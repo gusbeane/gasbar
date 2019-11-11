@@ -1,0 +1,270 @@
+% mnras_template.tex
+%
+% LaTeX template for creating an MNRAS paper
+%
+% v3.0 released 14 May 2015
+% (version numbers match those of mnras.cls)
+%
+% Copyright (C) Royal Astronomical Society 2015
+% Authors:
+% Keith T. Smith (Royal Astronomical Society)
+
+% Change log
+%
+% v3.0 May 2015
+%    Renamed to match the new package name
+%    Version number matches mnras.cls
+%    A few minor tweaks to wording
+% v1.0 September 2013
+%    Beta testing only - never publicly released
+%    First version: a simple (ish) template for creating an MNRAS paper
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basic setup. Most papers should leave these options alone.
+\documentclass[a4paper,fleqn,usenatbib]{mnras}
+
+% MNRAS is set in Times font. If you don't have this installed (most LaTeX
+% installations will be fine) or prefer the old Computer Modern fonts, comment
+% out the following line
+\usepackage{newtxtext,newtxmath}
+% Depending on your LaTeX fonts installation, you might get better results with one of these:
+%\usepackage{mathptmx}
+%\usepackage{txfonts}
+
+% Use vector fonts, so it zooms properly in on-screen viewing software
+% Don't change these lines unless you know what you are doing
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+
+
+%%%%% AUTHORS - PLACE YOUR OWN PACKAGES HERE %%%%%
+
+% Only include extra packages if you really need them. Common packages are:
+\usepackage{graphicx}	% Including figure files
+\usepackage{amsmath}	% Advanced maths commands
+\usepackage{amssymb}	% Extra maths symbols
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% AUTHORS - PLACE YOUR OWN COMMANDS HERE %%%%%
+\newcommand{\pc}{\ensuremath{\text{pc}}}
+\newcommand{\kpc}{\ensuremath{\text{kpc}}}
+
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+
+\newcommand{\mwib}{\texttt{mwib}}
+
+% Please keep new commands to a minimum, and use \newcommand not \def to avoid
+% overwriting existing commands. Example:
+%\newcommand{\pcm}{\,cm$^{-2}$}	% per cm-squared
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%% TITLE PAGE %%%%%%%%%%%%%%%%%%%
+
+% Title of the paper, and the short title which is used in the headers.
+% Keep the title short and informative.
+\title[Star Bar]{On Star Formation at Dynamical Resonances of the Bar}
+
+% The list of authors, and the short list which is used in the headers.
+% If you need two or more lines of authors, add an extra line using \newauthor
+\author[A. Beane et al.]{
+% Angus Beane,$^{1}$\thanks{E-mail: abeane@cfa.harvard.edu}
+Angus~Beane$^{1}$,\thanks{E-mail: abeane@cfa.harvard.edu}
+Elena~D'Onghia$^{2,3}$,
+Lars~Hernquist$^{1}$,
+and Federico~Marinacci$^{4}$
+\\
+% List of institutions
+% Center for Astrophysics {\normalfont |} Harvard \& Smithsonian, 60 Garden Street, Cambridge, MA 02138, USA
+$^{1}$Center for Astrophysics {\normalfont |} Harvard \& Smithsonian, 60 Garden Street, Cambridge, MA 02138, USA\\
+$^{2}$Department of Astronomy, University of Wisconsin, 475 North Charter Street, Madison, WI 53706, USA\\
+$^{3}$Center for Computational Astrophysics, Flatiron Institute, 162 5th Avenue, New York, NY 10010, USA\\
+$^{4}$Department of Physics \& Astronomy, University of Bologna, via Gobetti 93/2, 40129 Bologna, Italy
+% $^{3}$Department of Physics \& Astronomy, University of Pennsylvania, 209 South 33rd Street, Philadelphia, PA 19104, USA
+}
+
+% These dates will be filled out by the publisher
+\date{Accepted XXX. Received YYY; in original form ZZZ}
+
+% Enter the current year, for the copyright statements etc.
+\pubyear{2019}
+
+% Don't change these lines
+\begin{document}
+\label{firstpage}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+\maketitle
+
+% Abstract of the paper
+\begin{abstract}
+Stars are known to be captured at the dynamical resonances of the Milky Way
+bar, forming moving groups that are seen in the solar neighborhood. In
+principle, gas can also be captured at these resonances which, if allowed to
+cool, might trigger star formation -- predicting an enhanced number of
+star-forming regions at these resonances. However, the efficiency of stellar
+and radiation feedback may suppress the star formation process.
+\end{abstract}
+
+% Select between one and six entries from the list of approved keywords.
+% Don't make up new ones.
+\begin{keywords}
+Galaxy: disc -- Galaxy: kinematics and dynamics -- stars: kinematics and dynamics
+\end{keywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+This is a simple template for authors to write new MNRAS papers.
+See \texttt{mnras\_sample.tex} for a more complex example, and \texttt{mnras\_guide.tex}
+for a full user guide.
+
+All papers should start with an Introduction section, which sets the work
+in context, cites relevant earlier studies in the field by \citet{Others2013},
+and describes the problem the authors aim to solve \citep[e.g.][]{Author2012}.
+
+\section{Methods, Observations, Simulations etc.}
+
+Normally the next section describes the techniques the authors used.
+It is frequently split into subsections, such as Section~\ref{sec:maths} below.
+
+\subsection{Maths}
+\label{sec:maths} % used for referring to this section from elsewhere
+
+Simple mathematics can be inserted into the flow of the text e.g. $2\times3=6$
+or $v=220$\,km\,s$^{-1}$, but more complicated expressions should be entered
+as a numbered equation:
+
+\begin{equation}
+    x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
+	\label{eq:quadratic}
+\end{equation}
+
+Refer back to them as e.g. equation~(\ref{eq:quadratic}).
+
+\subsection{Figures and tables}
+
+Figures and tables should be placed at logical positions in the text. Don't
+worry about the exact layout, which will be handled by the publishers.
+
+Figures are referred to as e.g. Fig.~\ref{fig:example_figure}, and tables as
+e.g. Table~\ref{tab:example_table}.
+
+% Example figure
+\begin{figure}
+	% To include a figure from a file named example.*
+	% Allowable file formats are eps or ps if compiling using latex
+	% or pdf, png, jpg if compiling using pdflatex
+	% \includegraphics[width=\columnwidth]{example}
+    \caption{This is an example figure. Captions appear below each figure.
+	Give enough detail for the reader to understand what they're looking at,
+	but leave detailed discussion to the main body of the text.}
+    \label{fig:example_figure}
+\end{figure}
+
+% Example table
+\begin{table}
+	\centering
+	\caption{This is an example table. Captions appear above each table.
+	Remember to define the quantities, symbols and units used.}
+	\label{tab:example_table}
+	\begin{tabular}{lccr} % four columns, alignment for each
+		\hline
+		A & B & C & D\\
+		\hline
+		1 & 2 & 3 & 4\\
+		2 & 4 & 6 & 8\\
+		3 & 5 & 7 & 9\\
+		\hline
+	\end{tabular}
+\end{table}
+
+
+\section{Conclusions}
+
+The last numbered section should briefly summarise what has been done, and describe
+the final conclusions which the authors draw from their work.
+
+\section*{Acknowledgements}
+
+The Acknowledgements section is not numbered. Here you can thank helpful
+colleagues, acknowledge funding agencies, telescopes and facilities used etc.
+Try to keep it short.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%
+
+% The best way to enter references is to use BibTeX:
+
+\bibliographystyle{mnras}
+\bibliography{references} % if your bibtex file is called example.bib
+
+\appendix
+
+\section{Two-component Toomre instability criterion}
+The Toomre instability criterion for a two-component fluid was first derived
+by \citet{1984ApJ...276..114J}. For a mode of wavenumber $k=2\pi/\lambda$ to
+be stable against gravitational collapse, the criterion for the two fluids in
+an infinitesimally thin disk is that,
+\beq
+Q_2(k) = \left(Q_g^{-1}(k) + Q_s^{-1}(k) \right)^{-1} > 1\text{,}
+\eeq
+where $Q_2(k)$ is the two-component Toomre parameter and,
+\beq
+Q_g(k) = \frac{\kappa^2 + k^2 c_s^2}{2\pi G k \Sigma_{g,0}}\text{,}
+\eeq
+where $\kappa$ is the radial epicyclic frequency, $c_s$ is the sound speed of
+the gas, and $\Sigma_{g,0}$ is the surface density of the gas. $Q_s(k)$ can be
+obtained by replacing $c_s$ by $\sigma_R$ (the radial velocity dispersion) and
+$\Sigma_{g,0}$ by $\Sigma_{s,0}$ (the stellar surface density). Note that the
+familiar one-component Toomre criterion can be obtained by minimizing $Q_g(k)$
+as a function of $k$.
+
+We denote the minimum of $Q_2(k)$ as a function of $k$ by $Q_2$. We consider
+only physically plausible values of $k$ between $0.06$ and $6000\,\kpc^{-1}$
+(corresponding to modes of wavelength $\lambda\sim100\,\kpc$ to $1\,\pc$). The
+equivalent of the one-component Toomre stability criterion is that $Q_2>1$,
+such that the disk is stable against collapse of modes of all wavelengths.
+
+\section{\mwib{} resolution levels}
+We set a series of standard resolution levels similar to those in the Aquarius
+convention. Due to the isolated nature of our simulations, it is convenient to
+tune the particle mass to a specific number.
+
+\begin{table}
+\begin{tabular}{cccc}
+resolution level & $m_{\text{DM}}$      & $m_{\text{b}}$    & $\epsilon$        \\
+                 & $[\,M_{\odot}\,]$    & $[\,M_{\odot}\,]$ & $[\,\text{pc}\,]$ \\
+$5$              & $2.4\times10^6$      & $4.8\times10^5$   & $700$             \\
+$4$              & $3\times10^5$        & $6\times10^4$     & $350$             \\
+$3$              & $3.75 \times 10^{4}$ & $7500$            & $175$             \\
+$2$              & $4690$               & $938$             & $87.5$            \\
+$1$              & $586$                & $117$             & $43.8$           
+\end{tabular}
+\end{table}
+
+\begin{table}
+\begin{tabular}{cccc}
+resolution level & $m_{\text{DM}}$      & $m_{\text{b}}$    & $\epsilon$        \\
+                 & $[\,M_{\odot}\,]$    & $[\,M_{\odot}\,]$ & $[\,\text{pc}\,]$ \\
+$5$h             & $2.4\times10^6$      & $4.8\times10^5$   & $700$             \\
+$4$h             & $3\times10^5$        & $6\times10^4$     & $350$             \\
+$3$h             & $3.75 \times 10^{4}$ & $7500$            & $175$             \\
+$2$h             & $4690$               & $938$             & $87.5$            \\
+$1$h             & $586$                & $117$             & $43.8$           
+\end{tabular}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Don't change these lines
+\bsp	% typesetting comment
+\label{lastpage}
+\end{document}
