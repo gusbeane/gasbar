@@ -17,7 +17,7 @@ import pickle
 
 sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3']
 sims_list = [base+s for s in sims_list]
-name_list = ['lvl5', 'lvl4']#, 'lvl3']
+name_list = ['lvl5', 'lvl4', 'lvl3']
 
 skip = 10
 
