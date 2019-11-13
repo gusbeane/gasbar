@@ -15,9 +15,9 @@ import h5py as h5
 from tqdm import tqdm
 import pickle
 
-sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist']
+sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
 sims_list = [base+s for s in sims_list]
-name_list = ['lvl5', 'lvl4', 'lvl3']
+name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
 
 skip = 10
 
