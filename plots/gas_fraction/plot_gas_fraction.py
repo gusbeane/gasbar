@@ -14,7 +14,7 @@ import h5py as h5
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
-name_list = ['lvl5', 'lvl4', 'lvl3']
+name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
 
 fig, ax = plt.subplots(1, 1)
 
