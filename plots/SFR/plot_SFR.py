@@ -15,7 +15,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import astropy.units as u
 
-name_list = ['lvl5', 'lvl4', 'lvl3']
+name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
 dt = 100 # Myr
 
 fig, ax = plt.subplots(1, 1)
