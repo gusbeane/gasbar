@@ -31,7 +31,7 @@ def get_animator(frames, vmin, vmax, cmap, size, res):
     anim = FuncAnimation(
         fig,
         animate,
-        range(len(frames)),
+        tqdm(range(len(frames))),
         fargs=[],
         interval=1000 / 25
     )
