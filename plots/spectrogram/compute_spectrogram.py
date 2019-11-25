@@ -31,11 +31,11 @@ from tqdm import tqdm
 import pickle
 import astropy.units as u
 
-sims_list = ['/galakos/lvl5']#, '/galakos/lvl4', '/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
+sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
 path_list = [base+s for s in sims_list]
 name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
 
-dsnap2 = 30
+dsnap2 = 100
 
 snaps = ['100', '300', '500', '700', '900', '1100']
 mlist = [2, 3, 4, 6, 8]
@@ -94,6 +94,6 @@ for path, name in zip(path_list, name_list):
             to_dump['snap'] = snp
             to_dump['m'] = m
 
-            fout = 'data_'+name+'_snap'+snp+'_m'+str(m)+'.p'
+            fout = 'data/data_'+name+'_snap'+snp+'_m'+str(m)+'.p'
             print('writing to: ', fout)
             pickle.dump(to_dump, open(fout, 'wb'))
