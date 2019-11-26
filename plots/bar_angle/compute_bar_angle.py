@@ -18,7 +18,7 @@ time_conv = (1 * u.kpc/(u.km/u.s)).to_value(u.Myr)
 
 sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist']
 sims_list = [base+s for s in sims_list]
-name_list = ['lvl5']#, 'lvl4']#, 'lvl3']
+name_list = ['lvl5', 'lvl4']#, 'lvl3']
 
 Rbin = 5
 firstkey = 250
