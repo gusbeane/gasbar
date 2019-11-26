@@ -212,7 +212,7 @@ if __name__ == "__main__":
     extent = [-w, w, -w, w]
 
     if args["output"] is not "DEFAULT":
-        output = args["output"]
+        output_filename = args["output"]
     else:
         output_filename = "{}.pickle".format(particle_type)
 
