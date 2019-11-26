@@ -16,6 +16,7 @@ for name in name_list:
     time = out['time']
     polyfit = out['poly_fit']
     firstkey = out['firstkey']
+    true_bar_angle = out['bar_angle']
 
     pattern_speed = np.zeros(len(time))
 
@@ -27,7 +28,13 @@ for name in name_list:
     pattern_speed = pattern_speed / u.Myr
     pattern_speed = pattern_speed.to_value(u.km/u.s/u.kpc)
 
-    ax.plot(time[firstkey:], pattern_speed[firstkey:], label=name)
+    finite_diff = np.gradient(true_bar_angle, time)
+    finite_diff = finite_diff / u.Myr
+    finite_diff = finite_diff.to_value(u.km/u.s/u.kpc)
+
+    l = ax.plot(time[firstkey:], pattern_speed[firstkey:], label=name)
+    c = l[0].get_color()
+    ax.scatter(time[firstkey:], finite_diff[firstkey:], c=c, alpha=0.2, s=1)
 
 ax.set_xlabel('time [Myr]')
 ax.set_ylabel('pattern speed [ km/s/kpc ]')
