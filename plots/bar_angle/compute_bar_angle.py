@@ -12,13 +12,15 @@ import numpy as np
 import h5py as h5
 from tqdm import tqdm
 import pickle
+import re
 
 import astropy.units as u 
 time_conv = (1 * u.kpc/(u.km/u.s)).to_value(u.Myr)
 
-sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist']
+sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist',
+             '/galakos-rotbulge/lvl5', '/galakos-rotbulge/lvl4']
 sims_list = [base+s for s in sims_list]
-name_list = ['lvl5', 'lvl4', 'lvl3']
+name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge']
 
 Rbin = 5
 firstkey = 250
@@ -47,12 +49,18 @@ for sim, name in zip(sims_list, name_list):
     out = {}
     out['firstkey'] = firstkey
     
-    indices, files = mwib_io.get_files_indices(sim+'/output/*.hdf5')
+    #indices, files = mwib_io.get_files_indices(sim+'/output/*.hdf5')
     fourier = h5.File(sim+'/analysis/fourier_components.hdf5', mode='r')
 
-    Rlist = np.array([np.array(fourier['snapshot_'+"{0:03}".format(idx)]['Rlist']) for idx in tqdm(indices)])
-    A2r = np.array([np.array(fourier['snapshot_'+"{0:03}".format(idx)]['A2r']) for idx in tqdm(indices)])
-    A2i = np.array([np.array(fourier['snapshot_'+"{0:03}".format(idx)]['A2i']) for idx in tqdm(indices)])
+    keys = list(fourier.keys())
+    keys = [k for k in keys if 'snapshot' in k]
+    indices = [int(re.findall(r'\d?\d?\d\d\d', k)[0]) for k in keys]
+    sorted_arg = np.argsort(indices)
+    keys_sorted = [keys[i] for i in sorted_arg]
+
+    Rlist = np.array([np.array(fourier[k]['Rlist']) for k in tqdm(keys_sorted)])
+    A2r = np.array([np.array(fourier[k]['A2r']) for k in tqdm(keys_sorted)])
+    A2i = np.array([np.array(fourier[k]['A2i']) for k in tqdm(keys_sorted)])
 
     time_list = np.array(fourier['time'])
     out['time'] = time_list
