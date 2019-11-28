@@ -8,7 +8,7 @@ name_list = ['lvl5', 'lvl4']#, 'lvl3', 'lvl5-fg0.2']
 
 n = 5
 
-fig, ax = plt.subplots(1, 1)
+fig, ax = plt.subplots(2, 1, figsize=(3, 6), sharex=True)
 
 for name in name_list:
     out = pickle.load(open('bar_angle_'+name+'.p', 'rb'))
@@ -26,11 +26,14 @@ for name in name_list:
         bangle = mypfit[i] * time**(n-i) # taking the derivative of a general polynomial
         bar_angle[firstkey:] += bangle[firstkey:] # set pattern speed to zero before firstkey
 
-    ax.plot(time, bar_angle, label=name)
-    ax.scatter(time, true_bar_angle, s=1, c='k')
+    ax[0].plot(time, bar_angle, label=name)
+    ax[0].scatter(time, true_bar_angle, s=1, c='k')
 
-ax.set_xlabel('time [Myr]')
-ax.set_ylabel('bar angle')
+    ax[1].plot(time, np.diff(true_bar_angle, prepend=0), c='k')
+
+ax[1].set_xlabel('time [Myr]')
+ax[0].set_ylabel('bar angle')
+ax[1].set_ylabel('diff(bar angle)')
 
 fig.legend(frameon=False, title='resolution')
 
