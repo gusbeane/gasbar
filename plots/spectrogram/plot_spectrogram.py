@@ -53,3 +53,5 @@ for f in tqdm(files):
     
     fig.tight_layout()
     fig.savefig('fig/spectrogram_'+name+'_snap'+snap+'_m'+str(m)+'.pdf')
+
+    plt.close(fig)
