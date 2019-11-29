@@ -4,7 +4,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import astropy.units as u
 
-name_list = ['lvl5', 'lvl4', 'lvl3']# 'lvl5-fg0.2']
+name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge']# 'lvl5-fg0.2']
 
 n = 5
 
