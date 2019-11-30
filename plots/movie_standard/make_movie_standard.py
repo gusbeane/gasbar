@@ -29,7 +29,7 @@ def make_movie(fout, sim, final_frame):
     star_vmin = 10.**(0.0)
     star_vmax = 10.**(4.0)
     
-    nres = 512
+    nres = 256 
     
     res = [nres, nres, int(nres*width[2]/width[1])]
     surf_xy = (width[0]/res[0])*(width[1]/res[1]) * (1000)**2
