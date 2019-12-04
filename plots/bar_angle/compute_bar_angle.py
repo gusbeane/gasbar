@@ -23,6 +23,7 @@ sims_list = [base+s for s in sims_list]
 name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge']
 
 Rbin = 5
+Rbin_max = 10
 firstkey = 250
 
 def compute_bar_angle(phi, firstkey=400):
@@ -61,6 +62,7 @@ for sim, name in zip(sims_list, name_list):
     Rlist = np.array([np.array(fourier[k]['Rlist']) for k in tqdm(keys_sorted)])
     A2r = np.array([np.array(fourier[k]['A2r']) for k in tqdm(keys_sorted)])
     A2i = np.array([np.array(fourier[k]['A2i']) for k in tqdm(keys_sorted)])
+    A0 = np.array([np.array(fourier[k]['A0']) for k in tqdm(keys_sorted)])
 
     time_list = np.array(fourier['time'])
     out['time'] = time_list
@@ -70,11 +72,17 @@ for sim, name in zip(sims_list, name_list):
     phi = phi[:,Rbin]
 
     A2mag = np.sqrt(np.add(np.square(A2i), np.square(A2r)))
-    A2mag = A2mag[:,Rbin]
+    A2mag_at_R = A2mag[:,Rbin]
+
+    A2A0 = np.divide(A2mag, A0)
+    A2A0_max = np.max(A2A0[:,:Rbin_max], axis=1)
 
     out['phi'] = phi
     out['RatRbin'] = Rlist[:,Rbin]
-    out['A2mag'] = A2mag
+    out['RatRbin_max'] = Rlist[:,Rbin_max]
+
+    out['A2mag'] = A2mag_at_R
+    out['A2A0_max'] = A2A0_max
 
     bar_angle = compute_bar_angle(phi, firstkey=firstkey)
 
