@@ -18,9 +18,12 @@ import astropy.units as u
 time_conv = (1 * u.kpc/(u.km/u.s)).to_value(u.Myr)
 
 sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist',
-             '/galakos-rotbulge/lvl5', '/galakos-rotbulge/lvl4']
+             '/galakos-rotbulge/lvl5', '/galakos-rotbulge/lvl4',
+             '/galakos-softtest/lvl5-fac2', '/galakos-softtest/lvl5-fac4', '/galakos-softtest/lvl5-fac8',
+             '/galakos-softtest/lvl4-fac2', '/galakos-softtest/lvl4-fac4', '/galakos-softtest/lvl4-fac8']
 sims_list = [base+s for s in sims_list]
-name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge']
+name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge',
+             'lvl5-fac2', 'lvl5-fac4', 'lvl5-fac8', 'lvl4-fac2', 'lvl4-fac4', 'lvl4-fac8']
 
 Rbin = 5
 Rbin_max = 10
