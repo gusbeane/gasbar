@@ -31,9 +31,11 @@ from tqdm import tqdm
 import pickle
 import astropy.units as u
 
-sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
+#sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
+sims_list = ['/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
 path_list = [base+s for s in sims_list]
-name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
+#name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
+name_list = ['lvl3', 'lvl5-fg0.2']
 
 dsnap2 = 100
 

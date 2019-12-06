@@ -92,7 +92,9 @@ def make_movie(fout, sim, final_frame):
     
     
     def read_snapshot(base, number, return_time=False, subtract_center=True):
+        
         snapfile = base+'/snapshot_'+'{0:03}'.format(number)+'.hdf5'
+        print(snapfile)
         f = h5.File(snapfile, mode='r')
     
         snap = {}
@@ -201,9 +203,9 @@ if __name__ == '__main__':
     sims_list = [base+s for s in sims_list]
 
     name_list = ['lvl5-rotbulge', 'lvl4-rotbulge', 'lvl5', 'lvl4', 'lvl3']
-    fout_list = ['movie_'+n for n in name_list]
+    fout_list = ['movie_'+n+'.mp4' for n in name_list]
 
     final_frame_list = [1228, 955, 1228, 1228, 1228]
     
-    for fout, sim, final_frame in zip(fout_list, sim_list, final_frame_list):
+    for fout, sim, final_frame in zip(fout_list, sims_list, final_frame_list):
         make_movie(fout, sim, final_frame)
