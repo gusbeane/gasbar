@@ -15,15 +15,17 @@ for name in name_list:
     out = pickle.load(open('bar_angle_'+name+'.p', 'rb'))
 
     time = out['time']
-    A2mag = out['A2mag']
-    smoothed_A2mag = gaussian_filter1d(A2mag, 4)
+    A2A0 = out['A2A0_max']
+    smoothed_A2A0 = gaussian_filter1d(A2A0, 5)
 
-    l = ax.plot(time, smoothed_A2mag, label=name)
+    l = ax.plot(time, smoothed_A2A0, label=name)
     # c = l[0].get_color()
     # ax.scatter(time[firstkey:], finite_diff[firstkey:], c=c, alpha=0.2, s=1)
 
 ax.set_xlabel('time [Myr]')
-ax.set_ylabel('pattern speed [ km/s/kpc ]')
+ax.set_ylabel('max(A2/A0)')
+
+ax.set_ylim([0, 1])
 
 fig.legend(frameon=False, title='resolution')
 
