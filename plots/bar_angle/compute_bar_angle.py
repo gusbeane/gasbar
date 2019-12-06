@@ -27,7 +27,10 @@ name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge',
 
 Rbin = 5
 Rbin_max = 10
-firstkey = 250
+firstkey_list = [250, 250, 250, 
+                 250, 250, 
+                 250, 250, 250,
+                 50, 50, 50]
 
 def compute_bar_angle(phi, firstkey=400):
     out = np.zeros(len(phi))
@@ -49,7 +52,7 @@ def compute_bar_angle(phi, firstkey=400):
 
     return out
 
-for sim, name in zip(sims_list, name_list):
+for sim, name, firstkey in zip(sims_list, name_list, firstkey_list):
     out = {}
     out['firstkey'] = firstkey
     
