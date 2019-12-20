@@ -6,6 +6,9 @@ import astropy.units as u
 
 name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-rotbulge', 'lvl4-rotbulge']# 'lvl5-fg0.2']
 
+elena_time = [1500, 2500, 3000, 3500]
+elena_pattern_speed = [55, 40, 35, 30]
+
 n = 5
 
 fig, ax = plt.subplots(1, 1)
@@ -35,6 +38,8 @@ for name in name_list:
     l = ax.plot(time[firstkey:], pattern_speed[firstkey:], label=name)
     c = l[0].get_color()
     ax.scatter(time[firstkey:], finite_diff[firstkey:], c=c, alpha=0.2, s=1)
+
+ax.scatter(elena_time, elena_pattern_speed, s=9, c='k', label='galakos')
 
 ax.set_xlabel('time [Myr]')
 ax.set_ylabel('pattern speed [ km/s/kpc ]')
