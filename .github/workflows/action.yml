@@ -1,0 +1,2 @@
+- name: paper-maker
+  uses: andycasey/paper-maker@0.10
