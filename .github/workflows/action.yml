@@ -1,2 +1,7 @@
-- name: paper-maker
-  uses: andycasey/paper-maker@0.10
+name: Compile paper
+on: [push]
+
+jobs:
+  build:
+    - name: paper-maker
+      uses: andycasey/paper-maker@0.10
