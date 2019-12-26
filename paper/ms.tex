@@ -55,6 +55,8 @@
 
 \newcommand{\mwib}{\texttt{mwib}}
 
+\newcommand{\arepo}{\textsc{Arepo}}
+
 % Please keep new commands to a minimum, and use \newcommand not \def to avoid
 % overwriting existing commands. Example:
 %\newcommand{\pcm}{\,cm$^{-2}$}	% per cm-squared
@@ -99,12 +101,18 @@ $^{4}$Department of Physics \& Astronomy, University of Bologna, via Gobetti 93/
 
 % Abstract of the paper
 \begin{abstract}
-Stars are known to be captured at the dynamical resonances of the Milky Way
-bar, forming moving groups that are seen in the solar neighborhood. In
-principle, gas can also be captured at these resonances which, if allowed to
-cool, might trigger star formation -- predicting an enhanced number of
-star-forming regions at these resonances. However, the efficiency of stellar
-and radiation feedback may suppress the star formation process. 
+Long-term, secular processes can be important drivers of present-day galactic
+properties. The Milky Way is known to host one and perhaps multiple bars whose
+gravitational influence has observable consequences on both stellar and
+gaseous components. It has long been known that along the major axis of a bar
+gas can be driven towards the galactic center, fueling, e.g., the Central
+Molecular Zone and nuclear activity. On the other hand, stars are known to
+congregate near Lagrange points (i.e., minimums in the galactic potential),
+forming known moving groups such as Hercules. We report the results of
+isolated simulations incorporating both a state-of-the-art star formation and
+feedback model (in which a multi-phase interstellar medium is generated
+self-consistently) and a model of the Milky Way which forms a strong bar with
+a pattern speed matched to current observations. We are able to show, for the first time, that an enhancement of star formation may occur at the Lagrange points. We derive a collisional analogue of the theory of dynamical resonances and 
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
@@ -118,17 +126,10 @@ Galaxy: disc -- Galaxy: kinematics and dynamics -- stars: kinematics and dynamic
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
-
-This is a simple template for authors to write new MNRAS papers.
-See \texttt{mnras\_sample.tex} for a more complex example, and \texttt{mnras\_guide.tex}
-for a full user guide.
-
-All papers should start with an Introduction section, which sets the work
-in context, cites relevant earlier studies in the field by \citet{Others2013},
-and describes the problem the authors aim to solve \citep[e.g.][]{Author2012}.
+Introduction.
 
 \section{Methods}
-We perform our simulations using the moving-mesh code AREPO.
+We perform our simulations using the moving-mesh code \arepo{} \citep{}
 
 Normally the next section describes the techniques the authors used.
 It is frequently split into subsections, such as Section~\ref{sec:maths} below.
