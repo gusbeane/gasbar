@@ -50,6 +50,8 @@
 \newcommand{\pc}{\ensuremath{\text{pc}}}
 \newcommand{\kpc}{\ensuremath{\text{kpc}}}
 
+\newcommand{\Msun}{\ensuremath{\text{M}_{\odot}}}
+
 \newcommand{\beq}{\begin{equation}}
 \newcommand{\eeq}{\end{equation}}
 
@@ -73,7 +75,7 @@
 % If you need two or more lines of authors, add an extra line using \newauthor
 \author[A. Beane et al.]{
 % Angus Beane,$^{1}$\thanks{E-mail: abeane@cfa.harvard.edu}
-Angus~Beane$^{1}$,\thanks{E-mail: abeane@cfa.harvard.edu}
+Angus~Beane$^{1}$,\thanks{E-mail: angus.beane@cfa.harvard.edu}
 Elena~D'Onghia$^{2,3}$,
 Lars~Hernquist$^{1}$,
 and Federico~Marinacci$^{4}$
@@ -129,7 +131,16 @@ Galaxy: disc -- Galaxy: kinematics and dynamics -- stars: kinematics and dynamic
 Introduction.
 
 \section{Methods}
-We perform our simulations using the moving-mesh code \arepo{} \citep{}
+\subsection{Numerical Methods and Physical Model}
+We perform our simulations using the moving-mesh code \arepo{}. Gravity is
+solved using a standard oct-tree algorithm \citep{1986Natur.324..446B}.
+Hydrodynamics is modelled with a finite volume solver over an unstructured
+Voronoi mesh allowed to move in a quasi-Lagrangian fashion
+\citep{2010MNRAS.401..791S, 2016MNRAS.455.1134P}. A concise summary of this
+core functionality of \arepo{} is available with its public
+release\footnote{\url{https://arepo-code.org}} \citep{2019arXiv190904667W}.
+
+In our simulations we will reach $\sim10^3\,\Msun$ mass resolution. `
 
 Normally the next section describes the techniques the authors used.
 It is frequently split into subsections, such as Section~\ref{sec:maths} below.
