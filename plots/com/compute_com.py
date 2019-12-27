@@ -63,7 +63,7 @@ if __name__ == '__main__':
     else:
         lvl_list = [5, 4, 3, 2]
         path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
-        name_list = ['nbody-lvl']
+        name_list = ['nbody-lvl' + str(i) for i in lvl_list]
     
     snapnum_list = [0, 100, 200, 300, 400, 500, 600]
 
