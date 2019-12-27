@@ -70,4 +70,4 @@ if __name__ == '__main__':
     for path, name in zip(tqdm(path_list), name_list):
         for snapnum in snapnum_list:
             out = compute_com(path, snapnum, name)
-            print(out)
+            print(name, 'snap:', snapnum, out)
