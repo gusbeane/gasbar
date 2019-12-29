@@ -7,7 +7,7 @@ import pickle
 import re
 import astropy.units as u
 
-Rbin = 5
+Rbin = 2
 firstkey = 150
 nmax = 10
 
@@ -62,7 +62,7 @@ def evaluate_polynomial(pfit, n, time, bar_angle_firstkey, firstkey):
     poly_bar_angle = np.zeros(len(time))
     poly_pattern_speed = np.zeros(len(time))
 
-    for i in range(n):
+    for i in range(n+1):
         ba = pfit_n[i] * time ** (n-i)
         poly_bar_angle[firstkey:] += ba[firstkey:]
         ps = (n-i) * pfit_n[i] * time**(n-1-i)
