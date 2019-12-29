@@ -155,7 +155,10 @@ if __name__ == '__main__':
         name_list = ['nbody-lvl5']
         final_frame_list = [20]
     else:
-        lvl_list = [5, 4, 3, 2]
+        if sys.argv[1] == 'lvl2':
+            lvl_list = [2]
+        else:
+            lvl_list = [5, 4, 3]
         path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
         name_list = ['nbody-lvl' + str(i) for i in lvl_list]
         final_frame_list = [620, 620, 620, 122]
