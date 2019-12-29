@@ -8,5 +8,6 @@ paper/*.log
 paper/*.aux
 paper/*.bbl
 
-runs/*
+runs
+*.hdf5
 
