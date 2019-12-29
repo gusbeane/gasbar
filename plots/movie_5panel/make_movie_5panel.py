@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
+import arepo
 
 import astropy.units as u
 
@@ -38,19 +39,29 @@ def make_movie(fout, sim, final_frame, subtract_center):
     range_xy = [[center[0]-width[0]/2.0, center[0]+width[0]/2.0], [center[1]-width[1]/2.0, center[1]+width[1]/2.0]]
     range_xz = [[center[0]-width[0]/2.0, center[0]+width[0]/2.0], [center[2]-width[2]/2.0, center[2]+width[2]/2.0]]
     
-    def animate_one_type(snap, ptype, im_xy, im_xz):
+    def animate_one_type(snap, pidx, im_xy, im_xz):
     
-        xbool = np.logical_and(snap[ptype]['pos'][:,0] < center[0]+width[0]/2.0, snap[ptype]['pos'][:,0] > center[0]-width[0]/2.0)
-        ybool = np.logical_and(snap[ptype]['pos'][:,1] < center[1]+width[1]/2.0, snap[ptype]['pos'][:,1] > center[1]-width[1]/2.0)
-        zbool = np.logical_and(snap[ptype]['pos'][:,2] < center[2]+width[2]/2.0, snap[ptype]['pos'][:,2] > center[2]-width[2]/2.0)
+        if snap.NumPart_Total[pidx] == 0:
+            return (im_xy, im_xz)
+
+        part = getattr(snap, 'part'+str(pidx))
+
+        xbool = np.logical_and(part.pos[:,0] < center[0]+width[0]/2.0, part.pos[:,0] > center[0]-width[0]/2.0)
+        ybool = np.logical_and(part.pos[:,1] < center[1]+width[1]/2.0, part.pos[:,1] > center[1]-width[1]/2.0)
+        zbool = np.logical_and(part.pos[:,2] < center[2]+width[2]/2.0, part.pos[:,2] > center[2]-width[2]/2.0)
         keys = np.where(np.logical_and(np.logical_and(xbool, ybool), zbool))[0]
     
-        heatmap, xedges, yedges = np.histogram2d(snap[ptype]['pos'][:,0][keys], snap[ptype]['pos'][:,1][keys], 
-                                bins=(res[0], res[1]), weights=snap[ptype]['mass'][keys]/surf_xy, range=range_xy)
+        if hasattr(part.mass, 'as_unit'):
+            this_mass = part.mass.as_unit(arepo.u.msol).value
+        else:
+            this_mass = part.mass
+
+        heatmap, xedges, yedges = np.histogram2d(part.pos[:,0][keys], part.pos[:,1][keys], 
+                                bins=(res[0], res[1]), weights=this_mass[keys]/surf_xy, range=range_xy)
         im_xy.set_data(heatmap.T)
     
-        heatmap, xedges, yedges = np.histogram2d(snap[ptype]['pos'][:,0][keys], snap[ptype]['pos'][:,2][keys], 
-                                    bins=(res[0], res[2]), weights=snap[ptype]['mass'][keys]/surf_xz, range=range_xz)
+        heatmap, xedges, yedges = np.histogram2d(part.pos[:,0][keys], part.pos[:,2][keys], 
+                                    bins=(res[0], res[2]), weights=this_mass[keys]/surf_xz, range=range_xz)
         im_xz.set_data(heatmap.T)
     
         return (im_xy, im_xz)
@@ -61,11 +72,11 @@ def make_movie(fout, sim, final_frame, subtract_center):
         text.set_text('t='+'{0:.2f}'.format(time)+' Myr')
     
         for i, (im_xz, im_xy) in enumerate(np.transpose(imlist)):
-            ptype = 'PartType'+str(i)
               
-            # im_xy, im_xz = animate_one_type(snap, ptype, im_xy, im_xz)
+            im_xy, im_xz = animate_one_type(snap, i, im_xy, im_xz)
             try:
-                im_xy, im_xz = animate_one_type(snap, ptype, im_xy, im_xz)
+                pass
+                # im_xy, im_xz = animate_one_type(snap, ptype, im_xy, im_xz)
                 # pass
             except:
                pass
@@ -90,41 +101,27 @@ def make_movie(fout, sim, final_frame, subtract_center):
         return snap
     
     
-    def read_snapshot(base, number, return_time=False, subtract_center=True):
+    def read_snapshot(base, number, return_time=False, subtract_center=False):
         
-        snapfile = base+'/snapshot_'+'{0:03}'.format(number)+'.hdf5'
-        print(snapfile)
-        f = h5.File(snapfile, mode='r')
+        snap = arepo.Snapshot(base, number, combineFiles=True)
     
-        snap = {}
-        for i, t in enumerate(['PartType0', 'PartType1', 'PartType2', 'PartType3']):
-        #for i, t in enumerate(['PartType1', 'PartType2', 'PartType3']):
-            if t not in list(f.keys()):
+        for i, npart in enumerate(snap.NumPart_Total):
+            if npart == 0:
                 continue
-            snap[t] = {'pos': np.array(f[t]['Coordinates'])}
-            try:
-                # try loading in the masses from the file
-                snap[t]['mass'] = np.multiply(np.array(f[t]['Masses']), 1E10)
-            except:
-                # read in the mass from the header
-                ms = f['Header'].attrs['MassTable'][i] * 1E10
-                snap[t]['mass'] = np.full(len(snap[t]['pos']), ms)
-    
-        try:
-            t = 'PartType4'
-            snap[t] = {'pos': np.array(f[t]['Coordinates']), 'mass': np.multiply(np.array(f[t]['Masses']), 1E10)}
-        except:
-            pass
+
+            part = getattr(snap, 'part'+str(i))
+            mass = snap.MassTable[i].as_unit(arepo.u.msol).value
+            if mass > 0:
+                part.mass = np.full(npart, mass)
     
         if subtract_center:
             snap = subtract_center_from_snap(snap, number)
     
         if return_time:
-            time = f['Header'].attrs['Time']*time_conv
-            f.close()
+            time = snap.Time.as_unit(arepo.u.d).value * u.d
+            time = time.to_value(u.Myr)
             return snap, time
         else:
-            f.close()
             return snap
     
     fig, ax_list = plt.subplots(2, 5, sharex=True, gridspec_kw={'height_ratios': [width[2], width[1]]},
@@ -132,7 +129,8 @@ def make_movie(fout, sim, final_frame, subtract_center):
     
     # make t=0 plot
     snap, time = read_snapshot(snapbase, 0, return_time=True, subtract_center=subtract_center)
-    
+    # return snap
+
     im_list = np.zeros(np.shape(ax_list)).tolist()
     for i in range(5):
         ax_yz, ax_xy = ax_list.T[i]
@@ -149,18 +147,20 @@ def make_movie(fout, sim, final_frame, subtract_center):
         ax_yz.set_ylabel('z [kpc]')
     
         try:
-            xbool = np.logical_and(snap[ptype]['pos'][:,0] < center[0]+width[0]/2.0, snap[ptype]['pos'][:,0] > center[0]-width[0]/2.0)
-            ybool = np.logical_and(snap[ptype]['pos'][:,1] < center[1]+width[1]/2.0, snap[ptype]['pos'][:,1] > center[1]-width[1]/2.0)
-            zbool = np.logical_and(snap[ptype]['pos'][:,2] < center[2]+width[2]/2.0, snap[ptype]['pos'][:,2] > center[2]-width[2]/2.0)
+            xbool = np.logical_and(part.pos[:,0] < center[0]+width[0]/2.0, part.pos[:,0] > center[0]-width[0]/2.0)
+            ybool = np.logical_and(part.pos[:,1] < center[1]+width[1]/2.0, part.pos[:,1] > center[1]-width[1]/2.0)
+            zbool = np.logical_and(part.pos[:,2] < center[2]+width[2]/2.0, part.pos[:,2] > center[2]-width[2]/2.0)
             keys = np.where(np.logical_and(np.logical_and(xbool, ybool), zbool))[0]
        
-            heatmap, xedges, yedges = np.histogram2d(snap[ptype]['pos'][:,0][keys], snap[ptype]['pos'][:,1][keys], 
-                                    bins=(res[0], res[1]), weights=snap[ptype]['mass'][keys]/surf_xy, range=range_xy)
+            heatmap, xedges, yedges = np.histogram2d(part.pos[:,0][keys], part.pos[:,1][keys], 
+                                    bins=(res[0], res[1]), weights=part.mass[keys]/surf_xy, range=range_xy)
             extent = [center[0]-width[0]/2.0, center[0]+width[0]/2.0, center[1]-width[1]/2.0, center[1]+width[1]/2.0]
             im_xy = ax_xy.imshow(heatmap.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(), vmin=gas_vmin, vmax=gas_vmax)
             
-            heatmap_yz, xedges, yedges = np.histogram2d(snap[ptype]['pos'][:,0][keys], snap[ptype]['pos'][:,2][keys], 
-                                bins=(res[0], res[2]), weights=snap[ptype]['mass'][keys]/surf_xz, range=range_xz)
+            print('median surf den:', np.median(heatmap))
+
+            heatmap_yz, xedges, yedges = np.histogram2d(part.pos[:,0][keys], part.pos[:,2][keys], 
+                                bins=(res[0], res[2]), weights=part.mass[keys]/surf_xz, range=range_xz)
             extent = [center[0]-width[0]/2.0, center[0]+width[0]/2.0, center[2]-width[2]/2.0, center[2]+width[2]/2.0]
             im_yz = ax_yz.imshow(heatmap_yz.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(), vmin=gas_vmin, vmax=gas_vmax)
         
@@ -198,7 +198,7 @@ if __name__ == '__main__':
     if sys.platform == 'darwin':
         path_list = [basepath + nbody + 'lvl5/']
         name_list = ['nbody-lvl5']
-        final_frame_list = [620]
+        final_frame_list = [20]
     else:
         lvl_list = [5, 4, 3, 2]
         path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
@@ -210,4 +210,4 @@ if __name__ == '__main__':
     subtract_center=False
     
     for fout, path, final_frame in zip(fout_list, path_list, final_frame_list):
-        make_movie(fout, path, final_frame, subtract_center)
+        sn = make_movie(fout, path, final_frame, subtract_center)
