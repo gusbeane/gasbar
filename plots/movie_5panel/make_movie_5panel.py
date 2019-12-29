@@ -198,7 +198,7 @@ if __name__ == '__main__':
     if sys.platform == 'darwin':
         path_list = [basepath + nbody + 'lvl5/']
         name_list = ['nbody-lvl5']
-        final_frame_list = [20]
+        final_frame_list = [300]
     else:
         lvl_list = [5, 4, 3, 2]
         path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
@@ -208,6 +208,11 @@ if __name__ == '__main__':
     fout_list = ['movie_'+n+'.mp4' for n in name_list]
 
     subtract_center=False
-    
-    for fout, path, final_frame in zip(fout_list, path_list, final_frame_list):
-        sn = make_movie(fout, path, final_frame, subtract_center)
+
+    if len(sys.argv) > 1:
+        assert istype(sys.argv[1], int), "Must specify integer of the available movies to make"
+        i = sys.argv[1]
+        make_movie(fout_list[i], path_list[i], final_frame_list[i], subtract_center)
+    else:
+        for fout, path, final_frame in zip(fout_list, path_list, final_frame_list):
+            make_movie(fout, path, final_frame, subtract_center)
