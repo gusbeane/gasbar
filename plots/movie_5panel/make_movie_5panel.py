@@ -210,7 +210,7 @@ if __name__ == '__main__':
     subtract_center=False
 
     if len(sys.argv) > 1:
-        assert istype(sys.argv[1], int), "Must specify integer of the available movies to make"
+        assert isinstance(sys.argv[1], int), "Must specify integer of the available movies to make"
         i = sys.argv[1]
         make_movie(fout_list[i], path_list[i], final_frame_list[i], subtract_center)
     else:
