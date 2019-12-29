@@ -39,7 +39,7 @@ def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True, amplitu
         Am_list_imag = [np.sum(np.imag(Am_i[keys][digit == i])) for i in range(1, len(bins))]
         return np.array(R_list), np.array(Am_list_real), np.array(Am_list_imag)
 
-def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=30, logspace=False):
+def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False):
     # try loading snapshot
     try:
         sn = arepo.Snapshot(path+'output/', snapnum, combineFiles=True)
