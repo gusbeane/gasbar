@@ -207,9 +207,9 @@ if __name__ == '__main__':
 
         lvl_wetlist = [5, 4, 3]
         wet_fflist = [830, 243, 70]
-        for i in lvl_wetlist:
-            path_list.append(basepath + wet + 'lvl' + str(i) + '/')
-            name_list.append('wet-lvl'+str(i))
+        for i,l in enumerate(lvl_wetlist):
+            path_list.append(basepath + wet + 'lvl' + str(l) + '/')
+            name_list.append('wet-lvl'+str(l))
             final_frame_list.append(wet_fflist[i])
 
     fout_list = ['movie_'+n+'.mp4' for n in name_list]
