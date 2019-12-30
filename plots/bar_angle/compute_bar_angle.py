@@ -7,7 +7,7 @@ import pickle
 import re
 import astropy.units as u
 
-Rbin = 2
+Rbin = 5
 firstkey = 150
 nmax = 10
 
@@ -116,7 +116,8 @@ if __name__ == '__main__':
     fid = 'fid/'
     
     lvl_list = [5, 4, 3]#, 2]
-    name_list = ['nbody-lvl' + str(i) for i in lvl_list]
+    name_list = ['nbody-lvl5', 'nbody-lvl4',# 'nbody-lvl3',
+                 'wet-lvl5', 'wet-lvl4']#, 'wet-lvl3']
 
     fname_list = [basepath + 'fourier_' + name + '.hdf5' for name in name_list]
 
