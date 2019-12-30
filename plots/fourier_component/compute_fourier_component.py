@@ -5,6 +5,7 @@ from tqdm import tqdm
 import astropy.units as u
 import h5py as h5
 import glob
+import os
 
 from joblib import Parallel, delayed
 
@@ -173,7 +174,10 @@ if __name__ == '__main__':
     print(name_list)
 
     for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
-        print(nsnap)
+        fout = 'data/fourier_' + name + '.hdf5'
+        # dont remake something already made
+        if os.path.exists(fout):
+            continue
         indices = np.arange(nsnap)
         outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx)) for idx in tqdm(indices))
 
