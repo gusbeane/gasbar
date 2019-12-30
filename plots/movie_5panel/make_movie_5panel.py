@@ -1,6 +1,7 @@
 import matplotlib as mpl
 mpl.use('Agg')
 
+import glob
 import h5py as h5
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,12 +13,12 @@ import astropy.units as u
 
 from matplotlib.animation import FuncAnimation
 
-def make_movie(fout, sim, final_frame, subtract_center):
+def make_movie(fout, sim, nsnap, subtract_center):
 
     snapbase = sim + '/output'
     time_conv = 977.793 # converts time units to Myr
     
-    indices = np.arange(final_frame+1)
+    indices = np.arange(nsnap)
     
     center = np.array([0, 0, 0])
     width = [30, 30, 10]
@@ -111,6 +112,7 @@ def make_movie(fout, sim, final_frame, subtract_center):
 
             part = getattr(snap, 'part'+str(i))
             mass = snap.MassTable[i].as_unit(arepo.u.msol).value
+            print(mass)
             if mass > 0:
                 part.mass = np.full(npart, mass)
     
@@ -182,7 +184,7 @@ def make_movie(fout, sim, final_frame, subtract_center):
     
     fig.tight_layout()
     
-    animation = FuncAnimation(fig, animate, tqdm(np.arange(final_frame+1)), fargs=[im_list, text], interval=1000 / fps)
+    animation = FuncAnimation(fig, animate, tqdm(np.arange(nsnap)), fargs=[im_list, text], interval=1000 / fps)
     # animation = FuncAnimation(fig, animate, np.arange(final_frame+1), fargs=[im_list, text, arrow, arrow2], interval=1000 / fps)
     
     animation.save(fout)
@@ -198,19 +200,22 @@ if __name__ == '__main__':
     if sys.platform == 'darwin':
         path_list = [basepath + nbody + 'lvl5/']
         name_list = ['nbody-lvl5']
-        final_frame_list = [300]
+        nsnap_list = [300]
     else:
-        lvl_list = [5, 4, 3, 2]
-        path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
-        name_list = ['nbody-lvl' + str(i) for i in lvl_list]
-        final_frame_list = [830, 380, 122, 14]
-
-        lvl_wetlist = [5, 4, 3]
-        wet_fflist = [830, 243, 70]
-        for i,l in enumerate(lvl_wetlist):
-            path_list.append(basepath + wet + 'lvl' + str(l) + '/')
-            name_list.append('wet-lvl'+str(l))
-            final_frame_list.append(wet_fflist[i])
+        path_list = [basepath + f for f in [nbody + 'lvl5',
+                                    nbody + 'lvl4',
+                                    nbody + 'lvl3',
+                                    nbody + 'lvl2',
+                                    wet + 'lvl5',
+                                    wet + 'lvl4',
+                                    wet + 'lvl3']]
+        name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3', 'nbody-lvl2',
+                     'wet-lvl5', 'wet-lvl4', 'wet-lvl3']
+        if len(sys.argv) > 2:
+            path_list = [basepath + nbody + 'lvl2']
+            name_list = ['nbody-lvl2']
+        
+        nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
 
     fout_list = ['movie_'+n+'.mp4' for n in name_list]
 
@@ -218,7 +223,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) > 1:
         i = int(sys.argv[1])
-        make_movie(fout_list[i], path_list[i], final_frame_list[i], subtract_center)
+        make_movie(fout_list[i], path_list[i], nsnap_list[i], subtract_center)
     else:
-        for fout, path, final_frame in zip(fout_list, path_list, final_frame_list):
-            make_movie(fout, path, final_frame, subtract_center)
+        for fout, path, nsnap in zip(fout_list, path_list, nsnap_list):
+            make_movie(fout, path, nsnap, subtract_center)
