@@ -3,14 +3,10 @@ import arepo
 import sys
 from tqdm import tqdm
 
-def compute_veldisp(path, snapnum, name, output_dir='data/'):
+def compute_REPLACE(path, snapnum, name, output_dir='data/'):
     # try loading snapshot
-    try:
-        sn = arepo.Snapshot(path+'output/', snapnum, combineFiles=True)
-    except:
-        print("unable to load name:", name, "path:"+path, " snapnum: ", snapnum)
-        return None
-    
+    sn = arepo.Snapshot(path+'output/', snapnum, combineFiles=True)
+
     return sn
 
 
@@ -35,5 +31,5 @@ if __name__ == '__main__':
 
     for path, name in zip(tqdm(path_list), name_list):
         for snapnum in snapnum_list:
-            out = compute_veldisp(path, snapnum, name)
+            out = compute_REPLACE(path, snapnum, name)
     
