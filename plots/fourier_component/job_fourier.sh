@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -p hernquist
 #SBATCH -J fourier 
-#SBATCH -n 64
+#SBATCH -n 24 
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
@@ -18,5 +18,5 @@ source ../load-modules.sh
 
 ulimit -c unlimited
 
-python3 compute_fourier_component.py
+python3 compute_fourier_component.py ${SLURM_NTASKS}
 

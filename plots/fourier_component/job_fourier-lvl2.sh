@@ -18,5 +18,5 @@ source ../load-modules.sh
 
 ulimit -c unlimited
 
-python3 compute_fourier_component.py lvl2
+python3 compute_fourier_component.py ${SLURM_NTASKS} lvl2
 

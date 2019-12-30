@@ -4,6 +4,7 @@ import sys
 from tqdm import tqdm
 import astropy.units as u
 import h5py as h5
+import glob
 
 from joblib import Parallel, delayed
 
@@ -155,16 +156,26 @@ if __name__ == '__main__':
         name_list = ['nbody-lvl5']
         final_frame_list = [20]
     else:
-        if sys.argv[1] == 'lvl2':
-            lvl_list = [2]
-        else:
-            lvl_list = [5, 4, 3]
-        path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
-        name_list = ['nbody-lvl' + str(i) for i in lvl_list]
-        final_frame_list = [620, 620, 620, 122]
-    
-    for path, name, final_frame in zip(tqdm(path_list), name_list, final_frame_list):
-        indices = np.arange(final_frame+1)
+        path_list = [basepath + f for f in [nbody + 'lvl5/',
+                                            nbody + 'lvl4/',
+                                            nbody + 'lvl3/',
+                                            wet + 'lvl5/',
+                                            wet + 'lvl4/',
+                                            wet + 'lvl3/']]
+        name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
+                     'wet-lvl5', 'wet-lvl4', 'wet-lvl3']
+
+        if len(sys.argv) > 2:
+            path_list = [basepath + nbody + 'lvl2/']
+            name_list = ['nbody-lvl2']
+   
+    nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
+    print(name_list)
+
+    for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
+        print(nsnap)
+        indices = np.arange(nsnap)
         outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx)) for idx in tqdm(indices))
 
         concat_files(outs, indices, 'data/fourier_' + name + '.hdf5')
+
