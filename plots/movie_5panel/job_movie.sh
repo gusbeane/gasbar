@@ -1,7 +1,7 @@
 #!/bin/sh
-#SBATCH -p itc_cluster
+#SBATCH -p hernquist 
 #SBATCH -J movie 
-#SBATCH -n 4
+#SBATCH -n 6
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
@@ -10,7 +10,7 @@
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mem-per-cpu=16000
+#SBATCH --mem-per-cpu=32000
 ##SBATCH -t 4-00:00           # Runtime in D-HH:MM
 #SBATCH -t 7-00:00           # Runtime in D-HH:MM
 
@@ -19,5 +19,5 @@ module load parallel
 
 ulimit -c unlimited
 
-seq 0 3 | parallel -j ${SLURM_NTASKS} python3 make_movie_5panel.py {}
+seq 0 6 | parallel -j ${SLURM_NTASKS} python3 make_movie_5panel.py {}
 

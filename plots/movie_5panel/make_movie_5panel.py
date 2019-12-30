@@ -203,7 +203,14 @@ if __name__ == '__main__':
         lvl_list = [5, 4, 3, 2]
         path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
         name_list = ['nbody-lvl' + str(i) for i in lvl_list]
-        final_frame_list = [620, 620, 620, 122]
+        final_frame_list = [830, 380, 122, 14]
+
+        lvl_wetlist = [5, 4, 3]
+        wet_fflist = [830, 243, 70]
+        for i in lvl_wetlist:
+            path_list.append(basepath + wet + 'lvl' + str(i) + '/')
+            name_list.append('wet-lvl'+str(i))
+            final_frame_list.append(wet_fflist[i])
 
     fout_list = ['movie_'+n+'.mp4' for n in name_list]
 
