@@ -162,13 +162,19 @@ if __name__ == '__main__':
                                             nbody + 'lvl3/',
                                             wet + 'lvl5/',
                                             wet + 'lvl4/',
-                                            wet + 'lvl3/']]
+                                            wet + 'lvl3/',
+                                            nbody2 + 'lvl5/',
+                                            nbody2 + 'lvl4/',
+                                            nbody2 + 'lvl3/']]
         name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
-                     'wet-lvl5', 'wet-lvl4', 'wet-lvl3']
+                     'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
+                     'nbody2-lvl5', 'nbody2-lvl4', 'nbody2-lvl3']
 
         if len(sys.argv) > 2:
-            path_list = [basepath + nbody + 'lvl2/']
-            name_list = ['nbody-lvl2']
+            path_list = [basepath + nbody + 'lvl2/',
+                         basepath + wet + 'lvl2/',
+                         basepath + nbody2 + 'lvl2/']
+            name_list = ['nbody-lvl2', 'wet-lvl2', 'nbody2-lvl2']
    
     nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
     print(name_list)
