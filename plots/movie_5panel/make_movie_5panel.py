@@ -15,12 +15,16 @@ from matplotlib.animation import FuncAnimation
 
 def make_movie(fout, sim, nsnap, subtract_center):
 
+    if 'nbody' in fout:
+        center = np.array([0, 0, 0])
+    else:
+        center = np.array([200, 200, 200])
+
     snapbase = sim + '/output'
     time_conv = 977.793 # converts time units to Myr
     
     indices = np.arange(nsnap)
     
-    center = np.array([0, 0, 0])
     width = [30, 30, 10]
     
     gas_vmin = 10.**(0.0)
@@ -41,21 +45,28 @@ def make_movie(fout, sim, nsnap, subtract_center):
     range_xz = [[center[0]-width[0]/2.0, center[0]+width[0]/2.0], [center[2]-width[2]/2.0, center[2]+width[2]/2.0]]
     
     def animate_one_type(snap, pidx, im_xy, im_xz):
-    
+   
         if snap.NumPart_Total[pidx] == 0:
+            print(pidx)
             return (im_xy, im_xz)
-
+        
         part = getattr(snap, 'part'+str(pidx))
+
+        print(pidx, np.median(part.pos, axis=0))
 
         xbool = np.logical_and(part.pos[:,0] < center[0]+width[0]/2.0, part.pos[:,0] > center[0]-width[0]/2.0)
         ybool = np.logical_and(part.pos[:,1] < center[1]+width[1]/2.0, part.pos[:,1] > center[1]-width[1]/2.0)
         zbool = np.logical_and(part.pos[:,2] < center[2]+width[2]/2.0, part.pos[:,2] > center[2]-width[2]/2.0)
         keys = np.where(np.logical_and(np.logical_and(xbool, ybool), zbool))[0]
+        print(pidx, keys[:10])
     
-        if hasattr(part.mass, 'as_unit'):
+        masstable = snap.MassTable[pidx].as_unit(arepo.u.msol).value
+        if hasattr(part, 'mass'):
             this_mass = part.mass.as_unit(arepo.u.msol).value
         else:
-            this_mass = part.mass
+            this_mass = np.full(len(part.pos), masstable)
+
+        print(pidx, this_mass[:10])
 
         heatmap, xedges, yedges = np.histogram2d(part.pos[:,0][keys], part.pos[:,1][keys], 
                                 bins=(res[0], res[1]), weights=this_mass[keys]/surf_xy, range=range_xy)
@@ -111,10 +122,6 @@ def make_movie(fout, sim, nsnap, subtract_center):
                 continue
 
             part = getattr(snap, 'part'+str(i))
-            mass = snap.MassTable[i].as_unit(arepo.u.msol).value
-            print(mass)
-            if mass > 0:
-                part.mass = np.full(npart, mass)
     
         if subtract_center:
             snap = subtract_center_from_snap(snap, number)
@@ -153,9 +160,15 @@ def make_movie(fout, sim, nsnap, subtract_center):
             ybool = np.logical_and(part.pos[:,1] < center[1]+width[1]/2.0, part.pos[:,1] > center[1]-width[1]/2.0)
             zbool = np.logical_and(part.pos[:,2] < center[2]+width[2]/2.0, part.pos[:,2] > center[2]-width[2]/2.0)
             keys = np.where(np.logical_and(np.logical_and(xbool, ybool), zbool))[0]
-       
+      
+            masstable = snap.MassTable[i].as_unit(arepo.u.msol).value
+            if hasattr(part, 'mass'):
+                this_mass = part.mass.as_unit(arepo.u.msol).value
+            else:
+                this_mass = np.full(len(part.pos), masstable)
+
             heatmap, xedges, yedges = np.histogram2d(part.pos[:,0][keys], part.pos[:,1][keys], 
-                                    bins=(res[0], res[1]), weights=part.mass[keys]/surf_xy, range=range_xy)
+                                    bins=(res[0], res[1]), weights=this_mass[keys]/surf_xy, range=range_xy)
             extent = [center[0]-width[0]/2.0, center[0]+width[0]/2.0, center[1]-width[1]/2.0, center[1]+width[1]/2.0]
             im_xy = ax_xy.imshow(heatmap.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(), vmin=gas_vmin, vmax=gas_vmax)
             
@@ -195,12 +208,19 @@ if __name__ == '__main__':
     nbody = 'fid-Nbody/'
     wet = 'fid-wet/'
     fid = 'fid/'
-    
+   
+    nbody_bool = False 
+
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
-        path_list = [basepath + nbody + 'lvl5/']
-        name_list = ['nbody-lvl5']
-        nsnap_list = [300]
+        if nbody_bool:
+            path_list = [basepath + nbody + 'lvl5/']
+            name_list = ['nbody-lvl5']
+            nsnap_list = [300]
+        else:
+            path_list = [basepath + wet + 'lvl5/']
+            name_list = ['wet-lvl5']
+            nsnap_list = [20]
     else:
         path_list = [basepath + f for f in [nbody + 'lvl5',
                                     nbody + 'lvl4',
