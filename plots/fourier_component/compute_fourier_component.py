@@ -41,7 +41,7 @@ def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True, amplitu
         Am_list_imag = [np.sum(np.imag(Am_i[keys][digit == i])) for i in range(1, len(bins))]
         return np.array(R_list), np.array(Am_list_real), np.array(Am_list_imag)
 
-def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False):
+def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False, center=None):
     # try loading snapshot
     try:
         sn = arepo.Snapshot(path+'output/', snapnum, combineFiles=True)
@@ -62,6 +62,9 @@ def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logs
         # compute the center of mass
         this_mass = sn.MassTable[i].as_unit(arepo.u.msol).value
         this_pos = part.pos.as_unit(arepo.u.kpc).value
+
+        if center is not None:
+            this_pos = np.subtract(this_pos, center)
 
         # if mass is zero, then we need to load each individual mass
         if this_mass == 0:
@@ -182,11 +185,18 @@ if __name__ == '__main__':
 
     for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
         fout = 'data/fourier_' + name + '.hdf5'
+
         # dont remake something already made
         if os.path.exists(fout):
             continue
+
+        if 'wet' in name:
+            center = np.array([200, 200, 200])
+        else:
+            center = None
+
         indices = np.arange(nsnap)
-        outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx)) for idx in tqdm(indices))
+        outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx), center=center) for idx in tqdm(indices))
 
         concat_files(outs, indices, 'data/fourier_' + name + '.hdf5')
 
