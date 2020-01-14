@@ -146,6 +146,7 @@ if __name__ == '__main__':
     basepath = '../../runs/'
 
     nbody = 'fid-Nbody/'
+    nbody2 = 'fid-Nbody-disp2.0/'
     wet = 'fid-wet/'
     fid = 'fid/'
 
