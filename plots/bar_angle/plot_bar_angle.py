@@ -28,11 +28,14 @@ def plot_pattern_speed(name_list, c_list, ls_list, fout, n=5):
     fig.savefig(fout)
 
 if __name__ == '__main__':
-    name_list = ['nbody-lvl5', 'nbody-lvl4',# 'nbody-lvl3',
-                 'wet-lvl5', 'wet-lvl4']
+    name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3']
     #name_list = ['nbody-lvl3']
     c_list = [None, None, None]
     ls_list = [None, None, None]
 
     plot_pattern_speed(name_list, c_list, ls_list, 'bar_angle_nbody.pdf')
+
+    name_list = ['wet-lvl5', 'wet-lvl4', 'wet-lvl3']
+    
+    plot_pattern_speed(name_list, c_list, ls_list, 'bar_angle_wet.pdf')
 
