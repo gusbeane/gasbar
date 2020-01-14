@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -p hernquist 
 #SBATCH -J movie 
-#SBATCH -n 6
+#SBATCH -n 7 
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
