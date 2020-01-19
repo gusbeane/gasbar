@@ -58,6 +58,7 @@
 \newcommand{\mwib}{\texttt{mwib}}
 
 \newcommand{\arepo}{\textsc{Arepo}}
+\newcommand{\smuggle}{\textsc{SMUGGLE}}
 
 % Please keep new commands to a minimum, and use \newcommand not \def to avoid
 % overwriting existing commands. Example:
@@ -114,7 +115,10 @@ forming known moving groups such as Hercules. We report the results of
 isolated simulations incorporating both a state-of-the-art star formation and
 feedback model (in which a multi-phase interstellar medium is generated
 self-consistently) and a model of the Milky Way which forms a strong bar with
-a pattern speed matched to current observations. We are able to show, for the first time, that an enhancement of star formation may occur at the Lagrange points. We derive a collisional analogue of the theory of dynamical resonances and 
+a pattern speed matched to current observations. We are able to show, for the
+first time, that an enhancement of star formation may occur at the Lagrange
+points. We derive a collisional analogue of the theory of dynamical resonances
+and
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
@@ -140,7 +144,60 @@ Voronoi mesh allowed to move in a quasi-Lagrangian fashion
 core functionality of \arepo{} is available with its public
 release\footnote{\url{https://arepo-code.org}} \citep{2019arXiv190904667W}.
 
-In our simulations we will reach $\sim10^3\,\Msun$ mass resolution. `
+In our simulations we will reach $\sim10^3\,\Msun$ mass resolution. As a
+result, the cold phase of the interstellar medium (ISM) is well-resolved
+(\textcolor{red}{cite}), and an appropriate physical model which account for
+the processes occuring at these scales must be used. In this vein, we use the
+state-of-the-art model \smuggle{} \citep{2019MNRAS.489.4233M}. A detailed
+description of the model is presented in \citet{2019MNRAS.489.4233M}, but we
+summarize the salient components here.
+
+Standard cooling processes are accounted for using tabulated \textsc{cloudy}
+calculations, described in detail in \citet{2013MNRAS.436.3031V}. In addition
+to standard channels, metal line, fine-structure, and molecular cooling
+processes are also accounted for, allowing the gas to reach
+$\sim10\,\text{K}$, as well as self-shielding for high-density gas. Cosmic ray
+and photoelectric heating are also taken into account. Star formation follows
+a standard probabilistic approach \citep{2003MNRAS.339..289S}, with the star
+formation efficiency ($\epsilon$) set to $0.01$ and additional density and
+viriality conditions. Finally, stellar feedback is accounted for in three
+different channels: supernovae, young massive stellar radiation, and stellar
+winds from OB and AGB stars.
+
+The model used here is similar to the one used first by
+\citet{2011MNRAS.410.1391A, 2013ApJ...770...25A} and by the Feedback In
+Realistic Environments (FIRE) collaboration \citep{2011MNRAS.417..950H,
+2014MNRAS.445..581H, 2018MNRAS.480..800H}, with some key differences discussed
+in \citet{2019MNRAS.489.4233M}. One drawback of the \smuggle{} method is that
+radiation is not self-consistently tracked and evolved, and therefore
+radiation feedback must be implemented in an approximate manner. An extension
+of \smuggle{} which explicitly tracks the radiation field as an additional
+fluid component \citep{2019arXiv191014041K} based upon \areport{}
+\citep{2019MNRAS.485..117K} is available. We plan to use this module in the
+future.
+
+% Standard cooling processes from hydrogen and helium undergoing two-body
+% interactions, Compton cooling of cosmic microwave background photons, and
+% photoionization from a uniform UV background are accounted for using tabulated
+% \textsc{CLOUDY} calculations, described in detail in
+% \citet{2013MNRAS.436.3031V}. In addition to these processes, metal line,
+% fine-structure, and molecular cooling processes are accounted for, in order to
+% allow the gas to reach $\sim 10\,\text{K}$. At high densities, self-shielding
+% of the gas is accounted for using an analytic formula. Cosmic ray and
+% photoelectric heating are also taken into account, important for the thermal
+% stability of the cold and warm phases.
+
+% Star formation follows a standard probabilistic approach
+% \citep{2003MNRAS.339..289S}, where star particles are created and assumed to
+% be a coeval population following a \citet{2001ApJ...554.1274C} initial mass
+% function. Star formation efficiency ($\epsilon$) is assumed to be $0.01$. An
+% additional density threshold of $100\,\text{cm}^{-3}$ and a condition on a gas
+% cell to be sub-virial ($\alpha < 1$) and thus prone to gravitational collapse
+% are applied.
+
+% Finally, stellar feedback is accounted for in three different channels:
+% supernovae, young massive stellar radiation, and stellar winds from OB and AGB
+% stars.
 
 Normally the next section describes the techniques the authors used.
 It is frequently split into subsections, such as Section~\ref{sec:maths} below.
