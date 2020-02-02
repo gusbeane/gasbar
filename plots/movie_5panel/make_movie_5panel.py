@@ -205,6 +205,7 @@ def make_movie(fout, sim, nsnap, subtract_center):
 if __name__ == '__main__':
     basepath = '../../runs/'
 
+    fid = 'fid/'
     nbody = 'fid-Nbody/'
     nbody25 = 'fid-Nbody-disp2.5/'
     wet = 'fid-wet/'
@@ -223,7 +224,10 @@ if __name__ == '__main__':
             name_list = ['wet-lvl5']
             nsnap_list = [20]
     else:
-        path_list = [basepath + f for f in [nbody + 'lvl5',
+        path_list = [basepath + f for f in [fid + 'lvl5',
+                                    fid + 'lvl4',
+                                    #fid + 'lvl3',
+                                    nbody + 'lvl5',
                                     nbody + 'lvl4',
                                     nbody + 'lvl3',
                                     wet + 'lvl5',
@@ -232,7 +236,8 @@ if __name__ == '__main__':
                                     nbody25 + 'lvl5',
                                     nbody25 + 'lvl4',
                                     nbody25 + 'lvl3']]
-        name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
+        name_list = ['fid-lvl5', 'fid-lvl4', #'fid-lvl3',
+                     'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
                      'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
                      'nbody25-lvl5', 'nbody25-lvl4', 'nbody25-lvl3']
         if len(sys.argv) > 2:
