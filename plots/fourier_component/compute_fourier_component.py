@@ -195,7 +195,7 @@ if __name__ == '__main__':
         if os.path.exists(fout):
             continue
 
-        if 'wet' in name:
+        if 'wet' in name or 'fid' in name:
             center = np.array([200, 200, 200])
         else:
             center = None
