@@ -19,5 +19,5 @@ module load parallel
 
 ulimit -c unlimited
 
-seq 0 9 | parallel -j ${SLURM_NTASKS} python3 make_movie_5panel.py {}
+seq 0 12 | parallel -j ${SLURM_NTASKS} python3 make_movie_5panel.py {}
 

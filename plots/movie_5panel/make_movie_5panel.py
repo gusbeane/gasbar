@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
 import arepo
+import os
 
 import astropy.units as u
 
@@ -210,6 +211,7 @@ if __name__ == '__main__':
     nbody25 = 'fid-Nbody-disp2.5/'
     wet = 'fid-wet/'
     fid = 'fid/'
+    wetT100 = 'fid-wet-disp1.0-T100/'
    
     nbody_bool = False 
 
@@ -226,19 +228,21 @@ if __name__ == '__main__':
     else:
         path_list = [basepath + f for f in [fid + 'lvl5',
                                     fid + 'lvl4',
-                                    #fid + 'lvl3',
+                                    fid + 'lvl3',
                                     nbody + 'lvl5',
                                     nbody + 'lvl4',
                                     nbody + 'lvl3',
                                     wet + 'lvl5',
                                     wet + 'lvl4',
                                     wet + 'lvl3',
+                                    wetT100 + 'lvl5',
                                     nbody25 + 'lvl5',
                                     nbody25 + 'lvl4',
                                     nbody25 + 'lvl3']]
-        name_list = ['fid-lvl5', 'fid-lvl4', #'fid-lvl3',
+        name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3',
                      'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
                      'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
+                     'wet-T100-lvl5',
                      'nbody25-lvl5', 'nbody25-lvl4', 'nbody25-lvl3']
         if len(sys.argv) > 2:
             path_list = [basepath + nbody + 'lvl2',
@@ -254,7 +258,13 @@ if __name__ == '__main__':
 
     if len(sys.argv) > 1:
         i = int(sys.argv[1])
+        if os.path.exists(fout_list[i]):
+            sys.exit(0) 
         make_movie(fout_list[i], path_list[i], nsnap_list[i], subtract_center)
     else:
         for fout, path, nsnap in zip(fout_list, path_list, nsnap_list):
+            if os.path.exists(fout):
+                continue
+
             make_movie(fout, path, nsnap, subtract_center)
+
