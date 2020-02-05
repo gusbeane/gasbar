@@ -35,12 +35,15 @@ if __name__ == '__main__':
     name_list = ['wet-lvl5', 'wet-lvl4', 'wet-lvl3']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_wet.pdf')
 
-    name_list = ['nbody-lvl5', 'wet-lvl5']
+    name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3']
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fid.pdf')
+
+    name_list = ['nbody-lvl5', 'wet-lvl5', 'fid-lvl5']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_lvl5.pdf')
     
-    name_list = ['nbody-lvl4', 'wet-lvl4']
+    name_list = ['nbody-lvl4', 'wet-lvl4', 'fid-lvl4']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_lvl4.pdf')
     
-    name_list = ['nbody-lvl3', 'wet-lvl3']
+    name_list = ['nbody-lvl3', 'wet-lvl3', 'fid-lvl3']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_lvl3.pdf')
 
