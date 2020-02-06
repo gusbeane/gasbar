@@ -126,7 +126,12 @@ if __name__ == '__main__':
         path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
         name_list = ['nbody-lvl' + str(i) for i in lvl_list]
 
-    for path, name in zip(tqdm(path_list), name_list):
-        nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
-        out = compute_L4L5(path, nsnap, name)
+    if len(sys.argv) > 1:
+        i = int(sys.argv[1])
+        nsnap = len(glob.glob(path_list[i]+'/output/snapdir*/*.0.hdf5'))
+        out = compute_L4L5(path_list[i], nsnap, name_list[i])
+    else:
+        for path, name in zip(tqdm(path_list), name_list):
+            nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
+            out = compute_L4L5(path, nsnap, name)
     
