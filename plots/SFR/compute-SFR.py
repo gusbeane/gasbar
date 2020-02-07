@@ -5,6 +5,7 @@ from tqdm import tqdm
 import glob
 import astropy.units as u
 import pickle
+import re
 
 time_conv = (1 * u.kpc/(u.km/u.s)).to_value(u.Myr)
 
@@ -35,6 +36,8 @@ if __name__ == '__main__':
                  fid+'lvl4',
                  fid+'lvl3',
                  fid_rdisk + 'lvl5']
+
+    path_list = [basepath + p for p in path_list] # add basepath
 
     name_list = ['fid-lvl5',
                  'fid-lvl4',
