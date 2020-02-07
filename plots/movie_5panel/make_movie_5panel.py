@@ -254,7 +254,7 @@ if __name__ == '__main__':
         
         nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
 
-    fout_list = ['movie_'+n+'.mp4' for n in name_list]
+    fout_list = ['movies/movie_'+n+'.mp4' for n in name_list]
 
     subtract_center=False
 
