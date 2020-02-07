@@ -211,6 +211,7 @@ if __name__ == '__main__':
     nbody25 = 'fid-Nbody-disp2.5/'
     wet = 'fid-wet/'
     fid = 'fid/'
+    fid_rdisk = 'fid-disp1.0-resetDisk/'
     wetT100 = 'fid-wet-disp1.0-T100/'
    
     nbody_bool = False 
@@ -229,6 +230,7 @@ if __name__ == '__main__':
         path_list = [basepath + f for f in [fid + 'lvl5',
                                     fid + 'lvl4',
                                     fid + 'lvl3',
+                                    fid_rdisk + 'lvl5',
                                     nbody + 'lvl5',
                                     nbody + 'lvl4',
                                     nbody + 'lvl3',
