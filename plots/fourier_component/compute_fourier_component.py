@@ -153,7 +153,6 @@ if __name__ == '__main__':
     nbody25 = 'fid-Nbody-disp2.5/'
     wet = 'fid-wet/'
     fid = 'fid/'
-    fid_d1_rd = 'fid-disp1.0-resetDisk/'
 
     nproc = int(sys.argv[1])
     
@@ -166,7 +165,6 @@ if __name__ == '__main__':
         path_list = [basepath + f for f in [fid + 'lvl5/',
                                             fid + 'lvl4/',
                                             fid + 'lvl3/',
-                                            fid_d1_rd + 'lvl5/',
                                             nbody + 'lvl5/',
                                             nbody + 'lvl4/',
                                             nbody + 'lvl3/',
@@ -177,7 +175,6 @@ if __name__ == '__main__':
                                             nbody25 + 'lvl4/',
                                             nbody25 + 'lvl3/']]
         name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3',
-                     'fid-disp1.0-resetDisk-lvl5',
                      'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
                      'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
                      'nbody25-lvl5', 'nbody25-lvl4', 'nbody25-lvl3']
