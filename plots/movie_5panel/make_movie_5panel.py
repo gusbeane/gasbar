@@ -14,7 +14,7 @@ import astropy.units as u
 
 from matplotlib.animation import FuncAnimation
 
-def make_movie(fout, sim, nsnap, subtract_center):
+def make_movie(fout, sim, nsnap, subtract_center, replace_part0_by_part=None):
 
     if 'nbody' in fout:
         center = np.array([0, 0, 0])
@@ -48,8 +48,10 @@ def make_movie(fout, sim, nsnap, subtract_center):
     def animate_one_type(snap, pidx, im_xy, im_xz):
    
         if snap.NumPart_Total[pidx] == 0:
-            print(pidx)
-            return (im_xy, im_xz)
+            if pidx == 0 and replace_part0_by_part is not None:
+                pidx = replace_part0_by_part
+            else:
+                return (im_xy, im_xz)
         
         part = getattr(snap, 'part'+str(pidx))
 
@@ -211,7 +213,7 @@ if __name__ == '__main__':
     nbody25 = 'fid-Nbody-disp2.5/'
     wet = 'fid-wet/'
     fid = 'fid/'
-    fid_rdisk = 'fid-disp1.0-resetDisk/'
+    fid_fdisk = 'fid-disp1.0-fixedDisk/'
     wetT100 = 'fid-wet-disp1.0-T100/'
    
     nbody_bool = False 
@@ -230,7 +232,8 @@ if __name__ == '__main__':
         path_list = [basepath + f for f in [fid + 'lvl5',
                                     fid + 'lvl4',
                                     fid + 'lvl3',
-                                    fid_rdisk + 'lvl5',
+                                    fid_fdisk + 'lvl5',
+                                    #fid_fdisk + 'lvl4',
                                     nbody + 'lvl5',
                                     nbody + 'lvl4',
                                     nbody + 'lvl3',
@@ -242,7 +245,7 @@ if __name__ == '__main__':
                                     nbody25 + 'lvl4',
                                     nbody25 + 'lvl3']]
         name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3',
-                     'fid-disp1.0-resetDisk-lvl5',
+                     'fid-disp1.0-fixedDisk-lvl5', #'fid-disp1.0-resetDisk-lvl4',
                      'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
                      'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
                      'wet-T100-lvl5',
@@ -263,11 +266,11 @@ if __name__ == '__main__':
         i = int(sys.argv[1])
         if os.path.exists(fout_list[i]):
             sys.exit(0) 
-        make_movie(fout_list[i], path_list[i], nsnap_list[i], subtract_center)
+        make_movie(fout_list[i], path_list[i], nsnap_list[i], subtract_center, replace_part0_by_part=5)
     else:
         for fout, path, nsnap in zip(fout_list, path_list, nsnap_list):
             if os.path.exists(fout):
                 continue
 
-            make_movie(fout, path, nsnap, subtract_center)
+            make_movie(fout, path, nsnap, subtract_center, replace_part0_by_part=5)
 
