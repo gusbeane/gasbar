@@ -1,5 +1,6 @@
 #!/bin/sh
-#SBATCH -p hernquist
+#SBATCH -p conroy
+#SBATCH --constraint=intel
 #SBATCH -J fourier 
 #SBATCH -n 24 
 #SBATCH -N 1

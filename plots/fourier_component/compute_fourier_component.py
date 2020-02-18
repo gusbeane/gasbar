@@ -153,6 +153,9 @@ if __name__ == '__main__':
     nbody25 = 'fid-Nbody-disp2.5/'
     wet = 'fid-wet/'
     fid = 'fid/'
+    fid_fd = 'fid-disp1.0-fixedDisk/'
+    wet_fd = 'fid-wet-disp1.0-fixedDisk/'
+
 
     nproc = int(sys.argv[1])
     
@@ -165,18 +168,24 @@ if __name__ == '__main__':
         path_list = [basepath + f for f in [fid + 'lvl5/',
                                             fid + 'lvl4/',
                                             fid + 'lvl3/',
+                                            fid_fd + 'lvl5/',
+                                            fid_fd + 'lvl4/',
                                             nbody + 'lvl5/',
                                             nbody + 'lvl4/',
                                             nbody + 'lvl3/',
                                             wet + 'lvl5/',
                                             wet + 'lvl4/',
                                             wet + 'lvl3/',
+                                            wet_fd + 'lvl5/',
+                                            wet_fd + 'lvl4/',
                                             nbody25 + 'lvl5/',
                                             nbody25 + 'lvl4/',
                                             nbody25 + 'lvl3/']]
         name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3',
+                     'fid-disp1.0-fixedDisk-lvl5', 'fid-disp1.0-fixedDisk-lvl4',
                      'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
                      'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
+                     'fid-wet-disp1.0-fixedDisk-lvl5', 'fid-wet-disp1.0-fixedDisk-lvl4',
                      'nbody25-lvl5', 'nbody25-lvl4', 'nbody25-lvl3']
 
         if len(sys.argv) > 2:
