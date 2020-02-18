@@ -27,10 +27,10 @@ if __name__ == '__main__':
 
     basepath = '../../runs/'
 
-    nbody = 'fid-Nbody/'
-    wet = 'fid-wet/'
-    fid = 'fid/'
-    fid_rdisk = 'fid-disp1.0-resetDisk/'
+    nbody = 'fid-Nbody'
+    wet = 'fid-wet'
+    fid = 'fid'
+    fid_rdisk = 'fid-disp1.0-resetDisk'
 
     fid_g1 = 'fid-disp1.0-fg0.1'
     fid_g2 = 'fid-disp1.0-fg0.2'
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     fid_g5 = 'fid-disp1.0-fg0.5'
         
 
-    pair_list = [(fid, 'lvl5'), (fid, 'lvl4'), (fid, 'lvl3'),
+    pair_list = [(fid, 'lvl5'), (fid, 'lvl4'), #(fid, 'lvl3'),
                  (fid_g1, 'lvl5'), (fid_g1, 'lvl4'),
                  (fid_g2, 'lvl5'), (fid_g2, 'lvl4'),
                  (fid_g3, 'lvl5'), (fid_g3, 'lvl4'),
