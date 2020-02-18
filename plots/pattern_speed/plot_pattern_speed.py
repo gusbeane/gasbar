@@ -47,3 +47,9 @@ if __name__ == '__main__':
     name_list = ['nbody-lvl3', 'wet-lvl3', 'fid-lvl3']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_lvl3.pdf')
 
+    name_list = ['nbody-lvl5', 'fid-disp1.0-fixedDisk-lvl5']
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl5.pdf')
+    
+    name_list = ['nbody-lvl4', 'fid-disp1.0-fixedDisk-lvl4']
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl4.pdf')
+

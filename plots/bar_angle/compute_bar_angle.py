@@ -118,6 +118,8 @@ if __name__ == '__main__':
     lvl_list = [5, 4, 3]#, 2]
     name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3',
                  'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
+                 'fid-disp1.0-fixedDisk-lvl5', 'fid-disp1.0-fixedDisk-lvl4',
+                 'fid-wet-disp1.0-fixedDisk-lvl5', 'fid-wet-disp1.0-fixedDisk-lvl4',
                  'wet-lvl5', 'wet-lvl4', 'wet-lvl3']
 
     fname_list = [basepath + 'fourier_' + name + '.hdf5' for name in name_list]
