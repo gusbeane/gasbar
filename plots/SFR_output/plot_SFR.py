@@ -11,8 +11,8 @@ def plot_SFR(pair_list, c_list, ls_list, fout, n=5, basepath = '../../runs/'):
     
     fig, ax = plt.subplots(1, 1)
 
-    for name, path, c, ls in zip(name_list, path_list c_list, ls_list):
-        fdata = path_list + '/output/sfr.txt'
+    for name, path, c, ls in zip(name_list, path_list, c_list, ls_list):
+        fdata = path + '/output/sfr.txt'
         dat = np.genfromtxt(fdata)
 
         time = dat[:,0] * time_conv
@@ -48,5 +48,5 @@ if __name__ == '__main__':
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl5.pdf')
     
     pair_list = [(fid_g1, 'lvl4'), (fid_g3, 'lvl4'), (fid_g5, 'lvl4')]
-    plot_SFR(name_list, c_list, ls_list, 'SFR_fid-fg-lvl4.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl4.pdf')
 
