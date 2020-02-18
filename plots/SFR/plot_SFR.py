@@ -40,3 +40,9 @@ if __name__ == '__main__':
 
     plot_SFR(name_list, c_list, ls_list, 'SFR_fid.pdf')
 
+    name_list = ['fid-disp1.0-fg0.1-lvl5', 'fid-disp1.0-fg0.3-lvl5', 'fid-disp1.0-fg0.5-lvl5']
+    plot_SFR(name_list, c_list, ls_list, 'SFR_fid-fg-lvl5.pdf')
+    
+    name_list = ['fid-disp1.0-fg0.1-lvl4', 'fid-disp1.0-fg0.3-lvl4', 'fid-disp1.0-fg0.5-lvl4']
+    plot_SFR(name_list, c_list, ls_list, 'SFR_fid-fg-lvl4.pdf')
+
