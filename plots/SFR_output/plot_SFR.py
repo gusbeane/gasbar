@@ -46,10 +46,10 @@ if __name__ == '__main__':
     ls_list = [None, None, None]
     ylim = [0.1, None]
 
-    pair_list = [(fid_g1, 'lvl5'), (fid_g3, 'lvl5'), (fid_g5, 'lvl5')]
+    pair_list = [(fid_g1, 'lvl5'), (fid_g2, 'lvl5'), (fid_g3, 'lvl5'), (fid_g5, 'lvl5')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl5.pdf', ylim=ylim)
     
-    pair_list = [(fid_g1, 'lvl4'), (fid_g3, 'lvl4'), (fid_g5, 'lvl4')]
+    pair_list = [(fid_g1, 'lvl4'), (fid_g2, 'lvl4'), (fid_g3, 'lvl4'), (fid_g5, 'lvl4')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl4.pdf', ylim=ylim)
     
     pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4')]
