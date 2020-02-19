@@ -5,7 +5,7 @@ import astropy.units as u
 
 time_conv = 977.793
 
-def plot_SFR(pair_list, c_list, ls_list, fout, n=5, basepath = '../../runs/'):
+def plot_SFR(pair_list, c_list, ls_list, fout, n=5, ylim=[None, None] basepath = '../../runs/'):
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
     
@@ -25,6 +25,7 @@ def plot_SFR(pair_list, c_list, ls_list, fout, n=5, basepath = '../../runs/'):
     ax.legend(frameon=False)
 
     ax.set_yscale('log')
+    ax.set_ylim(ylim)
 
     fig.tight_layout()
     fig.savefig(fout)
@@ -43,25 +44,26 @@ if __name__ == '__main__':
     
     c_list = [None, None, None]
     ls_list = [None, None, None]
+    ylim = [0.1, None]
 
     pair_list = [(fid_g1, 'lvl5'), (fid_g3, 'lvl5'), (fid_g5, 'lvl5')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl5.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl5.pdf', ylim=ylim)
     
     pair_list = [(fid_g1, 'lvl4'), (fid_g3, 'lvl4'), (fid_g5, 'lvl4')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl4.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-lvl4.pdf', ylim=ylim)
     
     pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g1.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g1.pdf', ylim=ylim)
     
     pair_list = [(fid_g2, 'lvl5'), (fid_g2, 'lvl4')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g2.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g2.pdf', ylim=ylim)
     
     pair_list = [(fid_g3, 'lvl5'), (fid_g3, 'lvl4')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g3.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g3.pdf', ylim=ylim)
     
     pair_list = [(fid_g4, 'lvl5'), (fid_g4, 'lvl4')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g4.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g4.pdf', ylim=ylim)
     
     pair_list = [(fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
-    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g5.pdf')
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g5.pdf', ylim=ylim)
 
