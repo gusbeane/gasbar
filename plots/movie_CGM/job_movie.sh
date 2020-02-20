@@ -1,6 +1,6 @@
 #!/bin/sh
-#SBATCH -p conroy
-#SBATCH --constraint=intel
+#SBATCH -p conroy 
+##SBATCH --constraint=intel
 #SBATCH -J movie 
 #SBATCH -n 8 
 #SBATCH -N 1
