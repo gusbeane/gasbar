@@ -186,18 +186,17 @@ if __name__ == '__main__':
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
         pair_list = [(fid_g1, 'lvl5')]
-        nsnap_list = [20]
     else:
-        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'),
-                     (fid_g2, 'lvl5'), (fid_g2, 'lvl4'),
-                     (fid_g3, 'lvl5'), (fid_g3, 'lvl4'),
+        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
+                     (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
+                     (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                      (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                      (fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
                                             
-    # nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
+    nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
     fout_list = ['movies/movie_'+n+'.mp4' for n in name_list]
 
     if len(sys.argv) > 1:

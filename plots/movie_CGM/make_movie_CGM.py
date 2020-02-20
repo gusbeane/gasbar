@@ -158,9 +158,9 @@ if __name__ == '__main__':
     fid_g5 = 'fid-disp1.0-fg0.5'
    
     # look to see if we are on my macbook or on the cluster
-    pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'),
-                 (fid_g2, 'lvl5'), (fid_g2, 'lvl4'),
-                 (fid_g3, 'lvl5'), (fid_g3, 'lvl4'),
+    pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
+                 (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
+                 (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                  (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                  (fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
     
