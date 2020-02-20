@@ -17,9 +17,13 @@ def plot_gas_fraction(pair_list, c_list, ls_list, fout, output_dir='data/',
         dat = pickle.load(open(fdata, 'rb'))
 
         time = dat[:,0]
-        gas_fraction = dat[:,1]
+        gas_fraction_disk = dat[:,1]
+        gas_fraction_R0 = dat[:,2]
 
-        ax.plot(time, gas_fraction, label=name)
+        l = ax.plot(time, gas_fraction_disk, label=name)
+        c = l[0].get_color()
+        ax.plot(time, gas_fraction_R0, ls='dashed', c=c)
+
         if np.max(time) > max_time:
             max_time = np.max(time)
 
