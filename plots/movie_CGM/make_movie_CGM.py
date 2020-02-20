@@ -156,13 +156,20 @@ if __name__ == '__main__':
     fid_g3 = 'fid-disp1.0-fg0.3'
     fid_g4 = 'fid-disp1.0-fg0.4'
     fid_g5 = 'fid-disp1.0-fg0.5'
+
+    fid_d7_g3 = 'fid-disp0.7-fg0.3'
+    fid_d5_g3 = 'fid-disp0.5-fg0.3'
+    fid_g3_nB = 'fid-disp1.0-fg0.3-noBulge'
    
     # look to see if we are on my macbook or on the cluster
     pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
                  (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
                  (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                  (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
-                 (fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
+                 (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
+                 (fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
+                 (fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4')
+                 (fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
