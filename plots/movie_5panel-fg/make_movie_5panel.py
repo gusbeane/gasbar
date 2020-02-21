@@ -197,7 +197,7 @@ if __name__ == '__main__':
                      (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                      (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
                      (fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
-                     (fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4')
+                     (fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
                      (fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]

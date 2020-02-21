@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH -p conroy 
+#SBATCH -p conroy,hernquist 
 ##SBATCH --constraint=intel
 #SBATCH -J movie 
 #SBATCH -n 8 
@@ -20,5 +20,5 @@ module load parallel
 
 ulimit -c unlimited
 
-seq 0 20 | parallel -j ${SLURM_NTASKS} python3 make_movie_CGM.py {}
+seq 0 25 | parallel -j ${SLURM_NTASKS} python3 make_movie_CGM.py {}
 
