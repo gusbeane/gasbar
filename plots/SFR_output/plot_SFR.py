@@ -35,6 +35,7 @@ if __name__ == '__main__':
     wet = 'fid-wet'
     fid = 'fid'
     fid_rdisk = 'fid-disp1.0-resetDisk'
+    fid_da = 'fid-disp1.0-fg0.1-diskAcc'
 
     fid_g1 = 'fid-disp1.0-fg0.1'
     fid_g2 = 'fid-disp1.0-fg0.2'
@@ -66,4 +67,7 @@ if __name__ == '__main__':
     
     pair_list = [(fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-fg-g5.pdf', ylim=ylim)
+
+    pair_list = [(fid_g1, 'lvl5'), (fid_da, 'lvl5')]
+    plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-da-l5.pdf', ylim=ylim)
 
