@@ -19,10 +19,12 @@ def plot_gas_fraction(pair_list, c_list, ls_list, fout, output_dir='data/',
         time = dat[:,0]
         gas_fraction_disk = dat[:,1]
         gas_fraction_R0 = dat[:,2]
+        gas_fraction_Rcenter = dat[:,3]
 
         l = ax.plot(time, gas_fraction_disk, label=name)
         c = l[0].get_color()
         ax.plot(time, gas_fraction_R0, ls='dashed', c=c)
+        ax.plot(time, gas_fraction_Rcenter, ls='dashdot', c=c)
 
         if np.max(time) > max_time:
             max_time = np.max(time)
@@ -55,31 +57,43 @@ if __name__ == '__main__':
     fid_g4 = 'fid-disp1.0-fg0.4'
     fid_g5 = 'fid-disp1.0-fg0.5'
     
+    fid_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
+    fid_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
+    
     c_list = [None, None, None, None, None]
     ls_list = [None, None, None, None, None]
     ylim = [0, None]
 
-    pair_list = [(fid_g1, 'lvl5'), (fid_g2, 'lvl5'), (fid_g3, 'lvl5'), (fid_g5, 'lvl5')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-lvl5.pdf', ylim=ylim)
+    #pair_list = [(fid_g1, 'lvl5'), (fid_g2, 'lvl5'), (fid_g3, 'lvl5'), (fid_g5, 'lvl5')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-lvl5.pdf', ylim=ylim)
     
-    pair_list = [(fid_g1, 'lvl4'), (fid_g2, 'lvl4'), (fid_g3, 'lvl4'), (fid_g5, 'lvl4')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-lvl4.pdf', ylim=ylim)
+    #pair_list = [(fid_g1, 'lvl4'), (fid_g2, 'lvl4'), (fid_g3, 'lvl4'), (fid_g5, 'lvl4')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-lvl4.pdf', ylim=ylim)
 
-    pair_list = [(fid_g1, 'lvl3'), (fid_g2, 'lvl3'), (fid_g3, 'lvl3')]#, (fid_g5, 'lvl4')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-lvl3.pdf', ylim=ylim)
+    #pair_list = [(fid_g1, 'lvl3'), (fid_g2, 'lvl3'), (fid_g3, 'lvl3')]#, (fid_g5, 'lvl4')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-lvl3.pdf', ylim=ylim)
     
-    pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g1.pdf', ylim=ylim)
+    #pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g1.pdf', ylim=ylim)
     
-    pair_list = [(fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g2.pdf', ylim=ylim)
+    #pair_list = [(fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g2.pdf', ylim=ylim)
     
-    pair_list = [(fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g3.pdf', ylim=ylim)
+    #pair_list = [(fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g3.pdf', ylim=ylim)
     
-    pair_list = [(fid_g4, 'lvl5'), (fid_g4, 'lvl4')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g4.pdf', ylim=ylim)
+    #pair_list = [(fid_g4, 'lvl5'), (fid_g4, 'lvl4')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g4.pdf', ylim=ylim)
     
-    pair_list = [(fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
-    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g5.pdf', ylim=ylim)
+    #pair_list = [(fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
+    #plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-fg-g5.pdf', ylim=ylim)
+    
+    pair_list = [(fid_g1, 'lvl5'), (fid_da, 'lvl5'), (fid_da_am, 'lvl5')]
+    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-da-l5.pdf', ylim=ylim)
+    
+    pair_list = [(fid_g1, 'lvl4'), (fid_da, 'lvl4'), (fid_da_am, 'lvl4')]
+    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-da-l4.pdf', ylim=ylim)
+    
+
+
 
