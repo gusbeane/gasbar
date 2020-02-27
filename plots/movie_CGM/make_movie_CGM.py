@@ -156,6 +156,8 @@ if __name__ == '__main__':
     fid_g3 = 'fid-disp1.0-fg0.3'
     fid_g4 = 'fid-disp1.0-fg0.4'
     fid_g5 = 'fid-disp1.0-fg0.5'
+    fid_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
+    fid_da_dm = 'fid-disp1.0-fg0.1-diskAcc-decAngMom'
 
     fid_d7_g3 = 'fid-disp0.7-fg0.3'
     fid_d5_g3 = 'fid-disp0.5-fg0.3'
@@ -169,7 +171,9 @@ if __name__ == '__main__':
                  (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
                  (fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
                  (fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
-                 (fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4')]
+                 (fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
+                 (fid_da, 'lvl5'), (fid_da, 'lvl4'),
+                 (fid_da_dm, 'lvl5'), (fid_da_dm, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
