@@ -8,7 +8,7 @@ from joblib import Parallel, delayed
 
 def compute_gas_fraction(path, name, skip=10, output_dir='data/',
                          Rmax=20, zmax=3, 
-                         R0=8.2, dR=1.0,
+                         R0=8.2, dR=1.0, Rcenter=6.0,
                          gas_ptype=0, star_ptype=(2,3,4),
                          center = np.array([200, 200, 200])):
     # try loading snapshot
@@ -28,8 +28,13 @@ def compute_gas_fraction(path, name, skip=10, output_dir='data/',
         star_mass = get_mass_in_ptype(sn, star_ptype, R0-dR/2., R0+dR/2., 0., zmax, center)
 
         gas_fraction_R0 = gas_mass/(gas_mass + star_mass)
+        
+        gas_mass = get_mass_in_ptype(sn, gas_ptype, 0., Rcenter, 0., zmax, center)
+        star_mass = get_mass_in_ptype(sn, star_ptype, 0., Rcenter, 0., zmax, center)
 
-        out.append([time, gas_fraction_disk, gas_fraction_R0])
+        gas_fraction_Rcenter = gas_mass/(gas_mass + star_mass)
+
+        out.append([time, gas_fraction_disk, gas_fraction_R0, gas_fraction_Rcenter])
 
     pickle.dump(np.array(out), open(output_dir+'gas-fraction_'+name+'.p', 'wb'))
 
@@ -74,6 +79,9 @@ if __name__ == '__main__':
     fid_g3 = 'fid-disp1.0-fg0.3'
     fid_g4 = 'fid-disp1.0-fg0.4'
     fid_g5 = 'fid-disp1.0-fg0.5'
+
+    fid_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
+    fid_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
     
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
@@ -81,11 +89,13 @@ if __name__ == '__main__':
         pair_list = [(fid_g1, 'lvl5'), (fid_g2, 'lvl5')]
     else:
         nproc=16
-        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
-                     (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
-                     (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
-                     (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
-                     (fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
+        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), #(fid_g1, 'lvl3'),
+                     #(fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
+                     #(fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
+                     #(fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
+                     #(fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
+                     (fid_da, 'lvl5'), (fid_da, 'lvl4'),
+                     (fid_da_am, 'lvl5'), (fid_da_am, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
