@@ -190,6 +190,8 @@ if __name__ == '__main__':
     fid_g1_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
     fid_g1_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
 
+    fid_g1_corona = 'fid-disp1.0-fg0.1-corona'
+
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
         pair_list = [(fid_g1, 'lvl5')]
@@ -199,11 +201,12 @@ if __name__ == '__main__':
                      (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                      (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                      (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
-                     (fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
-                     (fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
-                     (fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
-                     (fid_g1_da, 'lvl5'), (fid_g1_da, 'lvl4'),
-                     (fid_g1_da_am, 'lvl5'), (fid_g1_da_am, 'lvl4')]
+                     (fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4')]
+                     #(fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
+                     #(fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
+                     #(fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
+                     #(fid_g1_da, 'lvl5'), (fid_g1_da, 'lvl4'),
+                     #(fid_g1_da_am, 'lvl5'), (fid_g1_da_am, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
