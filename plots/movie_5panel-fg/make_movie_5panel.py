@@ -191,6 +191,14 @@ if __name__ == '__main__':
     fid_g1_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
 
     fid_g1_corona = 'fid-disp1.0-fg0.1-corona'
+    fid_g1_coronaRot = 'fid-disp1.0-fg0.1-coronaRot'
+    fid_g1_coronaMat = 'fid-disp1.0-fg0.1-corona-Matthew'
+    fid_g1_coronaMat4 = 'fid-disp1.0-fg0.1-corona-Matthew-MHG0.004'
+    
+    fid_g1_fixed1kpc = 'fid-disp1.0-fixedDisk-core1kpc'
+    fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
+    fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
+    fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc'
 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
@@ -201,7 +209,15 @@ if __name__ == '__main__':
                      (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                      (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                      (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
-                     (fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4')]
+                     (fid_g1_fixed1kpc, 'lvl5'), (fid_g1_fixed1kpc, 'lvl4'),
+                     (fid_g1_fixed2kpc, 'lvl5'), (fid_g1_fixed2kpc, 'lvl4'),
+                     (fid_g1_fixed3kpc, 'lvl5'), (fid_g1_fixed3kpc, 'lvl4'),
+                     (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4')]
+                             
+                     #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
+                     #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
+                     #(fid_g1_coronaMat, 'lvl5'), (fid_g1_coronaMat, 'lvl4'),
+                     #(fid_g1_coronaMat4, 'lvl5'), (fid_g1_coronaMat4, 'lvl4')]
                      #(fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
                      #(fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
                      #(fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
