@@ -144,6 +144,24 @@ def concat_files(outs, indices, fout):
 
     return None
 
+def run(path, name, nsnap):
+    fout = 'data/fourier_' + name + '.hdf5'
+
+    # dont remake something already made
+    if os.path.exists(fout):
+        return None
+
+    if 'Nbody' in name:
+        center = None
+    else:
+        center = np.array([200, 200, 200])
+
+    indices = np.arange(nsnap)
+    outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx), center=center) for idx in tqdm(indices))
+
+    concat_files(outs, indices, fout)
+    
+
 if __name__ == '__main__':
     nproc = int(sys.argv[1])
 
@@ -173,10 +191,10 @@ if __name__ == '__main__':
         pair_list = [(fid_g1, 'lvl5')]
     else:
         pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
-                     (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
-                     (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
-                     (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
-                     (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
+                     #(fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
+                     #(fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
+                     #(fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
+                     #(fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
                      (fid_g1_fixed1kpc, 'lvl5'), (fid_g1_fixed1kpc, 'lvl4'),
                      (fid_g1_fixed2kpc, 'lvl5'), (fid_g1_fixed2kpc, 'lvl4'),
                      (fid_g1_fixed3kpc, 'lvl5'), (fid_g1_fixed3kpc, 'lvl4'),
@@ -197,19 +215,13 @@ if __name__ == '__main__':
                                             
     nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
 
-    for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
-        fout = 'data/fourier_' + name + '.hdf5'
+    if len(sys.argv) == 3:
+        i = int(sys.argv[2])
+        path = path_list[i]
+        name = name_list[i]
+        nsnap = nsnap_list[i]
 
-        # dont remake something already made
-        if os.path.exists(fout):
-            continue
-
-        if 'Nbody' in name:
-            center = None
-        else:
-            center = np.array([200, 200, 200])
-
-        indices = np.arange(nsnap)
-        outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx), center=center) for idx in tqdm(indices))
-
-        concat_files(outs, indices, 'data/fourier_' + name + '.hdf5')
+        run(path, name, nsnap)
+    else:
+        for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
+            run(path, name, nsnap)
