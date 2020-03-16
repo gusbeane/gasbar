@@ -164,6 +164,9 @@ if __name__ == '__main__':
     fid_g3_nB = 'fid-disp1.0-fg0.3-noBulge'
 
     fid_g1_corona = 'fid-disp1.0-fg0.1-corona'
+    fid_g1_coronaRot = 'fid-disp1.0-fg0.1-coronaRot'
+    fid_g1_coronaMat = 'fid-disp1.0-fg0.1-corona-Matthew'
+    fid_g1_coronaMat4 = 'fid-disp1.0-fg0.1-corona-Matthew-MHG0.004'
    
     # look to see if we are on my macbook or on the cluster
     pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
@@ -171,7 +174,10 @@ if __name__ == '__main__':
                  (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                  (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                  (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
-                 (fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4')]
+                 (fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
+                 (fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
+                 (fid_g1_coronaMat, 'lvl5'), (fid_g1_coronaMat, 'lvl4'),
+                 (fid_g1_coronaMat4, 'lvl5'), (fid_g1_coronaMat4, 'lvl4')]
                  #(fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
                  #(fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
                  #(fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
