@@ -44,7 +44,7 @@ def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True, amplitu
 def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False, center=None):
     # try loading snapshot
     try:
-        sn = arepo.Snapshot(path+'output/', snapnum, combineFiles=True)
+        sn = arepo.Snapshot(path+'/output/', snapnum, combineFiles=True)
     except:
         print("unable to load path:"+path, " snapnum: ", snapnum)
         return None
@@ -145,57 +145,57 @@ def concat_files(outs, indices, fout):
     return None
 
 if __name__ == '__main__':
+    nproc = int(sys.argv[1])
 
     basepath = '../../runs/'
 
-    nbody = 'fid-Nbody/'
-    nbody2 = 'fid-Nbody-disp2.0/'
-    nbody25 = 'fid-Nbody-disp2.5/'
-    wet = 'fid-wet/'
-    fid = 'fid/'
-    fid_fd = 'fid-disp1.0-fixedDisk/'
-    wet_fd = 'fid-wet-disp1.0-fixedDisk/'
-
-
-    nproc = int(sys.argv[1])
+    fid_g1 = 'fid-disp1.0-fg0.1'
+    fid_g2 = 'fid-disp1.0-fg0.2'
+    fid_g3 = 'fid-disp1.0-fg0.3'
+    fid_g4 = 'fid-disp1.0-fg0.4'
+    fid_g5 = 'fid-disp1.0-fg0.5'    
+    fid_d7_g3 = 'fid-disp0.7-fg0.3'
+    fid_d5_g3 = 'fid-disp0.5-fg0.3'
+    fid_g3_nB = 'fid-disp1.0-fg0.3-noBulge' 
+    fid_g1_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
+    fid_g1_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom' 
+    fid_g1_corona = 'fid-disp1.0-fg0.1-corona'
+    fid_g1_coronaRot = 'fid-disp1.0-fg0.1-coronaRot'
+    fid_g1_coronaMat = 'fid-disp1.0-fg0.1-corona-Matthew'
+    fid_g1_coronaMat4 = 'fid-disp1.0-fg0.1-corona-Matthew-MHG0.004'
     
+    fid_g1_fixed1kpc = 'fid-disp1.0-fixedDisk-core1kpc'
+    fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
+    fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
+    fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc' 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
-        path_list = [basepath + nbody + 'lvl5/']
-        name_list = ['nbody-lvl5']
-        final_frame_list = [20]
+        pair_list = [(fid_g1, 'lvl5')]
     else:
-        path_list = [basepath + f for f in [fid + 'lvl5/',
-                                            fid + 'lvl4/',
-                                            fid + 'lvl3/',
-                                            fid_fd + 'lvl5/',
-                                            fid_fd + 'lvl4/',
-                                            nbody + 'lvl5/',
-                                            nbody + 'lvl4/',
-                                            nbody + 'lvl3/',
-                                            wet + 'lvl5/',
-                                            wet + 'lvl4/',
-                                            wet + 'lvl3/',
-                                            wet_fd + 'lvl5/',
-                                            wet_fd + 'lvl4/',
-                                            nbody25 + 'lvl5/',
-                                            nbody25 + 'lvl4/',
-                                            nbody25 + 'lvl3/']]
-        name_list = ['fid-lvl5', 'fid-lvl4', 'fid-lvl3',
-                     'fid-disp1.0-fixedDisk-lvl5', 'fid-disp1.0-fixedDisk-lvl4',
-                     'nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3',
-                     'wet-lvl5', 'wet-lvl4', 'wet-lvl3',
-                     'fid-wet-disp1.0-fixedDisk-lvl5', 'fid-wet-disp1.0-fixedDisk-lvl4',
-                     'nbody25-lvl5', 'nbody25-lvl4', 'nbody25-lvl3']
-
-        if len(sys.argv) > 2:
-            path_list = [basepath + nbody + 'lvl2/',
-                         basepath + wet + 'lvl2/',
-                         basepath + nbody25 + 'lvl2/']
-            name_list = ['nbody-lvl2', 'wet-lvl2', 'nbody25-lvl2']
-   
+        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
+                     (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
+                     (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
+                     (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
+                     (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
+                     (fid_g1_fixed1kpc, 'lvl5'), (fid_g1_fixed1kpc, 'lvl4'),
+                     (fid_g1_fixed2kpc, 'lvl5'), (fid_g1_fixed2kpc, 'lvl4'),
+                     (fid_g1_fixed3kpc, 'lvl5'), (fid_g1_fixed3kpc, 'lvl4'),
+                     (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4')]
+                             
+                     #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
+                     #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
+                     #(fid_g1_coronaMat, 'lvl5'), (fid_g1_coronaMat, 'lvl4'),
+                     #(fid_g1_coronaMat4, 'lvl5'), (fid_g1_coronaMat4, 'lvl4')]
+                     #(fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
+                     #(fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
+                     #(fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
+                     #(fid_g1_da, 'lvl5'), (fid_g1_da, 'lvl4'),
+                     #(fid_g1_da_am, 'lvl5'), (fid_g1_da_am, 'lvl4')]
+    
+    name_list = [           p[0] + '-' + p[1] for p in pair_list]
+    path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
+                                            
     nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
-    print(name_list)
 
     for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
         fout = 'data/fourier_' + name + '.hdf5'
@@ -204,13 +204,12 @@ if __name__ == '__main__':
         if os.path.exists(fout):
             continue
 
-        if 'wet' in name or 'fid' in name:
-            center = np.array([200, 200, 200])
-        else:
+        if 'Nbody' in name:
             center = None
+        else:
+            center = np.array([200, 200, 200])
 
         indices = np.arange(nsnap)
         outs = Parallel(n_jobs=nproc) (delayed(compute_fourier_component)(path, int(idx), center=center) for idx in tqdm(indices))
 
         concat_files(outs, indices, 'data/fourier_' + name + '.hdf5')
-
