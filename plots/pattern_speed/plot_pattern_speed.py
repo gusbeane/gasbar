@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import pickle
 
-def plot_pattern_speed(name_list, c_list, ls_list, fout, n=5):
+def plot_pattern_speed(name_list, c_list, ls_list, fout, n=5, vline=None):
     fig, ax = plt.subplots(1, 1)
 
     for name, c, ls in zip(name_list, c_list, ls_list):
@@ -17,6 +17,9 @@ def plot_pattern_speed(name_list, c_list, ls_list, fout, n=5):
         c = t[0].get_color()
         ax.scatter(time, true_ps, c=c, s=0.2)
 
+    if vline is not None:
+        ax.axvline(vline, c='k', alpha=0.5, ls='dashed')
+
     ax.set_xlabel('time [Myr]')
     ax.set_ylabel('pattern speed [km/s/kpc]')
     ax.legend(frameon=False)
@@ -27,15 +30,17 @@ def plot_pattern_speed(name_list, c_list, ls_list, fout, n=5):
     fig.savefig(fout)
 
 if __name__ == '__main__':
+    nbody = 'nbody'
     fid_g1 = 'fid-disp1.0-fg0.1'
+    fid_wet_fixed = 'fid-wet-disp1.0-fixedDisk'
     fid_g1_fixed1kpc = 'fid-disp1.0-fixedDisk-core1kpc'
     fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
     fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
     fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc' 
 
     name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3']
-    c_list = [None, None, None, None, None]
-    ls_list = [None, None, None, None, None]
+    c_list = [None, None, None, None, None, None]
+    ls_list = [None, None, None, None, None, None]
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_nbody.pdf')
 
     # name_list = ['wet-lvl5', 'wet-lvl4', 'wet-lvl3']
@@ -59,11 +64,13 @@ if __name__ == '__main__':
     # name_list = ['nbody-lvl4', 'fid-disp1.0-fixedDisk-lvl4']
     # plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl4.pdf')
 
-    name_list = [fid_g1+'-lvl5', fid_g1_fixed1kpc+'-lvl5', fid_g1_fixed2kpc+'-lvl5', fid_g1_fixed3kpc+'-lvl5',
-                 fid_g1_fixed4kpc+'-lvl5']
-    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl5.pdf')
+    name_list = [nbody+'-lvl5', fid_wet_fixed+'-lvl5', fid_g1_fixed1kpc+'-lvl5', 
+                 fid_g1_fixed2kpc+'-lvl5', fid_g1_fixed3kpc+'-lvl5', fid_g1_fixed4kpc+'-lvl5']
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl5.pdf', vline=1.5352*1000)
 
-    name_list = [fid_g1+'-lvl4', fid_g1_fixed1kpc+'-lvl4', fid_g1_fixed2kpc+'-lvl4', fid_g1_fixed3kpc+'-lvl4',
+    name_list = [nbody+'-lvl4', fid_wet_fixed+'-lvl4', fid_g1_fixed1kpc+'-lvl4', 
+                 #fid_g1_fixed2kpc+'-lvl4', 
+                 fid_g1_fixed3kpc+'-lvl4', 
                  fid_g1_fixed4kpc+'-lvl4']
-    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl4.pdf')
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl4.pdf', vline=1.5352*1000)
 
