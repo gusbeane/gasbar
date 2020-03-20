@@ -37,6 +37,8 @@ if __name__ == '__main__':
     fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
     fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
     fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc' 
+    fid_g1_fixed5kpc = 'fid-disp1.0-fixedDisk-core5kpc' 
+    fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc' 
 
     name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3']
     c_list = [None, None, None, None, None, None]
@@ -68,9 +70,11 @@ if __name__ == '__main__':
                  fid_g1_fixed2kpc+'-lvl5', fid_g1_fixed3kpc+'-lvl5', fid_g1_fixed4kpc+'-lvl5']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl5.pdf', vline=1.5352*1000)
 
-    name_list = [nbody+'-lvl4', fid_wet_fixed+'-lvl4', fid_g1_fixed1kpc+'-lvl4', 
-                 #fid_g1_fixed2kpc+'-lvl4', 
-                 fid_g1_fixed3kpc+'-lvl4', 
-                 fid_g1_fixed4kpc+'-lvl4']
+    name_list = [nbody+'-lvl4', fid_wet_fixed+'-lvl4', #fid_g1_fixed1kpc+'-lvl4', 
+                 fid_g1_fixed2kpc+'-lvl4', 
+                 #fid_g1_fixed3kpc+'-lvl4', 
+                 fid_g1_fixed4kpc+'-lvl4',
+                 fid_g1_fixed5kpc+'-lvl4',
+                 fid_g1_fixed6kpc+'-lvl4']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl4.pdf', vline=1.5352*1000)
 
