@@ -186,6 +186,8 @@ if __name__ == '__main__':
     fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
     fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
     fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc' 
+    fid_g1_fixed5kpc = 'fid-disp1.0-fixedDisk-core5kpc' 
+    fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc' 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
         pair_list = [(fid_g1, 'lvl5')]
@@ -198,7 +200,9 @@ if __name__ == '__main__':
                      (fid_g1_fixed1kpc, 'lvl5'), (fid_g1_fixed1kpc, 'lvl4'),
                      (fid_g1_fixed2kpc, 'lvl5'), (fid_g1_fixed2kpc, 'lvl4'),
                      (fid_g1_fixed3kpc, 'lvl5'), (fid_g1_fixed3kpc, 'lvl4'),
-                     (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4')]
+                     (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4'),
+                     (fid_g1_fixed5kpc, 'lvl5'), (fid_g1_fixed5kpc, 'lvl4'),
+                     (fid_g1_fixed6kpc, 'lvl5'), (fid_g1_fixed6kpc, 'lvl4')]
                              
                      #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
                      #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
