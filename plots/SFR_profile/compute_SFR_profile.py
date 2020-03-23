@@ -49,8 +49,10 @@ if __name__ == '__main__':
 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
+        snapnum_list = [10, 50, 100]#, 100, 150, 200, 300, 400, 500, 600]
         pair_list = [(fid_g1, 'lvl5')]
     else:
+        snapnum_list = [10, 50, 100, 100, 150, 200, 300, 400, 500, 600]
         pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
@@ -72,7 +74,6 @@ if __name__ == '__main__':
 
     
     # snapnum_list = [10, 50, 100, 150, 200, 300, 400, 500, 600]
-    snapnum_list = [10, 50, 100]#, 100, 150, 200, 300, 400, 500, 600]
 
     for path, name in zip(tqdm(path_list), name_list):
         for snapnum in snapnum_list:
