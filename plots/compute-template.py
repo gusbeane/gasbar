@@ -14,20 +14,33 @@ if __name__ == '__main__':
 
     basepath = '../../runs/'
 
-    nbody = 'fid-Nbody/'
-    wet = 'fid-wet/'
-    fid = 'fid/'
-    
+    fid_g1 = 'fid-disp1.0-fg0.1'
+
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
-        path_list = [basepath + nbody + 'lvl5/']
-        name_list = ['nbody-lvl5']
+        pair_list = [(fid_g1, 'lvl5')]
     else:
-        lvl_list = [5, 4, 3, 2]
-        path_list = [basepath + nbody + 'lvl' + str(i) + '/' for i in lvl_list]
-        name_list = ['nbody-lvl' + str(i) for i in lvl_list]
+        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
+
+    name_list = [           p[0] + '-' + p[1] for p in pair_list]
+    path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
+                                            
+    nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
+
+    # if len(sys.argv) == 3:
+    #     i = int(sys.argv[2])
+    #     path = path_list[i]
+    #     name = name_list[i]
+    #     nsnap = nsnap_list[i]
+
+    #     run(path, name, nsnap)
+    # else:
+    #     for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
+    #         run(path, name, nsnap)
+
+
     
-    snapnum_list = [0, 100, 200, 300, 400, 500, 600]
+    snapnum_list = [10, 50, 100, 150, 200, 300, 400, 500, 600]
 
     for path, name in zip(tqdm(path_list), name_list):
         for snapnum in snapnum_list:
