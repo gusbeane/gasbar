@@ -19,7 +19,7 @@ def my_bin(X, Xbins, Y, func=np.mean):
     return np.array(X_avg), np.array(Y_func)
 
 def compute_SFR_profile(path, snapnum, name, output_dir='data/', center=[200, 200, 200],
-                        Rmin=0.1, Rmax=20, nbins=10):
+                        Rmin=0.1, Rmax=20, nbins=20):
     # try loading snapshot
     sn = arepo.Snapshot(path+'/output/', snapnum, combineFiles=True)
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         pair_list = [(fid_g1, 'lvl5')]
     else:
         snapnum_list = [10, 50, 100, 100, 150, 200, 300, 400, 500, 600]
-        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
+        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4')]#, (fid_g1, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
