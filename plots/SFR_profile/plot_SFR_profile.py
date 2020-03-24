@@ -33,4 +33,8 @@ if __name__ == '__main__':
     c_list = [None, None, None, None, None, None]
     ls_list = [None, None, None, None, None, None]
     plot_SFR_profile(name_list, c_list, ls_list, 'SFR_fid_lvl5.pdf')
+    
+    name_list = [fid_g1+'-lvl5'+'_snap10', fid_g1+'-lvl5'+'_snap100', fid_g1+'-lvl4'+'_snap200', fid_g1+'-lvl4'+'_snap300',
+                 fid_g1+'-lvl4'+'_snap500']
+    plot_SFR_profile(name_list, c_list, ls_list, 'SFR_fid_lvl4.pdf')
 
