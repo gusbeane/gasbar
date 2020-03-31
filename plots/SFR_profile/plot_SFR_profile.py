@@ -8,7 +8,7 @@ def plot_SFR_profile(name_list, c_list, ls_list, fout, n=5):
     for name, c, ls in zip(name_list, c_list, ls_list):
         fdata = 'data/SFR_profile_' + name + '.p'
         R, sfr = pickle.load(open(fdata, 'rb'))
-        ax.plot(R, sfr*1E6, c=c, ls=ls, label=name) #  1E6 makes it /pc^2
+        ax.plot(R, sfr, c=c, ls=ls, label=name) #  1E6 makes it /pc^2
 
     ax.set_xlabel('R [kpc]')
     ax.set_ylabel('SFR density [Msun/yr/pc^2]')
@@ -29,10 +29,11 @@ if __name__ == '__main__':
     # fid_g1_fixed5kpc = 'fid-disp1.0-fixedDisk-core5kpc' 
     # fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc' 
 
-    name_list = [fid_g1+'-lvl5'+'_snap10', fid_g1+'-lvl5'+'_snap50', fid_g1+'-lvl5'+'_snap100']
+    name_list = [fid_g1+'-lvl4'+'_snap10', fid_g1+'-lvl4'+'_snap50', fid_g1+'-lvl4'+'_snap100',
+                 fid_g1+'-lvl4'+'_snap150', fid_g1+'-lvl4'+'_snap200']
     c_list = [None, None, None, None, None, None]
     ls_list = [None, None, None, None, None, None]
-    plot_SFR_profile(name_list, c_list, ls_list, 'SFR_fid_lvl5.pdf')
+    plot_SFR_profile(name_list, c_list, ls_list, 'SFR_fid_lvl4_firstGyr.pdf')
     
     name_list = [fid_g1+'-lvl5'+'_snap10', fid_g1+'-lvl5'+'_snap100', fid_g1+'-lvl4'+'_snap200', fid_g1+'-lvl4'+'_snap300',
                  fid_g1+'-lvl4'+'_snap500']
