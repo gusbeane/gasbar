@@ -203,6 +203,7 @@ if __name__ == '__main__':
     fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc'
 
     fid_g1_mD = 'fid-disp1.0-fg0.1-mixedDisk'
+    fid_g1_dS = 'fid-disp1.0-fg0.1-diskAGB'
 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
@@ -219,7 +220,8 @@ if __name__ == '__main__':
                      (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4'),
                      (fid_g1_fixed5kpc, 'lvl5'), (fid_g1_fixed5kpc, 'lvl4'),
                      (fid_g1_fixed6kpc, 'lvl5'), (fid_g1_fixed6kpc, 'lvl4'),
-                     (fid_g1_mD, 'lvl5'), (fid_g1_mD, 'lvl4')]
+                     (fid_g1_mD, 'lvl5'), (fid_g1_mD, 'lvl4'),
+                     (fid_g1_dS, 'lvl5'), (fid_g1_dS, 'lvl4')]
                              
                      #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
                      #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
