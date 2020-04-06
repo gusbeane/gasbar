@@ -78,9 +78,9 @@ if __name__ == '__main__':
     pair_list = [(fid_g1, 'lvl4'), (fid_cM, 'lvl4')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-cM-l4.pdf', ylim=ylim)
 
-    pair_list = [(fid_g1_dS, 'lvl5'), (fid_g1_dS, 'lvl5')]
+    pair_list = [(fid_g1_dS, 'lvl5'), (fid_g1, 'lvl5')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-dS-l5.pdf', ylim=ylim)
     
-    pair_list = [(fid_g1_dS, 'lvl4'), (fid_g1_dS, 'lvl4')]
+    pair_list = [(fid_g1_dS, 'lvl4'), (fid_g1, 'lvl4')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-dS-l4.pdf', ylim=ylim)
 
