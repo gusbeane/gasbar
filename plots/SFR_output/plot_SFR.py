@@ -20,7 +20,7 @@ def plot_SFR(pair_list, c_list, ls_list, fout, n=5, ylim=[None, None], basepath 
 
         time = time - time[0]
 
-        ax.plot(time[::10], sfr[::10], label=name)
+        ax.plot(time[::20], sfr[::20], label=name)
 
     ax.set_xlabel('t [Myr]')
     ax.set_ylabel('SFR [Msun/yr]')
