@@ -49,6 +49,7 @@ if __name__ == '__main__':
     
     fid_g1_dS = 'fid-disp1.0-fg0.1-diskAGB'
     fid_g1_dS_out = 'fid-disp1.0-fg0.1-diskAGB-outer'
+    fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0'
 
     c_list = [None, None, None]
     ls_list = [None, None, None]
@@ -81,9 +82,9 @@ if __name__ == '__main__':
     pair_list = [(fid_g1, 'lvl4'), (fid_cM, 'lvl4')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-cM-l4.pdf', ylim=ylim)
 
-    pair_list = [(fid_g1_dS, 'lvl5'), (fid_g1_dS_out, 'lvl5'), (fid_g1, 'lvl5')]
+    pair_list = [(fid_g1_dS, 'lvl5'), (fid_g1_dS_out, 'lvl5'), (fid_g1_dS_out_delay, 'lvl5'), (fid_g1, 'lvl5')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-dS-l5.pdf', ylim=ylim)
     
-    pair_list = [(fid_g1_dS, 'lvl4'), (fid_g1_dS_out, 'lvl4'), (fid_g1, 'lvl4')]
+    pair_list = [(fid_g1_dS, 'lvl4'), (fid_g1_dS_out, 'lvl4'), (fid_g1_dS_out_delay, 'lvl5'), (fid_g1, 'lvl4')]
     plot_SFR(pair_list, c_list, ls_list, 'SFR_fid-dS-l4.pdf', ylim=ylim)
 
