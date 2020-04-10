@@ -51,8 +51,8 @@ if __name__ == '__main__':
     fid_g1_dS_out = 'fid-disp1.0-fg0.1-diskAGB-outer'
     fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0'
 
-    c_list = [None, None, None]
-    ls_list = [None, None, None]
+    c_list = [None, None, None, None, None, None, None, None]
+    ls_list = [None, None, None, None, None, None, None, None]
     ylim = [0.1, None]
 
     # pair_list = [(fid_g1, 'lvl5'), (fid_g2, 'lvl5'), (fid_g3, 'lvl5'), (fid_g5, 'lvl5')]
