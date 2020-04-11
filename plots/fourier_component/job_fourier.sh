@@ -1,6 +1,6 @@
 #!/bin/sh
-#SBATCH -p conroy
-#SBATCH --constraint=intel
+#SBATCH -p shared
+##SBATCH --constraint=intel
 #SBATCH -J fourier 
 #SBATCH -n 22 
 #SBATCH -N 1
