@@ -12,10 +12,10 @@ def plot_pattern_speed(name_list, c_list, ls_list, fout, n=5, vline=None):
         time = dat['time']
         ba, ps = dat['poly_eval'][n]
         true_ps = dat['pattern_speed']
-        t = ax.plot(time, ps, c=c, ls=ls, label=name)
+        t = ax.plot(time-time[0], ps, c=c, ls=ls, label=name)
 
         c = t[0].get_color()
-        ax.scatter(time, true_ps, c=c, s=0.2)
+        ax.scatter(time-time[0], true_ps, c=c, s=0.2)
 
     if vline is not None:
         ax.axvline(vline, c='k', alpha=0.5, ls='dashed')
@@ -39,6 +39,7 @@ if __name__ == '__main__':
     fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc' 
     fid_g1_fixed5kpc = 'fid-disp1.0-fixedDisk-core5kpc' 
     fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc' 
+    fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0'
 
     name_list = ['nbody-lvl5', 'nbody-lvl4', 'nbody-lvl3']
     c_list = [None, None, None, None, None, None]
@@ -77,4 +78,7 @@ if __name__ == '__main__':
                  fid_g1_fixed5kpc+'-lvl4',
                  fid_g1_fixed6kpc+'-lvl4']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_fixedDisk_lvl4.pdf', vline=1.5352*1000)
+
+    name_list = [nbody+'-lvl4', fid_g1+'-lvl4', fid_g1_dS_out_delay+'-lvl4']
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_AGBdelay_lvl4.pdf')
 
