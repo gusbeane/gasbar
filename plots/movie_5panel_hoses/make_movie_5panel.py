@@ -175,7 +175,11 @@ def make_movie(fout, sim, nsnap):
     animation.save(fout)
     
 if __name__ == '__main__':
-    basepath = '../../runs/'
+    def basepath(s):
+        if 'hose' in s:
+            return '../../runs/hose_runs/'
+        else:
+            return '../../runs/'
 
     fid_g1 = 'fid-disp1.0-fg0.1'
 
@@ -222,7 +226,7 @@ if __name__ == '__main__':
 
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
-    path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
+    path_list = [basepath(p[0]) + p[0] + '/' + p[1] for p in pair_list]
                                             
     nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
     fout_list = ['movies/movie_'+n+'.mp4' for n in name_list]
