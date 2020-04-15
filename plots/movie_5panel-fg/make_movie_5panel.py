@@ -225,7 +225,7 @@ if __name__ == '__main__':
                      (fid_g1_mD, 'lvl5'), (fid_g1_mD, 'lvl4'),
                      (fid_g1_dS, 'lvl5'), (fid_g1_dS, 'lvl4'),
                      (fid_g1_dS_out, 'lvl5'), (fid_g1_dS_out, 'lvl4'),
-                     (fid_g1_dS_out_delay, 'lvl5'), (fid_g1_dS_out_delay, 'lvl4')]
+                     (fid_g1_dS_out_delay, 'lvl5'), (fid_g1_dS_out_delay, 'lvl4'), (fid_g1_dS_out_delay, 'lvl3')]
                              
                      #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
                      #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
