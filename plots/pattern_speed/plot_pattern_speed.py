@@ -81,4 +81,7 @@ if __name__ == '__main__':
 
     name_list = [nbody+'-lvl4', fid_g1+'-lvl4', fid_g1_dS_out_delay+'-lvl4']
     plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_AGBdelay_lvl4.pdf')
+    
+    name_list = [nbody+'-lvl3', fid_g1_dS_out_delay+'-lvl3']
+    plot_pattern_speed(name_list, c_list, ls_list, 'pattern_speed_AGBdelay_lvl3.pdf')
 
