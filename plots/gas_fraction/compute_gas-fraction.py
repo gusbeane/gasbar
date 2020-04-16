@@ -6,7 +6,7 @@ import glob
 import pickle
 from joblib import Parallel, delayed
 
-def compute_gas_fraction(path, name, skip=10, output_dir='data/',
+def compute_gas_fraction(path, name, skip=50, output_dir='data/',
                          Rmax=20, zmax=3, 
                          R0=8.2, dR=1.0, Rcenter=6.0,
                          gas_ptype=0, star_ptype=(2,3,4),
@@ -15,7 +15,7 @@ def compute_gas_fraction(path, name, skip=10, output_dir='data/',
     nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
 
     out = []
-    for snapnum in np.arange(nsnap)[::skip]:
+    for snapnum in tqdm(np.arange(nsnap)[::skip]):
         sn = arepo.Snapshot(path+'/output/', snapnum, combineFiles=True)
         time = sn.header.time.as_unit(3.1536E13 * arepo.u.second).value # in Myr
 
@@ -82,23 +82,26 @@ if __name__ == '__main__':
 
     fid_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
     fid_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
-    
+
+    fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0'
+
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
         nproc=2
         pair_list = [(fid_g1, 'lvl5'), (fid_g2, 'lvl5')]
     else:
         nproc=16
-        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), #(fid_g1, 'lvl3'),
+        pair_list = [#(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), #(fid_g1, 'lvl3'),
                      #(fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
                      #(fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
                      #(fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
                      #(fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
-                     (fid_da, 'lvl5'), (fid_da, 'lvl4'),
-                     (fid_da_am, 'lvl5'), (fid_da_am, 'lvl4')]
+                     #(fid_da, 'lvl5'), (fid_da, 'lvl4'),
+                     #(fid_da_am, 'lvl5'), (fid_da_am, 'lvl4'),
+                     (fid_g1_dS_out_delay, 'lvl5'), (fid_g1_dS_out_delay, 'lvl4')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
     
     Parallel(n_jobs=nproc) (delayed(compute_gas_fraction)(path, name) 
-                            for path,name in zip(tqdm(path_list), name_list))
+                            for path,name in zip(path_list, name_list))
