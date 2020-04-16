@@ -17,6 +17,7 @@ def plot_gas_fraction(pair_list, c_list, ls_list, fout, output_dir='data/',
         dat = pickle.load(open(fdata, 'rb'))
 
         time = dat[:,0]
+        time = time - time[0]
         gas_fraction_disk = dat[:,1]
         gas_fraction_R0 = dat[:,2]
         gas_fraction_Rcenter = dat[:,3]
@@ -59,7 +60,9 @@ if __name__ == '__main__':
     
     fid_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
     fid_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
-    
+
+    fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0' 
+
     c_list = [None, None, None, None, None]
     ls_list = [None, None, None, None, None]
     ylim = [0, None]
@@ -94,6 +97,10 @@ if __name__ == '__main__':
     pair_list = [(fid_g1, 'lvl4'), (fid_da, 'lvl4'), (fid_da_am, 'lvl4')]
     plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-da-l4.pdf', ylim=ylim)
     
-
+    pair_list = [(fid_g1, 'lvl5'), (fid_g1_dS_out_delay, 'lvl5')]
+    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-AGB-delay-l5.pdf', ylim=ylim)
+    
+    pair_list = [(fid_g1, 'lvl4'), (fid_g1_dS_out_delay, 'lvl4')]
+    plot_gas_fraction(pair_list, c_list, ls_list, 'gas-fraction_fid-AGB-delay-l4.pdf', ylim=ylim)
 
 
