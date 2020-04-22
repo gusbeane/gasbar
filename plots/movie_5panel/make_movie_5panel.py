@@ -175,67 +175,15 @@ def make_movie(fout, sim, nsnap):
     animation.save(fout)
     
 if __name__ == '__main__':
-    basepath = '../../runs/'
+    basepath = '../../runs'
 
     fid_g1 = 'fid-disp1.0-fg0.1'
-    fid_g2 = 'fid-disp1.0-fg0.2'
-    fid_g3 = 'fid-disp1.0-fg0.3'
-    fid_g4 = 'fid-disp1.0-fg0.4'
-    fid_g5 = 'fid-disp1.0-fg0.5'
-
-    fid_d7_g3 = 'fid-disp0.7-fg0.3'
-    fid_d5_g3 = 'fid-disp0.5-fg0.3'
-    fid_g3_nB = 'fid-disp1.0-fg0.3-noBulge'
-
-    fid_g1_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
-    fid_g1_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom'
-
-    fid_g1_corona = 'fid-disp1.0-fg0.1-corona'
-    fid_g1_coronaRot = 'fid-disp1.0-fg0.1-coronaRot'
-    fid_g1_coronaMat = 'fid-disp1.0-fg0.1-corona-Matthew'
-    fid_g1_coronaMat4 = 'fid-disp1.0-fg0.1-corona-Matthew-MHG0.004'
-    
-    fid_g1_fixed1kpc = 'fid-disp1.0-fixedDisk-core1kpc'
-    fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
-    fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
-    fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc'
-    fid_g1_fixed5kpc = 'fid-disp1.0-fixedDisk-core5kpc'
-    fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc'
-
-    fid_g1_mD = 'fid-disp1.0-fg0.1-mixedDisk'
-    fid_g1_dS = 'fid-disp1.0-fg0.1-diskAGB'
-    fid_g1_dS_out = 'fid-disp1.0-fg0.1-diskAGB-outer'
-    fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0'
 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
         pair_list = [(fid_g1, 'lvl5')]
     else:
-        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
-                     (fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
-                     (fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
-                     (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
-                     (fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
-                     (fid_g1_fixed1kpc, 'lvl5'), (fid_g1_fixed1kpc, 'lvl4'),
-                     (fid_g1_fixed2kpc, 'lvl5'), (fid_g1_fixed2kpc, 'lvl4'),
-                     (fid_g1_fixed3kpc, 'lvl5'), (fid_g1_fixed3kpc, 'lvl4'),
-                     (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4'),
-                     (fid_g1_fixed5kpc, 'lvl5'), (fid_g1_fixed5kpc, 'lvl4'),
-                     (fid_g1_fixed6kpc, 'lvl5'), (fid_g1_fixed6kpc, 'lvl4'),
-                     (fid_g1_mD, 'lvl5'), (fid_g1_mD, 'lvl4'),
-                     (fid_g1_dS, 'lvl5'), (fid_g1_dS, 'lvl4'),
-                     (fid_g1_dS_out, 'lvl5'), (fid_g1_dS_out, 'lvl4'),
-                     (fid_g1_dS_out_delay, 'lvl5'), (fid_g1_dS_out_delay, 'lvl4'), (fid_g1_dS_out_delay, 'lvl3')]
-                             
-                     #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
-                     #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
-                     #(fid_g1_coronaMat, 'lvl5'), (fid_g1_coronaMat, 'lvl4'),
-                     #(fid_g1_coronaMat4, 'lvl5'), (fid_g1_coronaMat4, 'lvl4')]
-                     #(fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
-                     #(fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
-                     #(fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
-                     #(fid_g1_da, 'lvl5'), (fid_g1_da, 'lvl4'),
-                     #(fid_g1_da_am, 'lvl5'), (fid_g1_da_am, 'lvl4')]
+        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
     
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
