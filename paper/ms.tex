@@ -50,10 +50,16 @@
 \newcommand{\pc}{\ensuremath{\text{pc}}}
 \newcommand{\kpc}{\ensuremath{\text{kpc}}}
 
+\newcommand{\Msun}{\ensuremath{\text{M}_{\odot}}}
+
 \newcommand{\beq}{\begin{equation}}
 \newcommand{\eeq}{\end{equation}}
 
 \newcommand{\mwib}{\texttt{mwib}}
+
+\newcommand{\arepo}{\textsc{Arepo}}
+\newcommand{\areport}{\textsc{Arepo-RT}}
+\newcommand{\smuggle}{\textsc{SMUGGLE}}
 
 % Please keep new commands to a minimum, and use \newcommand not \def to avoid
 % overwriting existing commands. Example:
@@ -71,7 +77,7 @@
 % If you need two or more lines of authors, add an extra line using \newauthor
 \author[A. Beane et al.]{
 % Angus Beane,$^{1}$\thanks{E-mail: abeane@cfa.harvard.edu}
-Angus~Beane$^{1}$,\thanks{E-mail: abeane@cfa.harvard.edu}
+Angus~Beane$^{1}$,\thanks{E-mail: angus.beane@cfa.harvard.edu}
 Elena~D'Onghia$^{2,3}$,
 Lars~Hernquist$^{1}$,
 and Federico~Marinacci$^{4}$
@@ -99,14 +105,21 @@ $^{4}$Department of Physics \& Astronomy, University of Bologna, via Gobetti 93/
 
 % Abstract of the paper
 \begin{abstract}
-Effective models 
-
-Stars are known to be captured at the dynamical resonances of the Milky Way
-bar, forming moving groups that are seen in the solar neighborhood. In
-principle, gas can also be captured at these resonances which, if allowed to
-cool, might trigger star formation -- predicting an enhanced number of
-star-forming regions at these resonances. However, the efficiency of stellar
-and radiation feedback may suppress the star formation process. 
+Long-term, secular processes can be important drivers of present-day galactic
+properties. The Milky Way is known to host one and perhaps multiple bars whose
+gravitational influence has observable consequences on both stellar and
+gaseous components. It has long been known that along the major axis of a bar
+gas can be driven towards the galactic center, fueling, e.g., the Central
+Molecular Zone and nuclear activity. On the other hand, stars are known to
+congregate near Lagrange points (i.e., minimums in the galactic potential),
+forming known moving groups such as Hercules. We report the results of
+isolated simulations incorporating both a state-of-the-art star formation and
+feedback model (in which a multi-phase interstellar medium is generated
+self-consistently) and a model of the Milky Way which forms a strong bar with
+a pattern speed matched to current observations. We are able to show, for the
+first time, that an enhancement of star formation may occur at the Lagrange
+points. We derive a collisional analogue of the theory of dynamical resonances
+and
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
@@ -120,19 +133,74 @@ Galaxy: disc -- Galaxy: kinematics and dynamics -- stars: kinematics and dynamic
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
-Due to issues of large dynamic range, effective models of star formation is a
-crucial element of both high- and low-resolution numerical simulations of
-galaxy formation. 
+Roughly two-thirds of spiral galaxies are known to host bars in the
+near-infrared, about half of which are strong
+\citep[e.g.][]{2000AJ....119..536E}. 
 
-This is a simple template for authors to write new MNRAS papers.
-See \texttt{mnras\_sample.tex} for a more complex example, and \texttt{mnras\_guide.tex}
-for a full user guide.
+\section{Methods}
+\subsection{Numerical Methods and Physical Model}
+We perform our simulations using the moving-mesh code \arepo{}. Gravity is
+solved using a standard oct-tree algorithm \citep{1986Natur.324..446B}.
+Hydrodynamics is modelled with a finite volume solver over an unstructured
+Voronoi mesh allowed to move in a quasi-Lagrangian fashion
+\citep{2010MNRAS.401..791S, 2016MNRAS.455.1134P}. A concise summary of this
+core functionality of \arepo{} is available with its public
+release\footnote{\url{https://arepo-code.org}} \citep{2019arXiv190904667W}.
 
-All papers should start with an Introduction section, which sets the work
-in context, cites relevant earlier studies in the field by \citet{Others2013},
-and describes the problem the authors aim to solve \citep[e.g.][]{Author2012}.
+In our simulations we will reach $\sim10^3\,\Msun$ mass resolution. As a
+result, the cold phase of the interstellar medium (ISM) is well-resolved
+(\textcolor{red}{cite}), and an appropriate physical model which account for
+the processes occuring at these scales must be used. In this vein, we use the
+state-of-the-art model \smuggle{} \citep{2019MNRAS.489.4233M}. A detailed
+description of the model is presented in \citet{2019MNRAS.489.4233M}, but we
+summarize the salient components here.
 
-\section{Methods, Observations, Simulations etc.}
+Standard cooling processes are accounted for using tabulated \textsc{cloudy}
+calculations, described in detail in \citet{2013MNRAS.436.3031V}. In addition
+to standard channels, metal line, fine-structure, and molecular cooling
+processes are also accounted for, allowing the gas to reach
+$\sim10\,\text{K}$, as well as self-shielding for high-density gas. Cosmic ray
+and photoelectric heating are also taken into account. Star formation follows
+a standard probabilistic approach \citep{2003MNRAS.339..289S}, with the star
+formation efficiency ($\epsilon$) set to $0.01$ and additional density and
+viriality conditions. Finally, stellar feedback is accounted for in three
+different channels: supernovae, young massive stellar radiation, and stellar
+winds from OB and AGB stars.
+
+The model used here is similar to the one used first by
+\citet{2011MNRAS.410.1391A, 2013ApJ...770...25A} and by the Feedback In
+Realistic Environments (FIRE) collaboration \citep{2011MNRAS.417..950H,
+2014MNRAS.445..581H, 2018MNRAS.480..800H}, with some key differences discussed
+in \citet{2019MNRAS.489.4233M}. One drawback of the \smuggle{} method is that
+radiation is not self-consistently tracked and evolved, and therefore
+radiation feedback must be implemented in an approximate manner. An extension
+of \smuggle{} which explicitly tracks the radiation field as an additional
+fluid component \citep{2019arXiv191014041K} based upon \areport{}
+\citep{2019MNRAS.485..117K} is available. We plan to use this module in the
+future.
+
+% Standard cooling processes from hydrogen and helium undergoing two-body
+% interactions, Compton cooling of cosmic microwave background photons, and
+% photoionization from a uniform UV background are accounted for using tabulated
+% \textsc{CLOUDY} calculations, described in detail in
+% \citet{2013MNRAS.436.3031V}. In addition to these processes, metal line,
+% fine-structure, and molecular cooling processes are accounted for, in order to
+% allow the gas to reach $\sim 10\,\text{K}$. At high densities, self-shielding
+% of the gas is accounted for using an analytic formula. Cosmic ray and
+% photoelectric heating are also taken into account, important for the thermal
+% stability of the cold and warm phases.
+
+% Star formation follows a standard probabilistic approach
+% \citep{2003MNRAS.339..289S}, where star particles are created and assumed to
+% be a coeval population following a \citet{2001ApJ...554.1274C} initial mass
+% function. Star formation efficiency ($\epsilon$) is assumed to be $0.01$. An
+% additional density threshold of $100\,\text{cm}^{-3}$ and a condition on a gas
+% cell to be sub-virial ($\alpha < 1$) and thus prone to gravitational collapse
+% are applied.
+
+% Finally, stellar feedback is accounted for in three different channels:
+% supernovae, young massive stellar radiation, and stellar winds from OB and AGB
+% stars.
 
 Normally the next section describes the techniques the authors used.
 It is frequently split into subsections, such as Section~\ref{sec:maths} below.
@@ -245,11 +313,11 @@ tune the particle mass to a specific number.
 \begin{tabular}{cccc}
 resolution level & $m_{\text{DM}}$      & $m_{\text{b}}$    & $\epsilon$        \\
                  & $[\,M_{\odot}\,]$    & $[\,M_{\odot}\,]$ & $[\,\text{pc}\,]$ \\
-$5$              & $2.4\times10^6$      & $4.8\times10^5$   & $700$             \\
-$4$              & $3\times10^5$        & $6\times10^4$     & $350$             \\
-$3$              & $3.75 \times 10^{4}$ & $7500$            & $175$             \\
-$2$              & $4690$               & $938$             & $87.5$            \\
-$1$              & $586$                & $117$             & $43.8$           
+$5$              & $2.4\times10^6$      & $4.8\times10^5$   & $80$             \\
+$4$              & $3\times10^5$        & $6\times10^4$     & $40$             \\
+$3$              & $3.75 \times 10^{4}$ & $7500$            & $20$             \\
+$2$              & $4690$               & $938$             & $10$            \\
+$1$              & $586$                & $117$             & $5$           
 \end{tabular}
 \end{table}
 
@@ -257,11 +325,11 @@ $1$              & $586$                & $117$             & $43.8$
 \begin{tabular}{cccc}
 resolution level & $m_{\text{DM}}$      & $m_{\text{b}}$    & $\epsilon$        \\
                  & $[\,M_{\odot}\,]$    & $[\,M_{\odot}\,]$ & $[\,\text{pc}\,]$ \\
-$5$h             & $2.4\times10^6$      & $4.8\times10^5$   & $700$             \\
-$4$h             & $3\times10^5$        & $6\times10^4$     & $350$             \\
-$3$h             & $3.75 \times 10^{4}$ & $7500$            & $175$             \\
-$2$h             & $4690$               & $938$             & $87.5$            \\
-$1$h             & $586$                & $117$             & $43.8$           
+$5$h             & $2.4\times10^6$      & $4.8\times10^5$   & $80$             \\
+$4$h             & $3\times10^5$        & $6\times10^4$     & $40$             \\
+$3$h             & $3.75 \times 10^{4}$ & $7500$            & $20$             \\
+$2$h             & $4690$               & $938$             & $10$            \\
+$1$h             & $586$                & $117$             & $5$           
 \end{tabular}
 \end{table}
 

@@ -1,39 +1,53 @@
-import sys
-mach = sys.platform
-if mach == 'linux':
-    sys.path.append('/n/home01/abeane/mwib_analysis')
-    base = '/n/scratchlfs/hernquist_lab/abeane/mwib_runs/arepo'
-elif mach == 'darwin':
-    sys.path.append('/Users/abeane/scratch/mwib_analysis')
-    base = '/Volumes/abeaneSSD001/mwib_runs/arepo'
-
-print(base)
-
-from mwib_analysis import mwib_io
 import numpy as np
-import h5py as h5
+import arepo
+import sys
 from tqdm import tqdm
+import glob
+import astropy.units as u
 import pickle
+import re
 
-import astropy.units as u 
 time_conv = (1 * u.kpc/(u.km/u.s)).to_value(u.Myr)
 
-sims_list = ['/galakos/lvl5', '/galakos/lvl4', '/galakos/lvl3-hernquist', '/galakos-fg0.2/lvl5']
-sims_list = [base+s for s in sims_list]
-name_list = ['lvl5', 'lvl4', 'lvl3', 'lvl5-fg0.2']
+def compute_SFR(path, name, output_dir='data/'):
+    # get the last snapshot
+    files = glob.glob(path+'/output/snapdir_*/snapshot_*.0.hdf5')
+    indices = np.array([int(re.findall('\d?\d\d\d', f)[-1]) for f in files])
+    last_key = np.argmax(indices)
+    file_last = files[last_key]
 
-skip = 10
+    last_snap = arepo.Snapshot(file_last, combineFiles=True)
 
-for sim, name in zip(sims_list, name_list):
-    indices, files = mwib_io.get_files_indices(sim+'/output/*.hdf5')
+    star_birthtime = last_snap.GFM_StellarFormationTime * time_conv
+    star_mini = last_snap.GFM_InitialMass.as_unit(arepo.u.msol).value
 
-    print(len(files))
-    print(sim+'/output/*.hdf5')
+    pickle.dump((star_birthtime, star_mini), open(output_dir+'SFR_'+name+'.p', 'wb'))
 
-    f = files[-1]
-    t = h5.File(f, mode='r')
-    star_birthtime = np.array(t['PartType4']['GFM_StellarFormationTime'])*time_conv
-    star_mini = np.array(t['PartType4']['GFM_InitialMass'])*1E10
+if __name__ == '__main__':
 
-    pickle.dump((star_birthtime, star_mini), open('SFR_'+name+'.p', 'wb'))
+    basepath = '../../runs/'
+
+    nbody = 'fid-Nbody'
+    wet = 'fid-wet'
+    fid = 'fid'
+    fid_rdisk = 'fid-disp1.0-resetDisk'
+
+    fid_g1 = 'fid-disp1.0-fg0.1'
+    fid_g2 = 'fid-disp1.0-fg0.2'
+    fid_g3 = 'fid-disp1.0-fg0.3'
+    fid_g4 = 'fid-disp1.0-fg0.4'
+    fid_g5 = 'fid-disp1.0-fg0.5'
+        
+
+    pair_list = [(fid, 'lvl5'), (fid, 'lvl4'), #(fid, 'lvl3'),
+                 (fid_g1, 'lvl5'), (fid_g1, 'lvl4'),
+                 (fid_g2, 'lvl5'), (fid_g2, 'lvl4'),
+                 (fid_g3, 'lvl5'), (fid_g3, 'lvl4'),
+                 (fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
+                 (fid_g5, 'lvl5'), (fid_g5, 'lvl4')]
     
+    name_list = [           p[0] + '-' + p[1] for p in pair_list]
+    path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
+    
+    for path, name in zip(tqdm(path_list), name_list):
+        out = compute_SFR(path, name)
