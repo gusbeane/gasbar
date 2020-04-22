@@ -1,0 +1,13 @@
+*.out
+*.err
+*.pickle
+*.mp4
+
+paper/*.pdf
+paper/*.log
+paper/*.aux
+paper/*.bbl
+
+runs
+*.hdf5
+
