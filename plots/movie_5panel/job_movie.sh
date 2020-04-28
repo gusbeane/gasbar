@@ -1,8 +1,7 @@
 #!/bin/sh
-#SBATCH -p conroy 
-##SBATCH --constraint=intel
+#SBATCH -p hernquist,itc_cluster,conroy,shared
 #SBATCH -J movie 
-#SBATCH -n 4 
+#SBATCH -n 6 
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
