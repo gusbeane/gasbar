@@ -25,13 +25,16 @@ def compute_u_from_T(T):
     u /= 1e10 # code units
     return u
 
+def _Q1_of_k_(k, kappa, sigma, dens):
+    return (kappa**2 + (k*sigma)**2) / (2. * np.pi * G * k * dens)
+
 @jit(nopython=True)
 def _Q2_of_k_(k, cs, kappa, sigmaR, sigmaStar, sigmaGas):
     Qg = (kappa**2 + (k*cs)**2) / (2. * np.pi * G * k * sigmaGas)
     Qs = (kappa**2 + (k*sigmaR)**2) / (2. * np.pi * G * k * sigmaStar)
     return 1./(1./Qg + 1./Qs)
 
-def _toomre2_(kmin, kmax, cs, kappa, sigmaR, sigmaStar, sigmaGas):
+def _toomre2_(kmin, kmax, cs, kappa, sigmaR, sigmaStar, sigmaGas, returnk=False):
     fun_list = []
     x_list = []
     # print('cs=', cs, 'kappa=', kappa, 'sigmaR=', sigmaR, 'sigmaStar=', sigmaStar, 'sigmaGas=', sigmaGas)
@@ -43,7 +46,10 @@ def _toomre2_(kmin, kmax, cs, kappa, sigmaR, sigmaStar, sigmaGas):
     fun = np.min(fun_list)
     x = x_list[np.argmin(fun)]
 
-    return fun
+    if returnk:
+        return fun, x
+    else:
+        return fun
 
 def _toomre_star_(kappa, sigmaR, sigmaStar):
     return kappa * sigmaR / (3.36 * G * sigmaStar)
@@ -55,8 +61,8 @@ def _match_toomre_minimize_(sigmaR, Q, kmin, kmax, cs, kappa, sigmaStar, sigmaGa
 def _match_toomre_(kmin, kmax, Q, cs, kappa, sigmaStar, sigmaGas, sigmaR):
     fun_list = []
     x_list = []
-    for sigmaR_guess in sigmaR*np.linspace(0.01, 9, 5):
-        ans = minimize(_match_toomre_minimize_, sigmaR_guess, (Q, kmin, kmax, cs, kappa, sigmaStar, sigmaGas), bounds=((0, 10*sigmaR),))
+    for sigmaR_guess in np.logspace(-4, 2.5, 8):
+        ans = minimize(_match_toomre_minimize_, sigmaR_guess, (Q, kmin, kmax, cs, kappa, sigmaStar, sigmaGas), bounds=((0, 1000),))
         x_list.append(ans.x[0])
         fun_list.append(ans.fun)
     
@@ -70,6 +76,7 @@ def compute_two_comp_toomre(path, name, output_dir='data/'):
     gamma = 5./3.
     u = compute_u_from_T(1e4)
     cs2 = gamma * (gamma-1) * u
+    cs = np.sqrt(cs2)
 
     kmin = 0.06
     kmax = 6000.0
@@ -77,17 +84,30 @@ def compute_two_comp_toomre(path, name, output_dir='data/'):
 
     Q_star = []
     Q2_list = []
-    fR_list = []
+    Qm1k_star = []
+    Qm1k_gas = []
 
-    Q_star = Parallel(n_jobs=nproc) (delayed(_toomre_star_)(k, sR, sS) for k, sR, sS in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar']))
-    Q2_list = Parallel(n_jobs=nproc) (delayed(_toomre2_)(kmin, kmax, np.sqrt(cs2), k, sR, sS, sG) for k, sR, sS, sG in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar'], dat['sigmaGas']))
+    for kap, sR, sS, sG in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar'], dat['sigmaGas']):
+        this_Qstar = _toomre_star_(kap, sR, sS)
+        Q_star.append(this_Qstar)
+
+        this_Q2, k = _toomre2_(kmin, kmax, cs, kap, sR, sS, sG, returnk=True)
+        Q2_list.append(this_Q2)
+
+        Qm1k_star.append(float(_Q1_of_k_(k, kap, sR, sS)))
+        Qm1k_gas.append(float(_Q1_of_k_(k, kap, cs, sG)))
+    
+
+    # Q_star = Parallel(n_jobs=nproc) (delayed(_toomre_star_)(k, sR, sS) for k, sR, sS in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar']))
+    # Q2_list = Parallel(n_jobs=nproc) (delayed(_toomre2_)(kmin, kmax, np.sqrt(cs2), k, sR, sS, sG) for k, sR, sS, sG in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar'], dat['sigmaGas']))
+    
     sigmaR_match = Parallel(n_jobs=nproc) (delayed(_match_toomre_)(kmin, kmax, Q, np.sqrt(cs2), k, sS, sG, sR) for Q, k, sS, sG, sR in zip(tqdm(Q_star), dat['kappa'], dat['sigmaStar'], dat['sigmaGas'], dat['sigmaR']))
 
     Q_at_sigmaR_match = Parallel(n_jobs=nproc) (delayed(_toomre2_)(kmin, kmax, np.sqrt(cs2), k, sR, sS, sG) for k, sR, sS, sG in zip(tqdm(dat['kappa']), sigmaR_match, dat['sigmaStar'], dat['sigmaGas']))
 
     fR_list = np.square(sigmaR_match/dat['sigmaR'])
 
-    np.save(output_dir+name+'-Q2.npy', np.transpose([dat['R'], Q_star, Q2_list, fR_list, Q_at_sigmaR_match]))
+    np.save(output_dir+name+'-Q2.npy', np.transpose([dat['R'], Q_star, Q2_list, fR_list, Q_at_sigmaR_match, Qm1k_star, Qm1k_gas]))
 
 
 if __name__ == '__main__':
