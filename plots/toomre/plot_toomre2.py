@@ -33,10 +33,11 @@ def plot_toomre_fR(name, fout):
     fig, ax = plt.subplots(1, 1)
 
     fdata = 'data/' + name + '-Q2.npy'
+    print(fdata)
     dat = np.load(fdata)
 
     R = dat[:,0]
-    fR = dat[:,2]
+    fR = dat[:,3]
 
     ax.plot(R, fR)
 
@@ -44,6 +45,7 @@ def plot_toomre_fR(name, fout):
     ax.set_ylabel('fR')
 
     ax.set_ylim(0, 3)
+    ax.set_xlim(0, 10)
 
     fig.tight_layout()
     fig.savefig(fout)

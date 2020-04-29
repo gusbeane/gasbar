@@ -52,11 +52,11 @@ def _match_toomre_minimize_(sigmaR, Q, kmin, kmax, cs, kappa, sigmaStar, sigmaGa
     Q2 = _toomre2_(kmin, kmax, cs, kappa, sigmaR, sigmaStar, sigmaGas)
     return np.abs(Q - Q2)
 
-def _match_toomre_(kmin, kmax, Q, cs, kappa, sigmaStar, sigmaGas):
+def _match_toomre_(kmin, kmax, Q, cs, kappa, sigmaStar, sigmaGas, sigmaR):
     fun_list = []
     x_list = []
-    for sigmaR in np.logspace(-4, 3, 10):
-        ans = minimize(_match_toomre_minimize_, sigmaR, (Q, kmin, kmax, cs, kappa, sigmaStar, sigmaGas), bounds=((0, 1000),))
+    for sigmaR_guess in sigmaR*np.linspace(0.01, 9, 5):
+        ans = minimize(_match_toomre_minimize_, sigmaR_guess, (Q, kmin, kmax, cs, kappa, sigmaStar, sigmaGas), bounds=((0, 10*sigmaR),))
         x_list.append(ans.x[0])
         fun_list.append(ans.fun)
     
@@ -74,17 +74,20 @@ def compute_two_comp_toomre(path, name, output_dir='data/'):
     kmin = 0.06
     kmax = 6000.0
 
+
     Q_star = []
     Q2_list = []
     fR_list = []
 
     Q_star = Parallel(n_jobs=nproc) (delayed(_toomre_star_)(k, sR, sS) for k, sR, sS in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar']))
     Q2_list = Parallel(n_jobs=nproc) (delayed(_toomre2_)(kmin, kmax, np.sqrt(cs2), k, sR, sS, sG) for k, sR, sS, sG in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar'], dat['sigmaGas']))
-    sigmaR_match = Parallel(n_jobs=nproc) (delayed(_match_toomre_)(kmin, kmax, Q, np.sqrt(cs2), k, sS, sG) for Q, k, sS, sG in zip(tqdm(Q_star), dat['kappa'], dat['sigmaStar'], dat['sigmaGas']))
+    sigmaR_match = Parallel(n_jobs=nproc) (delayed(_match_toomre_)(kmin, kmax, Q, np.sqrt(cs2), k, sS, sG, sR) for Q, k, sS, sG, sR in zip(tqdm(Q_star), dat['kappa'], dat['sigmaStar'], dat['sigmaGas'], dat['sigmaR']))
+
+    Q_at_sigmaR_match = Parallel(n_jobs=nproc) (delayed(_toomre2_)(kmin, kmax, np.sqrt(cs2), k, sR, sS, sG) for k, sR, sS, sG in zip(tqdm(dat['kappa']), sigmaR_match, dat['sigmaStar'], dat['sigmaGas']))
 
     fR_list = np.square(sigmaR_match/dat['sigmaR'])
 
-    np.save(output_dir+name+'-Q2.npy', np.transpose([dat['R'], Q_star, Q2_list, fR_list]))
+    np.save(output_dir+name+'-Q2.npy', np.transpose([dat['R'], Q_star, Q2_list, fR_list, Q_at_sigmaR_match]))
 
 
 if __name__ == '__main__':
