@@ -28,6 +28,7 @@ def _Q2_of_k_(k, cs, kappa, sigmaR, sigmaStar, sigmaGas):
 def _toomre2_(kmin, kmax, cs, kappa, sigmaR, sigmaStar, sigmaGas):
     fun_list = []
     x_list = []
+    print('cs=', cs, 'kappa=', kappa, 'sigmaR=', sigmaR, 'sigmaStar=', sigmaStar, 'sigmaGas=', sigmaGas)
     for kguess in np.logspace(np.log10(kmin), np.log10(kmax), 10):
         ans = minimize(_Q2_of_k_, kguess, (cs, kappa, sigmaR, sigmaStar, sigmaGas), bounds=((kmin, kmax),))
         fun_list.append(ans.fun[0])
@@ -47,37 +48,22 @@ def compute_two_comp_toomre(path, name, output_dir='data/'):
     dat = np.genfromtxt(path+'/ICs/MW_ICs.vc2comp', names=True)
 
     gamma = 5./3.
-    u1 = compute_u_from_T(1e1)
-    u2 = compute_u_from_T(1e2)
-    u3 = compute_u_from_T(1e3)
-    u4 = compute_u_from_T(1e4)
-    cs2_1 = gamma * (gamma-1) * u1
-    cs2_2 = gamma * (gamma-1) * u2
-    cs2_3 = gamma * (gamma-1) * u3
-    cs2_4 = gamma * (gamma-1) * u4
+    u = compute_u_from_T(1e4)
+    cs2 = gamma * (gamma-1) * u
 
     kmin = 0.06
     kmax = 6000.0
 
     Q_star = []
-    Q2_T1e1 = []
-    Q2_T1e2 = []
-    Q2_T1e3 = []
-    Q2_T1e4 = []
+    Q2_list = []
     for kappa, sigmaR, sigmaStar, sigmaGas in zip(tqdm(dat['kappa']), dat['sigmaR'], dat['sigmaStar'], dat['sigmaGas']):
         Q = _toomre_star_(kappa, sigmaR, sigmaStar)
-        Q2_1, k = _toomre2_(kmin, kmax, np.sqrt(cs2_1), kappa, sigmaR, sigmaStar, sigmaGas)
-        Q2_2, k = _toomre2_(kmin, kmax, np.sqrt(cs2_2), kappa, sigmaR, sigmaStar, sigmaGas)
-        Q2_3, k = _toomre2_(kmin, kmax, np.sqrt(cs2_3), kappa, sigmaR, sigmaStar, sigmaGas)
-        Q2_4, k = _toomre2_(kmin, kmax, np.sqrt(cs2_4), kappa, sigmaR, sigmaStar, sigmaGas)
+        Q2, k = _toomre2_(kmin, kmax, np.sqrt(cs2), kappa, sigmaR, sigmaStar, sigmaGas)
         
         Q_star.append(Q)
-        Q2_T1e1.append(Q2_1)
-        Q2_T1e2.append(Q2_2)
-        Q2_T1e3.append(Q2_3)
-        Q2_T1e4.append(Q2_4)
+        Q2_list.append(Q2)
 
-    np.save(output_dir+name+'-Q2.npy', np.transpose([dat['R'], Q_star, Q2_T1e1, Q2_T1e2, Q2_T1e3, Q2_T1e4]))
+    np.save(output_dir+name+'-Q2.npy', np.transpose([dat['R'], Q_star, Q2_list]))
 
 
 if __name__ == '__main__':
@@ -85,10 +71,11 @@ if __name__ == '__main__':
     basepath = '../../runs/'
 
     fid_g1 = 'fid-disp1.0-fg0.1'
+    fid_d15_g1 = 'fid-disp1.5-fg0.1'
 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
-        pair_list = [(fid_g1, 'lvl5')]
+        pair_list = [(fid_g1, 'lvl5'), (fid_d15_g1, 'lvl5')]
     else:
         pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3')]
 
