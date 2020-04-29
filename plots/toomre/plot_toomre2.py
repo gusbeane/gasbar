@@ -29,33 +29,25 @@ def plot_toomre2(name_list, fout):
     fig.tight_layout()
     fig.savefig(fout)
 
-def plot_toomre_ratio(name, fout):
+def plot_toomre_fR(name, fout):
     fig, ax = plt.subplots(1, 1)
 
     fdata = 'data/' + name + '-Q2.npy'
     dat = np.load(fdata)
 
     R = dat[:,0]
-    Q = dat[:,1]
-    Q2_1 = dat[:,2]
-    Q2_2 = dat[:,3]
-    Q2_3 = dat[:,4]
-    Q2_4 = dat[:,5]
+    fR = dat[:,2]
 
-    ax.plot(R, Q2_1/Q, label='1e1')
-    ax.plot(R, Q2_2/Q, label='1e2')
-    ax.plot(R, Q2_3/Q, label='1e3')
-    ax.plot(R, Q2_4/Q, label='1e4')
-    ax.axhline(1, c='k')
+    ax.plot(R, fR)
 
     ax.set_xlabel('R [kpc]')
-    ax.set_ylabel('Q2/Q')
-    ax.legend(title='T [K]', frameon=False)
+    ax.set_ylabel('fR')
 
-
+    ax.set_ylim(0, 3)
 
     fig.tight_layout()
     fig.savefig(fout)
+
 
 if __name__ == '__main__':
 
@@ -65,5 +57,6 @@ if __name__ == '__main__':
     name_list = [fid_g1, fid_d15_g1]
 
     plot_toomre2(name_list, 'toomre_two_comp.pdf')
+    plot_toomre_fR(fid_g1, 'toomre_fR.pdf')
     #plot_toomre_ratio(fid_g1, 'toomre_two_comp_ratio_'+fid_g1+'.pdf')
     
