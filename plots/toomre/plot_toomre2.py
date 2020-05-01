@@ -40,6 +40,9 @@ def plot_toomre_fR(name, fout):
     fR = dat[:,3]
 
     ax.plot(R, fR)
+    ax.axhline(1.5, c = 'k', ls='dashed', alpha=0.5)
+    ax.axhline(1.2, c = 'k', ls='dashed', alpha=0.5)
+    ax.axhline(1.0, c = 'k', ls='dashed', alpha=0.5)
 
     keys = np.where(R > 1.0)[0]
 
