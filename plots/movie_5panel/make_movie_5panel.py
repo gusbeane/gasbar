@@ -181,6 +181,8 @@ if __name__ == '__main__':
     fid_d15_g1 = 'fid-disp1.5-fg0.1'
     fid_d12_g1 = 'fid-disp1.2-fg0.1'
     fid_dP_g1 = 'fid-dispPoly-fg0.1'
+    fid_dP_g1_dS = 'fid-dispPoly-fg0.1-diskAGB'
+    fid_dP_g1_dSD = 'fid-dispPoly-fg0.1-diskAGB-delay1.0'
 
     # look to see if we are on my macbook or on the cluster
     if sys.platform == 'darwin':
@@ -189,7 +191,9 @@ if __name__ == '__main__':
         pair_list = [(fid_g1, 'lvl5'),      (fid_g1, 'lvl4'),      (fid_g1, 'lvl3'),
                      (fid_d12_g1, 'lvl5'),  (fid_d12_g1, 'lvl4'),  (fid_d12_g1, 'lvl3'),
                      (fid_dP_g1, 'lvl5'),   (fid_dP_g1, 'lvl4'),   (fid_dP_g1, 'lvl3'),
-                     (fid_d15_g1, 'lvl5'),  (fid_d15_g1, 'lvl4'),  (fid_d15_g1, 'lvl3')]
+                     (fid_d15_g1, 'lvl5'),  (fid_d15_g1, 'lvl4'),  (fid_d15_g1, 'lvl3'),
+                     (fid_dP_g1_dS, 'lvl5'),  (fid_dP_g1_dS, 'lvl4'),  (fid_dP_g1_dS, 'lvl3'),
+                     (fid_dP_g1_dSD, 'lvl5'),  (fid_dP_g1_dSD, 'lvl4'),  (fid_dP_g1_dSD, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
