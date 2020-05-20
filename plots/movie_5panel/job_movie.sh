@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -p hernquist,itc_cluster,conroy,shared
 #SBATCH -J movie 
-#SBATCH -n 6 
+#SBATCH -n 3 
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
@@ -19,5 +19,5 @@ module load parallel
 
 ulimit -c unlimited
 
-seq 0 20 | parallel -j ${SLURM_NTASKS} python3 make_movie_5panel.py {}
+seq 0 30 | parallel -j ${SLURM_NTASKS} python3 make_movie_5panel.py {}
 

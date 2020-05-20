@@ -175,12 +175,15 @@ def make_movie(fout, sim, nsnap):
     animation.save(fout)
     
 if __name__ == '__main__':
+    import cProfile
     basepath = '../../runs/'
 
     fid_g1 = 'fid-disp1.0-fg0.1'
     fid_d15_g1 = 'fid-disp1.5-fg0.1'
     fid_d12_g1 = 'fid-disp1.2-fg0.1'
     fid_dP_g1 = 'fid-dispPoly-fg0.1'
+    fid_dP_sEQ_g1 = 'fid-dispPoly-fg0.1-SoftEQS0'
+    fid_dP_rx_g1 = 'fid-dispPoly-fg0.1-MeshReg'
     fid_dP_g1_dS = 'fid-dispPoly-fg0.1-diskAGB'
     fid_dP_g1_dSD = 'fid-dispPoly-fg0.1-diskAGB-delay1.0'
 
@@ -193,19 +196,22 @@ if __name__ == '__main__':
                      (fid_dP_g1, 'lvl5'),   (fid_dP_g1, 'lvl4'),   (fid_dP_g1, 'lvl3'),
                      (fid_d15_g1, 'lvl5'),  (fid_d15_g1, 'lvl4'),  (fid_d15_g1, 'lvl3'),
                      (fid_dP_g1_dS, 'lvl5'),  (fid_dP_g1_dS, 'lvl4'),  (fid_dP_g1_dS, 'lvl3'),
-                     (fid_dP_g1_dSD, 'lvl5'),  (fid_dP_g1_dSD, 'lvl4'),  (fid_dP_g1_dSD, 'lvl3')]
+                     (fid_dP_g1_dSD, 'lvl5'),  (fid_dP_g1_dSD, 'lvl4'),  (fid_dP_g1_dSD, 'lvl3'),
+                     (fid_dP_sEQ_g1, 'lvl5'),  (fid_dP_sEQ_g1, 'lvl4'),  (fid_dP_sEQ_g1, 'lvl3'),
+                     (fid_dP_rx_g1, 'lvl5'),  (fid_dP_rx_g1, 'lvl4'),  (fid_dP_rx_g1, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
                                             
     nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
     fout_list = ['movies/movie_'+n+'.mp4' for n in name_list]
+    profile_list = ['profiles/profile_'+n+'.prof' for n in name_list]
 
     if len(sys.argv) > 1:
         i = int(sys.argv[1])
         if os.path.exists(fout_list[i]):
             sys.exit(0) 
-        make_movie(fout_list[i], path_list[i], nsnap_list[i])
+        cProfile.run("make_movie(fout_list[i], path_list[i], nsnap_list[i])", profile_list[i])
     else:
         for fout, path, nsnap in zip(fout_list, path_list, nsnap_list):
             if os.path.exists(fout):
