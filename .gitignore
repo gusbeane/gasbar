@@ -2,6 +2,7 @@
 *.err
 *.pickle
 *.mp4
+*.prof
 
 paper/*.pdf
 paper/*.log
