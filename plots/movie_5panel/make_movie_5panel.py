@@ -92,7 +92,7 @@ def make_movie(fout, sim, nsnap):
     
     def read_snapshot(base, number, return_time=False):
         
-        snap = arepo.Snapshot(base, number, combineFiles=True)
+        snap = arepo.Snapshot(base, number, combineFiles=True, fields=['Coordinates', 'Masses'])
     
         for i, npart in enumerate(snap.NumPart_Total):
             if npart == 0:
@@ -183,6 +183,7 @@ if __name__ == '__main__':
     fid_d12_g1 = 'fid-disp1.2-fg0.1'
     fid_dP_g1 = 'fid-dispPoly-fg0.1'
     fid_dP_sEQ_g1 = 'fid-dispPoly-fg0.1-SoftEQS0'
+    fid_dP_sEQ_g8 = 'fid-dispPoly-fg0.08-SoftEQS0'
     fid_dP_rx_g1 = 'fid-dispPoly-fg0.1-MeshReg'
     fid_dP_g1_dS = 'fid-dispPoly-fg0.1-diskAGB'
     fid_dP_g1_dSD = 'fid-dispPoly-fg0.1-diskAGB-delay1.0'
@@ -195,9 +196,10 @@ if __name__ == '__main__':
                      (fid_d12_g1, 'lvl5'),  (fid_d12_g1, 'lvl4'),  (fid_d12_g1, 'lvl3'),
                      (fid_dP_g1, 'lvl5'),   (fid_dP_g1, 'lvl4'),   (fid_dP_g1, 'lvl3'),
                      (fid_d15_g1, 'lvl5'),  (fid_d15_g1, 'lvl4'),  (fid_d15_g1, 'lvl3'),
-                     (fid_dP_g1_dS, 'lvl5'),  (fid_dP_g1_dS, 'lvl4'),  (fid_dP_g1_dS, 'lvl3'),
+                     (fid_dP_g1_dS, 'lvl5'),  (fid_dP_g1_dS, 'lvl4'),#  (fid_dP_g1_dS, 'lvl3'),
                      (fid_dP_g1_dSD, 'lvl5'),  (fid_dP_g1_dSD, 'lvl4'),  (fid_dP_g1_dSD, 'lvl3'),
                      (fid_dP_sEQ_g1, 'lvl5'),  (fid_dP_sEQ_g1, 'lvl4'),  (fid_dP_sEQ_g1, 'lvl3'),
+                     (fid_dP_sEQ_g8, 'lvl5'),  (fid_dP_sEQ_g8, 'lvl4'),  (fid_dP_sEQ_g8, 'lvl3'),
                      (fid_dP_rx_g1, 'lvl5'),  (fid_dP_rx_g1, 'lvl4'),  (fid_dP_rx_g1, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
