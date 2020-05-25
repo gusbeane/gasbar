@@ -1,6 +1,11 @@
-import arepo
+import os
+import glob
+
 import numpy as np 
 import h5py as h5
+
+import arepo
+from tqdm import tqdm
 
 def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4], 
                          center=np.array([200, 200, 200]), width=30., nres=256):
@@ -11,8 +16,6 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
     range_xy = [[center[0] - width/2.0, center[0] + width/2.0], [center[1] - width/2.0, center[1] + width/2.0]]
     range_xz = [[center[0] - width/2.0, center[0] + width/2.0], [center[2] - width/2.0, center[2] + width/2.0]]
     range_yz = [[center[1] - width/2.0, center[1] + width/2.0], [center[2] - width/2.0, center[2] + width/2.0]]
-
-    print(range_xy)
 
     surf = (width/nres)**(2.0)
 
@@ -54,8 +57,44 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
         heatmap_yz *= postfac
 
         heatmap_xy_out.append(heatmap_xy)
-        heatmap_yz_out.append(heatmap_yz)
         heatmap_xz_out.append(heatmap_xz)
+        heatmap_yz_out.append(heatmap_yz)
 
-    return heatmap_xz, heatmap_yz, heatmap_xz
+    return heatmap_xy_out, heatmap_xz_out, heatmap_xy_out
 
+def construct_update_projection_hdf5(name, path, parttype=[0, 2, 3, 4], center=np.array([200., 200., 200.]),
+                                     width=30., nres=256, output_dir='data/'):
+
+    fname = name + '_w' + "{:.01f}".format(width) + '_n' + str(nres) + '.hdf5' 
+
+    f = h5.File(output_dir + '/' + fname, mode='a')
+
+    for pt in parttype:
+        if 'PartType' + str(pt) not in f.keys():
+            f.create_group('PartType' + str(pt)+'/xy')
+            f.create_group('PartType' + str(pt)+'/xz')
+            f.create_group('PartType' + str(pt)+'/yz')
+
+    nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
+    assert nsnap > 0
+
+    for snap in tqdm(range(nsnap)):
+        # check to see if the snapshot is already in the hdf5
+        snap_key = 'snapshot_'+"{:03d}".format(snap)
+        if snap_key not in f['PartType'+str(parttype[0])+'/xy']:
+            
+            xy, xz, yz = make_projection_snap(path, snap, parttype=parttype, 
+                                              center=center, width=width, nres=nres)
+
+            for i, pt in enumerate(parttype):
+                f['PartType'+str(pt)+'/xy'].create_dataset(snap_key, data=xy[i])
+                f['PartType'+str(pt)+'/xz'].create_dataset(snap_key, data=xz[i])
+                f['PartType'+str(pt)+'/yz'].create_dataset(snap_key, data=yz[i])
+
+    f.close()
+
+if __name__ == '__main__':
+    path = '../../runs/fid-dispPoly-fg0.1/lvl5'
+    name = 'fid-dispPoly-fg0.1-lvl5'
+
+    construct_update_projection_hdf5(name, path)
