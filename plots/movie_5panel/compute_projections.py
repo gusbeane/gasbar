@@ -14,6 +14,8 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
     sn = arepo.Snapshot(path+'/output', snapnum, parttype=parttype, 
                         combineFiles=True, fields=['Coordinates', 'Masses'])
 
+    time = sn.Time
+
     range_xy = [[center[0] - width/2.0, center[0] + width/2.0], [center[1] - width/2.0, center[1] + width/2.0]]
     range_xz = [[center[0] - width/2.0, center[0] + width/2.0], [center[2] - width/2.0, center[2] + width/2.0]]
     range_yz = [[center[1] - width/2.0, center[1] + width/2.0], [center[2] - width/2.0, center[2] + width/2.0]]
@@ -61,7 +63,7 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
         heatmap_xz_out.append(heatmap_xz)
         heatmap_yz_out.append(heatmap_yz)
 
-    return heatmap_xy_out, heatmap_xz_out, heatmap_xy_out
+    return heatmap_xy_out, heatmap_xz_out, heatmap_xy_out, time
 
 def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4], center=np.array([200., 200., 200.]),
                                      width=30., nres=256, output_dir='data/'):
@@ -93,12 +95,16 @@ def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4],
 
     for i,snap in tqdm(enumerate(snap_list)):
         snap_key = 'snapshot_'+"{:03d}".format(snap)
-        xy, xz, yz = out[i]
+        xy, xz, yz, time = out[i]
         
         for i, pt in enumerate(parttype):
             f['PartType'+str(pt)+'/xy'].create_dataset(snap_key, data=xy[i])
             f['PartType'+str(pt)+'/xz'].create_dataset(snap_key, data=xz[i])
             f['PartType'+str(pt)+'/yz'].create_dataset(snap_key, data=yz[i])
+
+            f['PartType'+str(pt)+'/xy/'+snap_key].attrs['Time'] = time
+            f['PartType'+str(pt)+'/xz/'+snap_key].attrs['Time'] = time
+            f['PartType'+str(pt)+'/yz/'+snap_key].attrs['Time'] = time
 
     f.close()
 
