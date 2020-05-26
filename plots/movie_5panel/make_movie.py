@@ -6,25 +6,35 @@ from tqdm import tqdm
 
 from matplotlib.animation import FuncAnimation
 
+time_conv = 977.793 # converts time units to Myr
+
 class animate_maker(object):
-    def __init__(self, proj_hdf5, projection, parttype, nres):
+    def __init__(self, proj_hdf5, projection, parttype, nres, im, txt=None):
         self.proj_hdf5 = proj_hdf5
         self.projection = projection
         self.parttype = parttype
         self.nres = nres
         self.base_key_list = ['PartType' + str(pt) + '/' + projection + '/snapshot_' for pt in self.parttype]
 
-    def __call__(self, frame, im):
+        self.im = im
+        self.txt = txt
+
+    def __call__(self, frame):
         heatmap = np.zeros((self.nres, self.nres))
         for base_key in self.base_key_list:
             this_ht = self.proj_hdf5[base_key + "{:03d}".format(frame)][:]
             heatmap += this_ht
 
-        im.set_data(heatmap.T)
-        return (im,)
+        self.im.set_data(heatmap.T)
+        if self.txt is None:
+            return (self.im,)
+        else:
+            time = self.proj_hdf5[self.base_key_list[0] + "{:03d}".format(frame)].attrs['Time']
+            self.txt.set_text('t='+'{0:.2f}'.format(time*time_conv)+' Myr')
+            return (self.im, self.txt)
 
 
-def make_movie(projection_file, parttype, projection, fout, vmin=1E-3, vmax=1E-1, fps=16):
+def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmin=1E-3, vmax=10.**(0.5), fps=16):
     assert projection in ['xy', 'xz', 'yz']
 
     if isinstance(parttype, int):
@@ -46,12 +56,20 @@ def make_movie(projection_file, parttype, projection, fout, vmin=1E-3, vmax=1E-1
     im = ax.imshow(np.full((nres, nres), vmin), extent=extent, origin='lower', 
                    norm=mpl.colors.LogNorm(), vmin=vmin, vmax=vmax)
 
-    # initialize animator
-    animate = animate_maker(f, projection, parttype, nres)
+    # initialize time if needed
+    if plot_time:
+        txt = ax.text(0.6, 0.85, ' ', transform=ax.transAxes, fontsize=7)
+    else:
+        txt = None
 
-    animation = FuncAnimation(fig, animate, tqdm(np.arange(maxsnap+1)), fargs=[im], interval=1000 / fps)
+    # initialize animator
+    animate = animate_maker(f, projection, parttype, nres, im, txt)
+
+    animation = FuncAnimation(fig, animate, tqdm(np.arange(maxsnap+1)), interval=1000 / fps)
     animation.save(fout, dpi=nres)
 
 if __name__ == '__main__':
-    make_movie('data/fid-dispPoly-fg0.1-lvl5_w30.0_n256.hdf5', 0, 'xy', 'test_gas.mp4')
-    make_movie('data/fid-dispPoly-fg0.1-lvl5_w30.0_n256.hdf5', [2, 3, 4], 'xy', 'test_star.mp4')
+    make_movie('data/fid-dispPoly-fg0.1-lvl5_w30.0_n256.hdf5', 0, 'xy', 'test_gas_xy.mp4')
+    make_movie('data/fid-dispPoly-fg0.1-lvl5_w30.0_n256.hdf5', 0, 'xz', 'test_gas_xz.mp4')
+    make_movie('data/fid-dispPoly-fg0.1-lvl5_w30.0_n256.hdf5', [2, 3, 4], 'xy', 'test_star_xy.mp4')
+    make_movie('data/fid-dispPoly-fg0.1-lvl5_w30.0_n256.hdf5', [2, 3, 4], 'xz', 'test_star_xz.mp4', plot_time=True)
