@@ -72,6 +72,11 @@ def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4],
 
     f = h5.File(output_dir + '/' + fname, mode='a')
 
+    if 'width' not in f.attrs.keys():
+        f.attrs['width'] = width
+    if 'nres' not in f.attrs.keys():
+        f.attrs['nres'] = nres
+
     for pt in parttype:
         if 'PartType' + str(pt) not in f.keys():
             f.create_group('PartType' + str(pt)+'/xy')
@@ -105,6 +110,9 @@ def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4],
             f['PartType'+str(pt)+'/xy/'+snap_key].attrs['Time'] = time
             f['PartType'+str(pt)+'/xz/'+snap_key].attrs['Time'] = time
             f['PartType'+str(pt)+'/yz/'+snap_key].attrs['Time'] = time
+
+    if len(snap_list) > 0:
+        f.attrs['maxsnap'] = np.max(snap_list)
 
     f.close()
 
