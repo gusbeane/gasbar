@@ -9,12 +9,13 @@ from matplotlib.animation import FuncAnimation
 time_conv = 977.793 # converts time units to Myr
 
 class animate_maker(object):
-    def __init__(self, proj_hdf5, projection, parttype, nres, im, txt=None):
+    def __init__(self, proj_hdf5, projection, parttype, nres, im, vmin, txt=None):
         self.proj_hdf5 = proj_hdf5
         self.projection = projection
         self.parttype = parttype
         self.nres = nres
         self.base_key_list = ['PartType' + str(pt) + '/' + projection + '/snapshot_' for pt in self.parttype]
+        self.vmin = vmin
 
         self.im = im
         self.txt = txt
@@ -24,6 +25,8 @@ class animate_maker(object):
         for base_key in self.base_key_list:
             this_ht = self.proj_hdf5[base_key + "{:03d}".format(frame)][:]
             heatmap += this_ht
+
+        heatmap[heatmap < self.vmin] = self.vmin
 
         self.im.set_data(heatmap.T)
         if self.txt is None:
@@ -63,7 +66,7 @@ def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmi
         txt = None
 
     # initialize animator
-    animate = animate_maker(f, projection, parttype, nres, im, txt)
+    animate = animate_maker(f, projection, parttype, nres, im, vmin, txt)
 
     animation = FuncAnimation(fig, animate, tqdm(np.arange(maxsnap+1)), interval=1000 / fps)
     animation.save(fout, dpi=nres)

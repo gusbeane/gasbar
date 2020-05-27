@@ -8,6 +8,11 @@ lvl  = sys.argv[2]
 width = 30.0
 nres = 256
 
+star_vmin = 1E-3
+star_vmax = 1E0
+gas_vmin  = 0.1 * star_vmin
+gas_vmax  = 0.1 * star_vmax
+
 data_dir = 'data/'
 
 name = base + '-' + lvl + '_w' + "{:.01f}".format(width) + '_n' + str(nres)
@@ -19,10 +24,10 @@ mov_starxy = 'movies/' + name + '_star_xy.mp4'
 mov_starxz = 'movies/' + name + '_star_xz.mp4'
 mov_4panel = 'movies/' + name + '_4panel.mp4'
 
-make_movie(proj, 0, 'xy', mov_gasxy)
-make_movie(proj, 0, 'xz', mov_gasxz)
-make_movie(proj, [2, 3, 4], 'xy', mov_starxy)
-make_movie(proj, [2, 3, 4], 'xz', mov_starxz)
+make_movie(proj, 0, 'xy', mov_gasxy, vmin=gas_vmin, vmax=gas_vmax)
+make_movie(proj, 0, 'xz', mov_gasxz, vmin=gas_vmin, vmax=gas_vmax)
+make_movie(proj, [2, 3, 4], 'xy', mov_starxy, vmin=star_vmin, vmax=star_vmax)
+make_movie(proj, [2, 3, 4], 'xz', mov_starxz, vmin=star_vmin, vmax=star_vmax)
 
 if os.path.exists('movies/' + name + '_4panel.mp4'):
     os.remove('movies/' + name + '_4panel.mp4')
