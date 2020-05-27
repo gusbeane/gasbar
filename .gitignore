@@ -4,6 +4,8 @@
 *.mp4
 *.prof
 
+__pycache__
+
 paper/*.pdf
 paper/*.log
 paper/*.aux
