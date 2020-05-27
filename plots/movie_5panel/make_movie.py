@@ -61,7 +61,7 @@ def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmi
 
     # initialize time if needed
     if plot_time:
-        txt = ax.text(0.6, 0.85, ' ', transform=ax.transAxes, fontsize=7)
+        txt = ax.text(0.6, 0.85, ' ', transform=ax.transAxes, fontsize=7, c='w')
     else:
         txt = None
 
