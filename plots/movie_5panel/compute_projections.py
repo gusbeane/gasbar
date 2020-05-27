@@ -65,11 +65,31 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
 
     return heatmap_xy_out, heatmap_xz_out, heatmap_xy_out, time
 
+def do_i_continue(fname, nsnap, parttype):
+    f = h5.File(fname, mode='r')
+    for pt in parttype:
+        pt_str = str(pt)
+        for snap in range(nsnap):
+            snap_key = 'snapshot_'+"{:03d}".format(snap)
+            if snap_key not in f['PartType' + pt_str + '/xy'].keys():
+                f.close()
+                return True
+
+    # all projections already computed
+    f.close()
+    return False
+
 def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4], center=np.array([200., 200., 200.]),
                                      width=30., nres=256, output_dir='data/'):
 
+    nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
+    assert nsnap > 0
+
     fname = name + '_w' + "{:.01f}".format(width) + '_n' + str(nres) + '.hdf5' 
 
+    if not do_i_continue(output_dir + '/' + fname, nsnap, parttype):
+        return
+    
     f = h5.File(output_dir + '/' + fname, mode='a')
 
     if 'width' not in f.attrs.keys():
@@ -83,8 +103,7 @@ def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4],
             f.create_group('PartType' + str(pt)+'/xz')
             f.create_group('PartType' + str(pt)+'/yz')
 
-    nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
-    assert nsnap > 0
+    
 
     snap_list = []
     for snap in range(nsnap):
