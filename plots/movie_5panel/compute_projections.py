@@ -66,6 +66,9 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
     return heatmap_xy_out, heatmap_xz_out, heatmap_xy_out, time
 
 def do_i_continue(fname, nsnap, parttype):
+    if not os.path.exists(fname):
+        return True
+    
     f = h5.File(fname, mode='r')
     for pt in parttype:
         pt_str = str(pt)

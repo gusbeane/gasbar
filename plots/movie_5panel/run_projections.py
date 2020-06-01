@@ -12,9 +12,11 @@ basepath = '../../runs/'
 
 fid_dP_sEQ_g1 = 'fid-dispPoly-fg0.1-SoftEQS0'
 fid_dP_rx_g1 = 'fid-dispPoly-fg0.1-MeshReg'
+fid_dP_rx_g1_dAGB = 'fid-dispPoly-fg0.1-MeshReg-diskAGB'
 
 pair_list = [(fid_dP_sEQ_g1, 'lvl5'), (fid_dP_sEQ_g1, 'lvl4'), (fid_dP_sEQ_g1, 'lvl3'),
-	  	     (fid_dP_rx_g1, 'lvl5'), (fid_dP_rx_g1, 'lvl4'), (fid_dP_rx_g1, 'lvl3')]
+	  	     (fid_dP_rx_g1, 'lvl5'), (fid_dP_rx_g1, 'lvl4'), (fid_dP_rx_g1, 'lvl3'),
+             (fid_dP_rx_g1_dAGB, 'lvl3')]
 
 name_list = [           p[0] + '-' + p[1] for p in pair_list]
 path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
