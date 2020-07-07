@@ -12,6 +12,7 @@ paper/*.aux
 paper/*.bbl
 
 runs
+hose_runs
 *.hdf5
 
 .DS_Store
