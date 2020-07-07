@@ -125,7 +125,8 @@ if __name__ == '__main__':
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
-                                            
-    for path, name in zip(path_list, name_list):
-        compute_two_comp_toomre(path, name)
+         
+    compute_two_comp_toomre('fid-fg0.1-Rcore1.0/', 'fid-fg0.1-Rcore1.0')
+    #for path, name in zip(path_list, name_list):
+        #compute_two_comp_toomre(path, name)
     

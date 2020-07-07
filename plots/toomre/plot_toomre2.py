@@ -97,11 +97,17 @@ if __name__ == '__main__':
 
     fid_g1 = 'fid-disp1.0-fg0.1-lvl5'
     fid_d15_g1 = 'fid-disp1.5-fg0.1-lvl5'
-   
-    name_list = [fid_g1, fid_d15_g1]
+    fid_g1_rcore1 = 'fid-fg0.1-Rcore1.0'
+
+    name_list = [fid_g1, fid_d15_g1, fid_g1_rcore1]
 
     plot_toomre2(name_list, 'toomre_two_comp.pdf')
     plot_toomre_fR(fid_g1, 'toomre_fR.pdf')
     plot_toomre_Qm1(fid_g1, 'toomre_Qm1.pdf')
+    
+    plot_toomre_fR(fid_g1_rcore1, 'toomre_Rcore1.0_fR.pdf')
+    plot_toomre_Qm1(fid_g1_rcore1, 'toomre_Rcore1.0_Qm1.pdf')
+
+
     #plot_toomre_ratio(fid_g1, 'toomre_two_comp_ratio_'+fid_g1+'.pdf')
     
