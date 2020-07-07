@@ -86,7 +86,7 @@ def construct_update_projection_hdf5(name, path, nproc=1, parttype=[0, 2, 3, 4],
                                      width=30., nres=256, output_dir='data/'):
 
     nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
-    assert nsnap > 0
+    assert nsnap > 0,"No output files detected for name="+name
 
     fname = name + '_w' + "{:.01f}".format(width) + '_n' + str(nres) + '.hdf5' 
 
