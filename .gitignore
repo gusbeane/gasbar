@@ -11,3 +11,5 @@ paper/*.bbl
 runs
 *.hdf5
 
+.DS_Store
+plots/movie_5panel/__pycache__/make_movie.cpython-37.pyc
