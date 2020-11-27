@@ -51,6 +51,7 @@
 \newcommand{\kpc}{\ensuremath{\text{kpc}}}
 
 \newcommand{\Msun}{\ensuremath{\text{M}_{\odot}}}
+\newcommand{\K}{\ensuremath{\text{K}}}
 
 \newcommand{\beq}{\begin{equation}}
 \newcommand{\eeq}{\end{equation}}
@@ -135,7 +136,15 @@ Galaxy: disc -- Galaxy: kinematics and dynamics -- stars: kinematics and dynamic
 \section{Introduction}
 Roughly two-thirds of spiral galaxies are known to host bars in the
 near-infrared, about half of which are strong
-\citep[e.g.][]{2000AJ....119..536E}. 
+\citep[e.g.][]{2000AJ....119..536E}. Given their ubiquity, it is no surprise
+that the Milky Way is known to host a strong bar. A full understanding of the
+origin of the Galaxy's structure clearly rests on the impact of the bar not
+just in the inner region but also near the Solar circle. Its impact on the gas
+phase is highly discussed in the inner regions of the Galaxy, but studies of
+the bar's impact on star formation at the Solar circle are less developed. In
+this work, we seek to contribute to our understanding of the latter topic.
+
+
 
 \section{Methods}
 \subsection{Numerical Methods and Physical Model}
@@ -178,6 +187,87 @@ of \smuggle{} which explicitly tracks the radiation field as an additional
 fluid component \citep{2019arXiv191014041K} based upon \areport{}
 \citep{2019MNRAS.485..117K} is available. We plan to use this module in the
 future.
+
+\subsection{Initial Conditions}\label{ssec:ics}
+The starting point for the construction of our initial conditions is the
+N-body model GALAKOS \citep{2020ApJ...890..117D}. GALAKOS has structural
+parameters and a circular velocity curve which are in reasonable agreement
+with current data. However, GALAKOS is a particularly good starting point
+because as \citet{2020ApJ...890..117D} showed, the disk forms a strong bar
+after ~ 1 Gyr. The bar then grows, until at ~ 2.5 Gyr it has grown and slowed
+down to a pattern speed of ~40 km/s/kpc. Evidence is mounting that the Milky
+Way's bar is long and slow, just like that in GALAKOS.
+
+We convert a fraction (10\%) of the initial stellar disk of GALAKOS to a gas
+disk. As described in \citet{2005MNRAS.361..776S}, the gas disk is initially
+in hydrostatic equilibrium. We assumed an ideal EOS for the gas phase,
+consistent with our underlying physical model. We make two further
+modifications to this setup. First, we ``core'' the gas profile -- instead of
+assuming the gas surface density profile is exponential, we assume it is a
+constant value within some radius $R_{\text{core}}$. Specifically,
+\beq
+\Sigma_{\text{gas}} = \Sigma_{0,\text{gas}} \times \begin{cases} 
+      e^{-R_{\text{core}}/H} & R \leq R_{\text{core}} \\
+      e^{-R/H} & R > R_{\text{core}}\text{,}
+   \end{cases}
+\eeq
+where $H$ is the scale length of the disk and $\Sigma_{0,\text{gas}} =
+\frac{M_{\text{gas}}}{2\pi H^2}$ is the central surface density. When
+$R_{\text{core}}/H=1$ and $1.4$, $\sim10\%$ and $\sim20\%$ of the gas disk
+mass is removed, respectively. This mass is not returned to another component
+and is thus removed from the initial conditions entirely. However, since our
+assumed gas fraction is $10\%$, this only represents a total reduction in the
+disk mass by a few percent. The surface density profile of the stellar disk is
+unchanged, though its velocity distribution is suitably altered.
+
+The second modification we make is to treat the initial disk particles as star
+particles. In, e.g., \citet{2019MNRAS.489.4233M} the initial disk is assumed
+to be a purely collisionless component with no feedback contributions.
+Instead, we assume the initial disk particles are star particles so they may
+contribute gas through AGB channels. This requires assigning an age and
+metallicity to each star particle. We randomly draw the age and metallicity of
+each star according to the age-metallicity-radius relation of
+\citet{2018ApJ...865...96F}. This ignores vertical variations which is
+implemented in other models \citep[e.g.][]{2020arXiv200503646S}.
+
+\subsection{Gas Accretion}\label{ssec:gas_acc}
+The method described in Section~\ref{ssec:ics} will succesfully form a bar
+after a few Gyr. However, because the disk is isolated (i.e., the only gas
+present in the initial conditions is in the disk), there is no source of fresh
+gas to resupply the disk. We found in empirical tests that by the time the bar
+had fully formed, the disk had become significantly more quiescent than what
+is expected for the Milky Way, with a global SFR of <~0.5 Msun/yr and a SFR
+surface density at 8 kpc about two orders of magnitude less than expected.
+Such differences prohibit a faithful comparison to the Milky Way.
+
+As a result, it is necessary to include a source of fresh gas to resupply the
+galaxy. We found this to be quite problematic because several such techniques
+we explored would either weaken or completely destroy the bar. We found that
+it was necessary to include a somewhat \textit{ad hoc} implementation of gas
+accretion from the circumgalactic medium (CGM).
+
+Our method is inspired by the picture of a ``galactic fountain flow''
+\citep{2006MNRAS.366..449F, 2008MNRAS.386..935F}. In this picture, gas is
+launched from the central region of a spiral galaxy before falling back onto
+the disk at a larger radii. In these models, the gas has lower angular
+momentum than the disk when it rejoins the disk due to {\bf drag interactions
+with the hot corona.}
+
+We therefore have implemented a method to include ``hoses'' into AREPO. These
+hoses are circular regions of radius $R_h$ placed along the $x$-axis at $x=\pm
+R$. At a fixed timestep $\delta t$ each hose will spawn a number $N$ of gas
+particles. The spawned gas particles have a fixed mass, a uniform initial
+temperature of $10^4 \K$, and a uniform metallicity chosen to be solar. 
+
+\subsection{Summary}\label{ssec:ics_summary}
+
+
+Our goal is now to construct an initial disk galaxy with gas that, like
+GALAKOS, forms a strong bar. The underlying method GALAKOS uses (namely
+MakeNewDisk) can already convert a constant fraction of the initial stellar disk to a
+gas disk which is initially in hydrostatic equilibrium. However, if this setup
+is used na
+
 
 % Standard cooling processes from hydrogen and helium undergoing two-body
 % interactions, Compton cooling of cosmic microwave background photons, and
