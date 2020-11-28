@@ -11,8 +11,13 @@ except:
 basepath = '../../runs/'
 
 fid_dP = 'fRpoly'
+fid_dP_c1 = 'fRpoly-Rcore1.0'
+fid_dP_c1_h = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel160.0'
 
-pair_list = [(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), (fid_dP, 'lvl3')]
+
+pair_list = [(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
+             (fid_dP_c1, 'lvl5'),
+             (fid_dP_c1_h, 'lvl5')]
 
 name_list = [           p[0] + '-' + p[1] for p in pair_list]
 path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
