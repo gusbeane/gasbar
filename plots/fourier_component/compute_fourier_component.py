@@ -6,40 +6,40 @@ import astropy.units as u
 import h5py as h5
 import glob
 import os
+from numba import njit
 
 from joblib import Parallel, delayed
 
-def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True, amplitude=True):
-
-    assert isinstance(m, int), "m must be an integer!"
-    assert isinstance(float(Rmin), float), "Rmin must be a float!"
-    assert isinstance(float(Rmax), float), "Rmax must be a float!"
-
+@njit
+def fourier_component_njit(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True):
     if logspace:
-        bins = np.logspace(np.log10(Rmin), np.log10(Rmax), nbins)
+        bins = np.linspace(np.log10(Rmin), np.log10(Rmax), nbins+1)
+        bins = np.power(10., bins)
     else:
-        bins = np.linspace(Rmin, Rmax, nbins)
-
-    # loop through types and concatenate positions and masses    
-    Rmag = np.linalg.norm(pos[:,:2], axis=1)
-
-    keys = np.logical_and(Rmag > Rmin, Rmag < Rmax)
-
-    # get output R list by averaging the value of R in each bin
-    digit = np.digitize(Rmag[keys], bins)
-    R_list = [Rmag[keys][digit == i].mean() for i in range(1, len(bins))]
-
-    # compute the Am term for each particle
-    phi_list = np.arctan2(pos[:,1], pos[:,0])
-    Am_i = mass*np.exp((1j)*m*phi_list)
-
-    if amplitude:
-        Am_list = [np.abs(np.sum(Am_i[keys][digit == i])) for i in range(1, len(bins))]
-        return np.array(R_list), np.array(Am_list)
-    else:
-        Am_list_real = [np.sum(np.real(Am_i[keys][digit == i])) for i in range(1, len(bins))]
-        Am_list_imag = [np.sum(np.imag(Am_i[keys][digit == i])) for i in range(1, len(bins))]
-        return np.array(R_list), np.array(Am_list_real), np.array(Am_list_imag)
+        bins = np.linspace(Rmin, Rmax, nbins+1)
+    
+    Am_real = np.zeros(nbins)
+    Am_imag = np.zeros(nbins)
+    Rmag = np.zeros(nbins)
+    N_in_bin = np.zeros(nbins)
+    
+    Npart = len(pos)
+    for i in range(Npart):
+        R = np.sqrt(pos[i][0]*pos[i][0] + pos[i][1]*pos[i][1])
+        phi = np.arctan2(pos[i][1], pos[i][0])
+        
+        for j in range(nbins):
+            if R > bins[j] and R < bins[j+1]:
+                Am_real[j] += mass[j]*np.cos(m*phi)
+                Am_imag[j] += mass[j]*np.sin(m*phi)
+                Rmag[j] += R
+                N_in_bin[j] += 1
+    
+    
+    for j in range(nbins):
+        Rmag[j] /= N_in_bin[j]
+    
+    return Rmag, Am_real, Am_imag
 
 def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False, center=None):
     # try loading snapshot
@@ -81,28 +81,28 @@ def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logs
             mass = np.concatenate((mass, this_mass))
             pos = np.concatenate((pos, this_pos))
 
-    Rlist, A0 = fourier_component(pos, mass, 0, Rmin, Rmax, 
+    Rlist, A0, _ = fourier_component(pos, mass, 0, Rmin, Rmax, 
                                        nbins=nbins, logspace=logspace)
     Rlist, A1r, A1i = fourier_component(pos, mass, 1, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A2r, A2i = fourier_component(pos, mass, 2, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A3r, A3i = fourier_component(pos, mass, 3, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A4r, A4i = fourier_component(pos, mass, 4, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A5r, A5i = fourier_component(pos, mass, 5, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A6r, A6i = fourier_component(pos, mass, 6, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A7r, A7i = fourier_component(pos, mass, 7, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A8r, A8i = fourier_component(pos, mass, 8, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A9r, A9i = fourier_component(pos, mass, 9, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     Rlist, A10r, A10i = fourier_component(pos, mass, 10, Rmin, Rmax, 
-                                       nbins=nbins, logspace=logspace, amplitude=False)
+                                       nbins=nbins, logspace=logspace)
     
     time = sn.Time.as_unit(arepo.u.d).value * u.d
     time = time.to_value(u.Myr)
@@ -167,56 +167,26 @@ if __name__ == '__main__':
 
     basepath = '../../runs/'
 
-    fid_g1 = 'fid-disp1.0-fg0.1'
-    fid_g2 = 'fid-disp1.0-fg0.2'
-    fid_g3 = 'fid-disp1.0-fg0.3'
-    fid_g4 = 'fid-disp1.0-fg0.4'
-    fid_g5 = 'fid-disp1.0-fg0.5'    
-    fid_d7_g3 = 'fid-disp0.7-fg0.3'
-    fid_d5_g3 = 'fid-disp0.5-fg0.3'
-    fid_g3_nB = 'fid-disp1.0-fg0.3-noBulge' 
-    fid_g1_da = 'fid-disp1.0-fg0.1-diskAcc1.0'
-    fid_g1_da_am = 'fid-disp1.0-fg0.1-diskAcc1.0-decAngMom' 
-    fid_g1_corona = 'fid-disp1.0-fg0.1-corona'
-    fid_g1_coronaRot = 'fid-disp1.0-fg0.1-coronaRot'
-    fid_g1_coronaMat = 'fid-disp1.0-fg0.1-corona-Matthew'
-    fid_g1_coronaMat4 = 'fid-disp1.0-fg0.1-corona-Matthew-MHG0.004'
-    
-    fid_g1_fixed1kpc = 'fid-disp1.0-fixedDisk-core1kpc'
-    fid_g1_fixed2kpc = 'fid-disp1.0-fixedDisk-core2kpc'
-    fid_g1_fixed3kpc = 'fid-disp1.0-fixedDisk-core3kpc'
-    fid_g1_fixed4kpc = 'fid-disp1.0-fixedDisk-core4kpc' 
-    fid_g1_fixed5kpc = 'fid-disp1.0-fixedDisk-core5kpc' 
-    fid_g1_fixed6kpc = 'fid-disp1.0-fixedDisk-core6kpc' 
-    fid_g1_dS_out_delay = 'fid-disp1.0-fg0.1-diskAGB-outer-delay1.0'
-    
-    # look to see if we are on my macbook or on the cluster
-    if sys.platform == 'darwin':
-        pair_list = [(fid_g1, 'lvl5')]
-    else:
-        pair_list = [(fid_g1, 'lvl5'), (fid_g1, 'lvl4'), (fid_g1, 'lvl3'),
-                     #(fid_g2, 'lvl5'), (fid_g2, 'lvl4'), (fid_g2, 'lvl3'),
-                     #(fid_g3, 'lvl5'), (fid_g3, 'lvl4'), (fid_g3, 'lvl3'),
-                     #(fid_g4, 'lvl5'), (fid_g4, 'lvl4'),
-                     #(fid_g5, 'lvl5'), (fid_g5, 'lvl4'),
-                     (fid_g1_fixed1kpc, 'lvl5'), (fid_g1_fixed1kpc, 'lvl4'),
-                     (fid_g1_fixed2kpc, 'lvl5'), (fid_g1_fixed2kpc, 'lvl4'),
-                     (fid_g1_fixed3kpc, 'lvl5'), (fid_g1_fixed3kpc, 'lvl4'),
-                     (fid_g1_fixed4kpc, 'lvl5'), (fid_g1_fixed4kpc, 'lvl4'),
-                     (fid_g1_fixed5kpc, 'lvl5'), (fid_g1_fixed5kpc, 'lvl4'),
-                     (fid_g1_fixed6kpc, 'lvl5'), (fid_g1_fixed6kpc, 'lvl4'),
-                     (fid_g1_dS_out_delay, 'lvl5'), (fid_g1_dS_out_delay, 'lvl4'), (fid_g1_dS_out_delay, 'lvl3')]
+    fid_dP = 'fRpoly'
+    fid_dP_c1 = 'fRpoly-Rcore1.0'
+    fid_dP2_c1 = 'fRpoly2-Rcore1.0'
+    fid_dP_c1_rx = 'fRpoly-Rcore1.0-relax'
+    fid_dP_c1_bG = 'fRpoly-Rcore1.0-barGas'
+    fid_dP_c1_bG1 = 'fRpoly-Rcore1.0-barGas1.0'
+    fid_dP_c1_rB = 'fRpoly-Rcore1.0-ringBug'
+    fid_dP_c1_h = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel160.0'
+    fid_dP_c1_h_v140 = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel140.0'
 
-                     #(fid_g1_corona, 'lvl5'), (fid_g1_corona, 'lvl4'),
-                     #(fid_g1_coronaRot, 'lvl5'), (fid_g1_coronaRot, 'lvl4'),
-                     #(fid_g1_coronaMat, 'lvl5'), (fid_g1_coronaMat, 'lvl4'),
-                     #(fid_g1_coronaMat4, 'lvl5'), (fid_g1_coronaMat4, 'lvl4')]
-                     #(fid_d7_g3, 'lvl5'), (fid_d7_g3, 'lvl4'),
-                     #(fid_d5_g3, 'lvl5'), (fid_d5_g3, 'lvl4'),
-                     #(fid_g3_nB, 'lvl5'), (fid_g3_nB, 'lvl4'),
-                     #(fid_g1_da, 'lvl5'), (fid_g1_da, 'lvl4'),
-                     #(fid_g1_da_am, 'lvl5'), (fid_g1_da_am, 'lvl4')]
-    
+
+    pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
+                 (fid_dP_c1, 'lvl5'), (fid_dP_c1, 'lvl4'), (fid_dP_c1, 'lvl3'),
+                 (fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3')]
+                 # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
+                 # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
+                 # (fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
+                 # (fid_dP_c1_h, 'lvl5'), (fid_dP_c1_h, 'lvl4'), #(fid_dP_c1_h, 'lvl3'),
+                 # (fid_dP_c1_h_v140, 'lvl5'), (fid_dP_c1_h_v140, 'lvl4')] #(fid_dP_c1_h, 'lvl3')]
+
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
                                             
