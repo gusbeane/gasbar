@@ -32,7 +32,7 @@ def gas_flow(pos, mass, vel, Rmin, Rmax, nbins=20, logspace=True):
         
         for j in range(nbins):
             if R > bins[j] and R < bins[j+1]:
-                flow[j] += mass * vR
+                flow[j] += mass[j] * vR
                 Rmag[j] += R
                 N_in_bin[j] += 1
     
