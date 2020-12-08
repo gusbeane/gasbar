@@ -83,7 +83,7 @@ def compute_gas_flow(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=Fals
             mass = np.concatenate((mass, this_mass))
             pos = np.concatenate((pos, this_pos))
 
-    Rlist, flow_rate = flow_rate(pos, mass, Rmin, Rmax, 
+    Rlist, flow_rate = gas_flow(pos, mass, Rmin, Rmax, 
                                        nbins=nbins, logspace=logspace)
     
     time = sn.Time.as_unit(arepo.u.d).value * u.d
