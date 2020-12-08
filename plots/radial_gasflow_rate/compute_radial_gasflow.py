@@ -52,38 +52,14 @@ def compute_gas_flow(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=Fals
         return None
     
     firstpart = True
-    for i, npart in enumerate(sn.NumPart_Total):
-        if i not in [0]:
-            continue
+    
+    pos = sn.part0.pos
+    if center is not None:
+        pos = np.subtract(pos, center)
+    vel = sn.part0.vel
+    mass = sn.part0.mass
 
-        if npart == 0:
-            continue
-
-        part = getattr(sn, 'part'+str(i))
-
-        # compute the center of mass
-        this_mass = sn.MassTable[i].as_unit(arepo.u.msol).value
-        this_pos = part.pos.as_unit(arepo.u.kpc).value
-
-        if center is not None:
-            this_pos = np.subtract(this_pos, center)
-
-        # if mass is zero, then we need to load each individual mass
-        if this_mass == 0:
-            this_mass = part.mass.as_unit(arepo.u.msol).value
-        else:
-            this_mass = np.full(npart, this_mass)
-
-        # now concatenate if needed
-        if firstpart:
-            mass = np.copy(this_mass)
-            pos = np.copy(this_pos)
-            firstpart = False
-        else:
-            mass = np.concatenate((mass, this_mass))
-            pos = np.concatenate((pos, this_pos))
-
-    Rlist, flow_rate = gas_flow(pos, mass, Rmin, Rmax, 
+    Rlist, flow_rate = gas_flow(pos, mass, vel, Rmin, Rmax, 
                                        nbins=nbins, logspace=logspace)
     
     time = sn.Time.as_unit(arepo.u.d).value * u.d
