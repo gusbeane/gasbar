@@ -11,7 +11,7 @@ from numba import njit
 from joblib import Parallel, delayed
 
 @njit
-def fourier_component_njit(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True):
+def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True):
     if logspace:
         bins = np.linspace(np.log10(Rmin), np.log10(Rmax), nbins+1)
         bins = np.power(10., bins)
