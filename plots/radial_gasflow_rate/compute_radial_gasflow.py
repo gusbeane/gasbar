@@ -38,7 +38,11 @@ def gas_flow(pos, mass, vel, Rmin, Rmax, nbins=20, logspace=True):
     
     
     for j in range(nbins):
-        Rmag[j] /= N_in_bin[j]
+        if N_in_bin[j] > 0:
+            Rmag[j] /= N_in_bin[j]
+        else:
+            Rmag[j] = np.nan 
+            flow[j] = np.nan
     
     return Rmag, flow
 
