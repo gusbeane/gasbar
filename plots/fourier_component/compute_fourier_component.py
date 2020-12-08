@@ -44,7 +44,8 @@ def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True):
 def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False, center=None):
     # try loading snapshot
     try:
-        sn = arepo.Snapshot(path+'/output/', snapnum, combineFiles=True)
+        sn = arepo.Snapshot(path+'/output/', snapnum, combineFiles=True, 
+                            parttype=[2, 3, 4], fields=['Coordinates', 'Masses'])
     except:
         print("unable to load path:"+path, " snapnum: ", snapnum)
         return None
