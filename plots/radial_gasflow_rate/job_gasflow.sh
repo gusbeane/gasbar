@@ -1,12 +1,12 @@
 #!/bin/sh
-#SBATCH -p shared
+#SBATCH -p hernquist,conroy
 ##SBATCH --constraint=intel
 #SBATCH -J gasflow
-#SBATCH -n 22 
+#SBATCH -n 64
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
-#SBATCH --exclusive
+##SBATCH --exclusive
 #SBATCH --mail-user=angus.beane@cfa.harvard.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
