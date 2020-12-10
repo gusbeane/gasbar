@@ -19,4 +19,4 @@ hose_runs
 plots/movie_5panel/__pycache__/make_movie.cpython-37.pyc
 
 plots/movie_5panel/data*
-
+.ipynb_checkpoints
