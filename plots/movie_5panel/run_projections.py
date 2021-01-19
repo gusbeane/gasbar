@@ -40,6 +40,8 @@ f_Ngb32  = 'fRpoly-Rcore1.0-DesNumNgbEnrichment32'
 f_Ngb128 = 'fRpoly-Rcore1.0-DesNumNgbEnrichment128'
 f_Ngb512 = 'fRpoly-Rcore1.0-DesNumNgbEnrichment512'
 
+f_noMB_Ngb512 = 'fRpoly-Rcore1.0-noMB-Ngb512'
+
 f_Sg40 = 'fR1.0-Sg40-Rc4.5'
 f_Sg10 = 'fR1.0-Sg10-Rc4.5'
 
@@ -48,6 +50,7 @@ fid_dP_c1_h = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel160.0'
 fid_dP_c1_h_v140 = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel140.0'
 
 ph = 'phantom'
+phNgb = 'phantom-Ngb512'
 
 pair_list = [(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
              (fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
@@ -74,9 +77,11 @@ pair_list = [(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
              (f_Ngb32, 'lvl4'), (f_Ngb32, 'lvl3'),
              (f_Ngb128, 'lvl4'), (f_Ngb128, 'lvl3'),
              (f_Ngb512, 'lvl4'), (f_Ngb512, 'lvl3'),
+             (f_noMB_Ngb512, 'lvl3'),
              (f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
              (f_Sg10, 'lvl4'), (f_Sg10, 'lvl3'),
-             (ph, 'lvl3')]
+             (ph, 'lvl3'),
+             (phNgb, 'lvl3')]
              #(fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
              #(fid_dP_c1_h, 'lvl5'), (fid_dP_c1_h, 'lvl4'), #(fid_dP_c1_h, 'lvl3'),
              #(fid_dP_c1_h_v140, 'lvl5'), (fid_dP_c1_h_v140, 'lvl4')] #(fid_dP_c1_h, 'lvl3')]
