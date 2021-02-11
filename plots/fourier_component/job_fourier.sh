@@ -1,8 +1,8 @@
 #!/bin/sh
-#SBATCH -p hernquist,conroy
+#SBATCH -p hernquist,conroy,shared,itc_cluster
 ##SBATCH --constraint=intel
 #SBATCH -J fourier 
-#SBATCH -n 64
+#SBATCH -n 16
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err

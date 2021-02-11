@@ -37,8 +37,11 @@ def fourier_component(pos, mass, m, Rmin, Rmax, nbins=20, logspace=True):
     
     
     for j in range(nbins):
-        Rmag[j] /= N_in_bin[j]
-    
+        if N_in_bin[j] > 0:
+            Rmag[j] /= N_in_bin[j]
+        else:
+            Rmag[j] = np.nan
+
     return Rmag, Am_real, Am_imag
 
 def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logspace=False, center=None):
@@ -182,6 +185,12 @@ if __name__ == '__main__':
     fid_dP_c1_h = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel160.0'
     fid_dP_c1_h_v140 = 'fRpoly-Rcore1.0-hose-Del1.0-Rg15.0-Rate0.5-Rh0.2-Vel140.0'
 
+    phv = 'phantom-vacuum'
+    phgv = 'phantom-vacuum-grav'
+
+    phgvS1 = 'phantom-vacuum-Sg10-Rc4.0'
+    phgvS2 = 'phantom-vacuum-Sg20-Rc4.0'
+    phgS1 = 'phantom-Sg10-Rc4.0'
 
     pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
                  (Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
@@ -189,7 +198,12 @@ if __name__ == '__main__':
                  (fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3'),
                  (fid_dP_c1_bG2, 'lvl5'), (fid_dP_c1_bG2, 'lvl4'), (fid_dP_c1_bG2, 'lvl3'),
                  (fid_dP_c1_sp, 'lvl5'), (fid_dP_c1_sp, 'lvl4'), (fid_dP_c1_sp, 'lvl3'),
-                 (fid_dP_c1_MB, 'lvl5'), (fid_dP_c1_MB, 'lvl4'), (fid_dP_c1_MB, 'lvl3')]
+                 (fid_dP_c1_MB, 'lvl5'), (fid_dP_c1_MB, 'lvl4'), (fid_dP_c1_MB, 'lvl3'),
+                 (phv, 'lvl3'),
+                 (phgv, 'lvl3'),
+                 (phgvS1, 'lvl3'),
+                 (phgvS2, 'lvl3'),
+                 (phgS1, 'lvl3')]
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
