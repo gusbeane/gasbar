@@ -24,10 +24,10 @@ mov_testxy = 'movies/' + name + '_test_xy.mp4'
 mov_testxz = 'movies/' + name + '_test_xz.mp4'
 mov_4panel = 'movies/' + name + '_4panel.mp4'
 
-make_movie(proj, [2, 3], 'xy', mov_gasxy, vmin=gas_vmin, vmax=gas_vmax, plot_time=True)
-make_movie(proj, [2, 3], 'xz', mov_gasxz, vmin=gas_vmin, vmax=gas_vmax)
-make_movie(proj, 5, 'xy', mov_starxy, vmin=star_vmin, vmax=star_vmax)
-make_movie(proj, 5, 'xz', mov_starxz, vmin=star_vmin, vmax=star_vmax, plot_time=True)
+make_movie(proj, [2, 3], 'xy', mov_starxy, vmin=star_vmin, vmax=star_vmax, plot_time=True)
+make_movie(proj, [2, 3], 'xz', mov_starxz, vmin=star_vmin, vmax=star_vmax)
+make_movie(proj, 5, 'xy', mov_testxy, vmin=star_vmin, vmax=star_vmax)
+make_movie(proj, 5, 'xz', mov_testxz, vmin=star_vmin, vmax=star_vmax, plot_time=True)
 
 if os.path.exists('movies/' + name + '_4panel.mp4'):
     os.remove('movies/' + name + '_4panel.mp4')
