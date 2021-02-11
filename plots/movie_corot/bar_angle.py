@@ -1,5 +1,6 @@
 import numpy as np
 import astropy.units as u
+import re
 
 def get_bar_angle(phi, firstkey):
     out = np.zeros(len(phi))
@@ -33,7 +34,7 @@ def get_sorted_keys(dat):
 
     return keys_sorted
 
-def get_A2_angle(dat, keys):
+def get_A2_angle(dat, keys, Rbin=5):
     Rlist = np.array([np.array(dat[k]['Rlist']) for k in keys])
     A2r = np.array([np.array(dat[k]['A2r']) for k in keys])
     A2i = np.array([np.array(dat[k]['A2i']) for k in keys])
@@ -69,7 +70,7 @@ def master_bar_angle(dat, Rbin = 5, firstkey = 150, nmax = 10):
     out = {}
 
     keys = get_sorted_keys(dat)
-    time, R, phi = get_A2_angle(dat, keys)
+    time, R, phi = get_A2_angle(dat, keys, Rbin=Rbin)
     bar_angle = get_bar_angle(phi, firstkey)
 
     pattern_speed = np.gradient(bar_angle, time) / u.Myr

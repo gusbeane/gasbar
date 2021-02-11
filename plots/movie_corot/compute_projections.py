@@ -39,9 +39,9 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
 
         part = getattr(sn, 'part'+str(pt))
 
-        x = part.pos[:,0]
-        y = part.pos[:,1]
-        z = part.pos[:,2]
+        x = part.pos[:,0].value
+        y = part.pos[:,1].value
+        z = part.pos[:,2].value
 
         if corot:
             phi = np.arctan(y, x)
