@@ -190,6 +190,7 @@ if __name__ == '__main__':
 
     phgvS1 = 'phantom-vacuum-Sg10-Rc4.0'
     phgvS2 = 'phantom-vacuum-Sg20-Rc4.0'
+    phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
     phgS1 = 'phantom-Sg10-Rc4.0'
 
     pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
@@ -203,6 +204,7 @@ if __name__ == '__main__':
                  (phgv, 'lvl3'),
                  (phgvS1, 'lvl3'),
                  (phgvS2, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm'),
                  (phgS1, 'lvl3')]
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),

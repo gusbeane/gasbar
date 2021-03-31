@@ -41,6 +41,7 @@ f_Ngb128 = 'fRpoly-Rcore1.0-DesNumNgbEnrichment128'
 f_Ngb512 = 'fRpoly-Rcore1.0-DesNumNgbEnrichment512'
 f_Ngb512_ft = 'fRpoly-Rcore1.0-DesNumNgbEnrichment512-ftrap'
 f_Ngb512_rf = 'fRpoly-Rcore1.0-DesNumNgbEnrichment512-RadFeed'
+f3_Ngb512_rf = 'fR3.0-Rcore1.0-DesNumNgbEnrichment512-RadFeed'
 
 f_noMB_Ngb512 = 'fRpoly-Rcore1.0-noMB-Ngb512'
 
@@ -59,49 +60,53 @@ phgv = 'phantom-vacuum-grav'
 
 phgvS1 = 'phantom-vacuum-Sg10-Rc4.0'
 phgvS2 = 'phantom-vacuum-Sg20-Rc4.0'
+phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 phgS1 = 'phantom-Sg10-Rc4.0'
 phgvS1Ngbft = 'phantom-vacuum-Sg10-Rc4.0-DesNumNgbEnrichment512-ftrap'
 
-
-pair_list = [(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
-             (fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
-             (fid_dP_c1, 'lvl5'), (fid_dP_c1, 'lvl4'), (fid_dP_c1, 'lvl3'),
-             (fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3'),
+pair_list = [#(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
+             #(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
+             #(fid_dP_c1, 'lvl5'), (fid_dP_c1, 'lvl4'), (fid_dP_c1, 'lvl3'),
+             #(fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3'),
              #(fid_dP_c1_rx, 'lvl5'), (fid_dP_c1_rx, 'lvl4'),# (fid_dP_c1_rx, 'lvl3'),
              #(fid_dP_c1_rx, 'lvl4-snap001'),# (fid_dP_c1_rx, 'lvl3'),
              #(fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
              #(fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
-             (fid_dP_c1_bG2, 'lvl5'), (fid_dP_c1_bG2, 'lvl4'), (fid_dP_c1_bG2, 'lvl3'),
-             (fid_dP_c1_sp, 'lvl5'), (fid_dP_c1_sp, 'lvl4'), (fid_dP_c1_sp, 'lvl3'),
-             (fid_dP_c1_MB, 'lvl5'), (fid_dP_c1_MB, 'lvl4'), (fid_dP_c1_MB, 'lvl3'),
-             (fid_dP_c1_MB_sp, 'lvl5'), (fid_dP_c1_MB_sp, 'lvl4'), (fid_dP_c1_MB_sp, 'lvl3'),
-             (fid_dP_c1_MB_eff2, 'lvl5'), (fid_dP_c1_MB_eff2, 'lvl4'), (fid_dP_c1_MB_eff2, 'lvl3'),
-             (fid_dP_c1_MB_LM, 'lvl4'), (fid_dP_c1_MB_LM, 'lvl3'),
-             (fid_dP_c1_noMB, 'lvl5'), (fid_dP_c1_noMB, 'lvl4'), (fid_dP_c1_noMB, 'lvl3'), (fid_dP_c1_noMB, 'lvl3-TauBug'),
-             (fid_dP_c1_MB_WSF2, 'lvl4'), (fid_dP_c1_MB_WSF2, 'lvl3'),
-             (fid_dP_c1_MB_LM3, 'lvl4'), (fid_dP_c1_MB_LM3, 'lvl3'),
-             (fid_dP_noB_fR12, 'lvl4'), (fid_dP_noB_fR12, 'lvl3'),
-             (fid_dP_MB2_fR12, 'lvl4'), (fid_dP_MB2_fR12, 'lvl3'),
-             (f_g1_MB, 'lvl4'), (f_g1_MB, 'lvl3'),
-             (f_g2_MB, 'lvl4'), (f_g2_MB, 'lvl3'),
-             (fR3_g2_MB, 'lvl4'), (fR3_g2_MB, 'lvl3'),
-             (f_Ngb32, 'lvl4'), (f_Ngb32, 'lvl3'),
-             (f_Ngb128, 'lvl4'), (f_Ngb128, 'lvl3'),
-             (f_Ngb512, 'lvl4'), (f_Ngb512, 'lvl3'),
-             (f_Ngb512_ft, 'lvl3-ft0'), (f_Ngb512_ft, 'lvl3-ft2'), (f_Ngb512_ft, 'lvl3-ft8'),
-             (f_Ngb512_rf, 'lvl3'),
-             (f_noMB_Ngb512, 'lvl3'),
-             (f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
-             (f_Sg10, 'lvl4'), (f_Sg10, 'lvl3'),
-             (ph, 'lvl3'),
-             (phNgb, 'lvl3'),
-             (phv, 'lvl3'),# (phv, 'lvl3-grav'),
-             (phg, 'lvl3'),
-             (phgv, 'lvl3'),
-             (phgvS1, 'lvl3'),
-             (phgvS2, 'lvl3'),
-             (phgS1, 'lvl3'),
-             (phgvS1Ngbft, 'lvl3-ft8')]
+             #(fid_dP_c1_bG2, 'lvl5'), (fid_dP_c1_bG2, 'lvl4'), (fid_dP_c1_bG2, 'lvl3'),
+             #(fid_dP_c1_sp, 'lvl5'), (fid_dP_c1_sp, 'lvl4'), (fid_dP_c1_sp, 'lvl3'),
+             #(fid_dP_c1_MB, 'lvl5'), (fid_dP_c1_MB, 'lvl4'), (fid_dP_c1_MB, 'lvl3'),
+             #(fid_dP_c1_MB_sp, 'lvl5'), (fid_dP_c1_MB_sp, 'lvl4'), (fid_dP_c1_MB_sp, 'lvl3'),
+             #(fid_dP_c1_MB_eff2, 'lvl5'), (fid_dP_c1_MB_eff2, 'lvl4'), (fid_dP_c1_MB_eff2, 'lvl3'),
+             #(fid_dP_c1_MB_LM, 'lvl4'), (fid_dP_c1_MB_LM, 'lvl3'),
+             #(fid_dP_c1_noMB, 'lvl5'), (fid_dP_c1_noMB, 'lvl4'), (fid_dP_c1_noMB, 'lvl3'), (fid_dP_c1_noMB, 'lvl3-TauBug'),
+             #(fid_dP_c1_MB_WSF2, 'lvl4'), (fid_dP_c1_MB_WSF2, 'lvl3'),
+             #(fid_dP_c1_MB_LM3, 'lvl4'), (fid_dP_c1_MB_LM3, 'lvl3'),
+             #(fid_dP_noB_fR12, 'lvl4'), (fid_dP_noB_fR12, 'lvl3'),
+             #(fid_dP_MB2_fR12, 'lvl4'), (fid_dP_MB2_fR12, 'lvl3'),
+             #(f_g1_MB, 'lvl4'), (f_g1_MB, 'lvl3'),
+             #(f_g2_MB, 'lvl4'), (f_g2_MB, 'lvl3'),
+             #(fR3_g2_MB, 'lvl4'), (fR3_g2_MB, 'lvl3'),
+             #(f_Ngb32, 'lvl4'), (f_Ngb32, 'lvl3'),
+             #(f_Ngb128, 'lvl4'), (f_Ngb128, 'lvl3'),
+             #(f_Ngb512, 'lvl4'), (f_Ngb512, 'lvl3'),
+             #(f_Ngb512_ft, 'lvl3-ft0'), (f_Ngb512_ft, 'lvl3-ft2'), (f_Ngb512_ft, 'lvl3-ft8'),
+             #(f_Ngb512_rf, 'lvl3'), (f_Ngb512_rf, 'lvl3-eta1'), (f_Ngb512_rf, 'lvl3-eta2'),
+             #(f_Ngb512_rf, 'lvl3-eta1-eta2'), (f_Ngb512_rf, 'lvl3-eta1-eta2-OBbugfix'),
+             (f3_Ngb512_rf, 'lvl3'), (f3_Ngb512_rf, 'lvl3-eta1'), (f3_Ngb512_rf, 'lvl3-eta2'),
+             (f3_Ngb512_rf, 'lvl3-eta1-eta2'), (f3_Ngb512_rf, 'lvl3-eta1-eta2-OBbugfix'),
+             (phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm')]
+             #(f_noMB_Ngb512, 'lvl3'),
+             #(f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
+             #(f_Sg10, 'lvl4'), (f_Sg10, 'lvl3'),
+             #(ph, 'lvl3'),
+             #(phNgb, 'lvl3'),
+             #(phv, 'lvl3'),# (phv, 'lvl3-grav'),
+             #(phg, 'lvl3'),
+             #(phgv, 'lvl3'),
+             #(phgvS1, 'lvl3'),
+             #(phgvS2, 'lvl3'),
+             #(phgS1, 'lvl3'),
+             #(phgvS1Ngbft, 'lvl3-ft8')]
              #(fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
              #(fid_dP_c1_h, 'lvl5'), (fid_dP_c1_h, 'lvl4'), #(fid_dP_c1_h, 'lvl3'),
              #(fid_dP_c1_h_v140, 'lvl5'), (fid_dP_c1_h_v140, 'lvl4')] #(fid_dP_c1_h, 'lvl3')]
