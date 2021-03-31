@@ -44,11 +44,17 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
         z = part.pos[:,2].value
 
         if corot:
-            phi = np.arctan(y, x)
+            x -= center[0]
+            y -= center[1]
+
+            phi = np.arctan2(y, x)
             R = np.sqrt(x**2 + y**2)
             phi -= ba
             x = R * np.cos(phi)
             y = R * np.sin(phi)
+
+            x += center[0]
+            y += center[1]
 
         xbool = np.logical_and(x > center[0] - width/2.0, x < center[0] + width/2.0)
         ybool = np.logical_and(y > center[1] - width/2.0, y < center[1] + width/2.0)

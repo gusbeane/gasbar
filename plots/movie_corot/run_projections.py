@@ -37,4 +37,4 @@ for name, path in zip(name_list, path_list):
         firstkey = 150
 
     construct_update_projection_hdf5(name, path, nproc=nproc, center=center, 
-                                     corot=True, fourier_path=fourier_path, firstkey=firstkey)
+                                     nres=512, corot=True, fourier_path=fourier_path, firstkey=firstkey)
