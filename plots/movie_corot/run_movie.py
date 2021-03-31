@@ -6,7 +6,7 @@ base = sys.argv[1]
 lvl  = sys.argv[2]
 
 width = 30.0
-nres = 256
+nres = 512
 
 star_vmin = 1E-3
 star_vmax = 1E0
@@ -15,7 +15,7 @@ gas_vmax  = 0.1 * star_vmax
 
 data_dir = 'data/'
 
-name = base + '-' + lvl + '_w' + "{:.01f}".format(width) + '_n' + str(nres)
+name = base + '-' + lvl + '_corot_w' + "{:.01f}".format(width) + '_n' + str(nres)
 proj = data_dir + name + '.hdf5'
 
 mov_gasxy = 'movies/' + name + '_gas_xy.mp4'
