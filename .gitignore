@@ -20,4 +20,9 @@ plots/movie_5panel/__pycache__/make_movie.cpython-37.pyc
 
 plots/movie_5panel/data*
 plots/movie_tp/data*
+plots/torques/data*
+plots/movie_corot/data*
 .ipynb_checkpoints
+
+*.swp
+
