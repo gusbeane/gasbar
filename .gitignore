@@ -12,8 +12,11 @@ paper/*.aux
 paper/*.bbl
 
 runs
+initial_conditions
 hose_runs
 *.hdf5
+
+to_try.txt
 
 .DS_Store
 plots/movie_5panel/__pycache__/make_movie.cpython-37.pyc
