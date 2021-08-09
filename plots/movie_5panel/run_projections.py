@@ -61,6 +61,7 @@ phgv = 'phantom-vacuum-grav'
 phgvS1 = 'phantom-vacuum-Sg10-Rc4.0'
 phgvS2 = 'phantom-vacuum-Sg20-Rc4.0'
 phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
+phgvS2Rc35_rf = 'phantom-vacuum-Sg20-Rc3.5-RadFeed'
 phgS1 = 'phantom-Sg10-Rc4.0'
 phgvS1Ngbft = 'phantom-vacuum-Sg10-Rc4.0-DesNumNgbEnrichment512-ftrap'
 
@@ -92,9 +93,12 @@ pair_list = [#(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
              #(f_Ngb512_ft, 'lvl3-ft0'), (f_Ngb512_ft, 'lvl3-ft2'), (f_Ngb512_ft, 'lvl3-ft8'),
              #(f_Ngb512_rf, 'lvl3'), (f_Ngb512_rf, 'lvl3-eta1'), (f_Ngb512_rf, 'lvl3-eta2'),
              #(f_Ngb512_rf, 'lvl3-eta1-eta2'), (f_Ngb512_rf, 'lvl3-eta1-eta2-OBbugfix'),
-             (f3_Ngb512_rf, 'lvl3'), (f3_Ngb512_rf, 'lvl3-eta1'), (f3_Ngb512_rf, 'lvl3-eta2'),
-             (f3_Ngb512_rf, 'lvl3-eta1-eta2'), (f3_Ngb512_rf, 'lvl3-eta1-eta2-OBbugfix'),
-             (phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm')]
+             #(f3_Ngb512_rf, 'lvl3'), (f3_Ngb512_rf, 'lvl3-eta1'), (f3_Ngb512_rf, 'lvl3-eta2'),
+             #(f3_Ngb512_rf, 'lvl3-eta1-eta2'), (f3_Ngb512_rf, 'lvl3-eta1-eta2-OBbugfix'),
+             #(phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm'),
+             #(phgvS2Rc35_rf, 'lvl3'), (phgvS2Rc35_rf, 'lvl3-eta1'), (phgvS2Rc35_rf, 'lvl3-eta2'),
+             #(phgvS2Rc35_rf, 'lvl3-eta1-eta2'), (phgvS2Rc35_rf, 'lvl3-eta1-eta2-OBbugfix'),
+             (phgvS2Rc35_rf, 'lvl4-Paulfix'), (phgvS2Rc35_rf, 'lvl4-GFM'), (phgvS2Rc35_rf, 'lvl3-Paulfix')]
              #(f_noMB_Ngb512, 'lvl3'),
              #(f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
              #(f_Sg10, 'lvl4'), (f_Sg10, 'lvl3'),
