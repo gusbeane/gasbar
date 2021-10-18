@@ -29,3 +29,6 @@ plots/movie_corot/data*
 
 *.swp
 
+local_plots
+local_notebooks
+
