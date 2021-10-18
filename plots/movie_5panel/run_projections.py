@@ -98,7 +98,8 @@ pair_list = [#(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
              #(phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm'),
              #(phgvS2Rc35_rf, 'lvl3'), (phgvS2Rc35_rf, 'lvl3-eta1'), (phgvS2Rc35_rf, 'lvl3-eta2'),
              #(phgvS2Rc35_rf, 'lvl3-eta1-eta2'), (phgvS2Rc35_rf, 'lvl3-eta1-eta2-OBbugfix'),
-             (phgvS2Rc35_rf, 'lvl4-Paulfix'), (phgvS2Rc35_rf, 'lvl4-GFM'), (phgvS2Rc35_rf, 'lvl3-Paulfix')]
+             #(phgvS2Rc35_rf, 'lvl4-Paulfix'), (phgvS2Rc35_rf, 'lvl4-GFM'), (phgvS2Rc35_rf, 'lvl3-Paulfix')]
+             (phgvS2Rc35, 'lvl3')]#, (phgvS2Rc35, 'lvl4-GFM')]
              #(f_noMB_Ngb512, 'lvl3'),
              #(f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
              #(f_Sg10, 'lvl4'), (f_Sg10, 'lvl3'),

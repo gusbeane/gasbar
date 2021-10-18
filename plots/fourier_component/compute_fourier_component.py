@@ -55,7 +55,7 @@ def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logs
     
     firstpart = True
     for i, npart in enumerate(sn.NumPart_Total):
-        if i not in [2, 3, 4]:
+        if i not in [2, 3]:
             continue
 
         if npart == 0:
@@ -206,8 +206,9 @@ if __name__ == '__main__':
                  #(phgvS1, 'lvl3'),
                  #(phgvS2, 'lvl3'),
                  #(phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm'), 
-                 (phgvS2Rc35RF, 'lvl4-Paulfix'), (phgvS2Rc35RF, 'lvl3-Paulfix'),
-                 (phgS1, 'lvl3')]
+                 #(phgvS2Rc35RF, 'lvl4-Paulfix'), (phgvS2Rc35RF, 'lvl3-Paulfix'),
+                 #(phgS1, 'lvl3')]
+                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3')]
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),

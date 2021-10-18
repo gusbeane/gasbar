@@ -186,7 +186,7 @@ if __name__ == '__main__':
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
     phgS1 = 'phantom-Sg10-Rc4.0'
 
-    pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
+    pair_list = [(Nbody, 'lvl3'),
                  (phgvS2Rc35, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
