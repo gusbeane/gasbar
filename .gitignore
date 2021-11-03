@@ -25,6 +25,8 @@ plots/movie_5panel/data*
 plots/movie_tp/data*
 plots/torques/data*
 plots/movie_corot/data*
+plots/bar_orbis/data*
+plots/phase_space/data*
 .ipynb_checkpoints
 
 *.swp
