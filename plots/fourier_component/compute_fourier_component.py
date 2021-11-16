@@ -209,6 +209,7 @@ if __name__ == '__main__':
                  #(phgvS2Rc35RF, 'lvl4-Paulfix'), (phgvS2Rc35RF, 'lvl3-Paulfix'),
                  #(phgS1, 'lvl3')]
                  (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3-GFM-snap050'), (phgvS2Rc35, 'lvl3-isotherm'),
                  (phgvS2Rc35, 'lvl4-GFM'), (phgvS2Rc35, 'lvl3-GFM')]
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
