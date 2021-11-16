@@ -141,7 +141,7 @@ def main_bar_angle(dat, Rbin = 5, firstkey = 150, nmax = 10):
     keys = get_sorted_keys(dat)
     time, R, phi = get_A2_angle(dat, keys, Rbin)
     time, Rbar = get_bar_length(dat, keys)
-#     Rlist, Iibar = get_bar_length(dat, keys)
+    #     Rlist, Iibar = get_bar_length(dat, keys)
     bar_angle = get_bar_angle(phi, firstkey)
 
     pattern_speed = np.gradient(bar_angle, time) / u.Myr
@@ -167,30 +167,9 @@ def main_bar_angle(dat, Rbin = 5, firstkey = 150, nmax = 10):
 
     return out
 
-def construct_orbits(path, idx, center):
-    sn = read_snap(path, idx, parttype=[2])
-    
-    id_list = sn.part2.id
-    keys = np.argsort(id_list)
-    
-    pos = sn.part2.pos.value
-    pos = pos[keys] - center
-    
-    vel = sn.part2.vel.value
-    vel = vel[keys]
-    
-    w = np.hstack((pos, vel))
-    t = sn.Time.value
-
-    return t, w
-
 # rotate wlist
 def rotate_w(w, ang):
 
-    # tmp = np.random.rand(50, 200, 6)
-    # print(tmp[0][0])
-    # ang = 2.*np.pi
-    print(np.shape(w))
     Rmat = np.array([[np.cos(ang), -np.sin(ang), 0.0],
                      [np.sin(ang), np.cos(ang),  0.0],
                      [0.0,         0.0,          1.0]])
@@ -209,7 +188,7 @@ def rotate_wlist(wlist, bar_angle_out, idx_list):
 
     Rwlist = np.zeros(np.shape(wlist))
 
-    for i,idx in enumerate(tqdm(idx_list)):
+    for i,idx in enumerate(idx_list):
         Rwlist[i] = rotate_w(wlist[i], -bar_angle[i])
     
     return Rwlist
@@ -296,8 +275,6 @@ def compute_angle_from_xaxis(pos):
     phi_n[key] = phi_n[key] - 2.*np.pi
 
     phi_ = np.minimum(np.abs(phi_p), np.abs(phi_n))
-#     phi_[np.abs(phi_)==np.abs(phi_p)] *= np.sign(phi_p[np.abs(phi_)==np.abs(phi_p)])
-#     phi_[np.abs(phi_)==np.abs(phi_n)] *= np.sign(phi_n[np.abs(phi_)==np.abs(phi_n)])
 
     return phi_
 
@@ -358,14 +335,12 @@ def compute_trapping_metrics(apo0, apo1, dt):
 @njit
 def find_apoapses_do_kmeans(orbit, tlist, indices):
     key_apo, apo = compute_apoapses(orbit)
-    #     key_apo = np.array(key_apo)
+    
     t_apo = np.zeros(len(key_apo))
     idx_apo = np.zeros(len(key_apo))
     for i in range(len(key_apo)):
         t_apo[i] = tlist[key_apo[i]]
         idx_apo[i] = indices[key_apo[i]]
-    #     print(t_apo[0])
-    #       print(key_apo)
     
     trap_met_list = np.zeros((len(key_apo), 6))
     
@@ -395,18 +370,13 @@ def loop_trapping_metrics(Rwlist, tlist, idx_list):
     N = Rwlist.shape[1]
     ans = []
     
-    for i in tqdm(range(N)):
+    for i in range(N):
         out = find_apoapses_do_kmeans(Rwlist[:,i,:3], tlist, idx_list)
         ans.append(out)
 
     return ans
 
-def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data_tmp/'):
-    # dont remake something already made
-    fout = 'data/bar_orbit_' + name + '.hdf5'
-    if os.path.exists(fout):
-        return None
-
+def preprocess_center(name):
     if 'Nbody' in name:
         center = np.array([0., 0., 0.])
         firstkey=150
@@ -415,66 +385,57 @@ def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plo
     else:
         center = np.array([200, 200, 200])
         firstkey=0
+        indices = np.arange(nsnap)
     
-    fourier = read_fourier(name)
-    bar_angle_out = main_bar_angle(fourier, firstkey=firstkey)
+    return center, firstkey, indices
 
-    # indices = np.arange(nsnap)
-    
+def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, bar_angle_out, indices):
+    fin = phase_space_path + name + '/phase_space_' + name + '.' + str(chunk_idx) + '.hdf5'
+    h5in = h5.File(fin, mode='r')
+        
+    fout = prefix + 'bar_orbit_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5out = h5.File(fout, mode='w')
-    nchunk = len(glob.glob(phase_space_path+name+'/phase_space_'+name+'.*.hdf5'))
-    tot_ids = []
-    for i in tqdm(range(nchunk)):
-        fin = phase_space_path + name + '/phase_space_' + name + '.' + str(i) + '.hdf5'
-        h5in = h5.File(fin, mode='r')
+
+    tlist = np.array(h5in['Time'])
+    pos = np.array(h5in['Coordinates']) - center
+    vel = np.array(h5in['Velocities'])
         
-        tlist = np.array(h5in['Time'])
-        pos = np.array(h5in['Coordinates']) - center
-        vel = np.array(h5in['Velocities'])
-        
-        w = np.concatenate((pos, vel), axis=-1)
-        w = np.swapaxes(w, 0, 1)
+    w = np.concatenate((pos, vel), axis=-1)
+    w = np.swapaxes(w, 0, 1)
 
-        Rwlist = rotate_wlist(w, bar_angle_out, indices)
-        ans = loop_trapping_metrics(Rwlist, tlist, indices)
+    Rwlist = rotate_wlist(w, bar_angle_out, indices)
+    ans = loop_trapping_metrics(Rwlist, tlist, indices)
 
-        ids = np.array(h5in['ParticleIDs'])
-        tot_ids = np.concatenate((tot_ids, ids))
+    ids = np.array(h5in['ParticleIDs'])
+    # tot_ids = np.concatenate((tot_ids, ids))
 
-        for j in range(len(ans)):
-            h5out.create_dataset('bar_metrics/'+str(ids[j]), data=ans[j])
+    for j in range(len(ans)):
+        h5out.create_dataset('bar_metrics/'+str(ids[j]), data=ans[j])
     
     h5out.create_dataset('tlist', data=tlist)
-    h5out.create_dataset('id_list', data=tot_ids)
+    h5out.create_dataset('id_list', data=ids)
     h5out.create_dataset('idx_list', data=indices)
 
     bar_angle = np.mod(bar_angle_out['bar_angle'][indices], 2.*np.pi)
     h5out.create_dataset('bar_angle', data=bar_angle)
+    return None
+
+def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data_tmp/'):
+    prefix = 'data/bar_orbit_' + name +'/'
+    if not os.path.isdir(prefix):
+        os.mkdir(prefix)
+
+    # get some preliminary variables
+    center, firstkey, indices = preprocess_center(name)
+    
+    # do standard fourier and bar angle stuff
+    fourier = read_fourier(name)
+    bar_angle_out = main_bar_angle(fourier, firstkey=firstkey)
+
+    nchunk = len(glob.glob(phase_space_path+name+'/phase_space_'+name+'.*.hdf5'))
+    # tot_ids = []
+    _ = Parallel(n_jobs=nproc) (delayed(_run_chunk)(name, i, prefix, phase_space_path, center, bar_angle_out, indices) for i in tqdm(range(nchunk)))
         
-
-
-
-    # out = Parallel(n_jobs=nproc) (delayed(construct_orbits)(path, int(idx), center) for idx in tqdm(indices))
-    # sn = read_snap(path, 0, parttype=[2])
-    # ids = sn.part2.id
-    
-    # tlist = np.array([out[i][0] for i in range(len(indices))])
-    # wlist = np.array([out[i][1] for i in range(len(indices))])
-
-    # Rwlist = rotate_wlist(wlist, bar_angle_out, indices)
-
-    # ans = loop_trapping_metrics(Rwlist, tlist, indices)
-
-    # print('outputting to file', fout)
-    # h5out = h5.File(fout, mode='w')
-    # for i in tqdm(range(len(ans))):
-    #     h5out.create_dataset(str(ids[i]), data=ans[i])
-    # h5out.create_dataset('tlist', data=tlist)
-    # h5out.create_dataset('id_list', data=ids)
-    # h5out.create_dataset('idx_list', data=indices)
-
-    # # tlist, wlist = construct_orbits(snap_list, indices, center)
-    
 
 if __name__ == '__main__':
     nproc = int(sys.argv[1])
@@ -484,8 +445,8 @@ if __name__ == '__main__':
     Nbody = 'Nbody'
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
-    pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3')]
-                #  (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3')]
+    pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
+                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
