@@ -114,14 +114,18 @@ def _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, chunk_idx):
     in_bar = np.array(h5_in_bar['in_bar'])
     idx_list = np.array(h5_in_bar['idx_list'])
     
-    bar_prop_list = np.zeros((len(idx_list), 5))
+    bar_prop_list = {}
+    for key in ['tlist', 'bar_frac', 'Rbar', 'Mbar', 'Lzbar']:
+        bar_prop_list[key] = np.zeros(len(idx_list))
+    
+    print(len(idx_list))
 
     # get mass and center from name
     mass, center = get_mass_and_center_from_name(name)
 
     # load phase space properties
     pos_tot = np.array(h5_phase_space['Coordinates']) - center
-    vel_tot = np.array(h5_phase_space['Velocities']) - center
+    vel_tot = np.array(h5_phase_space['Velocities'])
     tlist = np.array(h5_phase_space['Time'])
 
 
@@ -148,9 +152,9 @@ def _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, chunk_idx):
         Lzbar = mass * np.sum(np.cross(pos_inbar, vel_inbar)[:,2])
 
         # output
-        bar_prop_list[j,0] = tlist[idx]
-        bar_prop_list[j,3] = Mbar
-        bar_prop_list[j,4] = Lzbar
+        bar_prop_list['tlist'][j] = tlist[idx]
+        bar_prop_list['Mbar'][j]  = Mbar
+        bar_prop_list['Lzbar'][j] = Lzbar
 
         Rlist[idx] = np.linalg.norm(pos_inbar[:,:2], axis=1)
     
@@ -162,10 +166,13 @@ def _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, chunk_idx):
 
 def process_bar_prop_out(bar_prop_out):
     # get total number of snapshots
-    nsnap = len(bar_prop_out[0][0])
+    nsnap = len(bar_prop_out[0][0]['tlist'])
     nchunk = len(bar_prop_out)
     
-    bar_prop = np.zeros((nsnap, 5))
+    bar_prop = {}
+    for key in ['tlist', 'bar_frac', 'Rbar', 'Mbar', 'Lzbar']:
+        bar_prop[key] = np.zeros(nsnap)
+
     N_inbar = np.zeros(nsnap)
     N_disk = np.zeros(nsnap)
 
@@ -178,8 +185,8 @@ def process_bar_prop_out(bar_prop_out):
         bar_prop_i = bar_prop_out[i][0]
         
         # add the Mbar and Lzbar
-        bar_prop[:,3] += bar_prop_i[:,3]
-        bar_prop[:,4] += bar_prop_i[:,4]
+        bar_prop['Mbar']  += bar_prop_i['Mbar']
+        bar_prop['Lzbar'] += bar_prop_i['Lzbar']
 
         # concat the Rlist
         for j in range(nsnap):
@@ -201,11 +208,11 @@ def process_bar_prop_out(bar_prop_out):
         
         Rbar.append(Rbar_j)
     
-    bar_prop[:,2] = np.array(Rbar)
+    bar_prop['Rbar'] = np.array(Rbar)
 
     # compute disk fraction
-    bar_prop[:,1] = N_inbar / N_disk
-    bar_prop[:,0] = bar_prop_out[0][0][:,0] # tlist
+    bar_prop['bar_frac'] = N_inbar / N_disk
+    bar_prop['tlist'] = bar_prop_out[0][0]['tlist'] # tlist
 
     return bar_prop
 
@@ -239,7 +246,9 @@ def run(name, nproc, basepath = '/n/home01/abeane/starbar/plots/bar_orbits/data/
     fout = prefix_out + 'bar_prop_' + name + '.hdf5'
     h5out = h5.File(fout, mode='w')
 
-    h5out.create_dataset('bar_prop', data=bar_prop)
+    grp = h5out.create_group('bar_prop')
+    for key in bar_prop.keys():
+        grp.create_dataset(key, data=bar_prop[key])
     h5out.create_dataset('tlist', data=tlist)
     h5out.create_dataset('idx_list', data=idx_list)
     h5out.create_dataset('bar_angle', data=bar_angle)
