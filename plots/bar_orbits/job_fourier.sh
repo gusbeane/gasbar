@@ -3,7 +3,7 @@
 #SBATCH -p hernquist,conroy
 ##SBATCH --constraint=intel
 #SBATCH -J orbits 
-#SBATCH -n 24
+#SBATCH -n 16
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
