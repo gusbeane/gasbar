@@ -41,23 +41,27 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks, data_dir='data_tmp/'):
         h5out.create_dataset("Time", data=time)
         h5out.create_dataset("Coordinates", data=pos)
         h5out.create_dataset("Velocities", data=pos)
+        h5out.create_dataset("Acceleration", data=pos)
 
         h5out_list.append(h5out)
     
     # Now loop through each index, read the snapshot, then loop through each
     # id chunk and write to the relevant file.
     for i,idx in enumerate(idx_list):
-        sn = read_snap(path, idx, parttype=[2])
+        sn = read_snap(path, idx, parttype=[2], 
+                       fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs', 'Acceleration'])
         # Sort by ID
         key = np.argsort(sn.part2.id)
         pos_ = sn.part2.pos.value[key]
         vel_ = sn.part2.vel.value[key]
+        acc_ = sn.part2.acce[key]
 
         for j,id_chunk_list in enumerate(id_chunks):
             in_key = np.isin(np.sort(sn.part2.id), id_chunk_list)
 
             h5out_list[j]['Coordinates'][:,i,:] = pos_[in_key]
             h5out_list[j]['Velocities'][:,i,:] = vel_[in_key]
+            h5out_list[j]['Acceleration'][:,i,:] = acc_[in_key]
             h5out_list[j]['Time'][i] = sn.Time.value
     
     # Close h5 files.
@@ -76,6 +80,7 @@ def _concat_h5_files(name, chunk_id, id_chunk_list, indices_chunks, nsnap, data_
 
     pos = np.zeros((Nids, nsnap, 3))
     vel = np.zeros((Nids, nsnap, 3))
+    acc = np.zeros((Nids, nsnap, 3))
     time = np.zeros(nsnap)
 
     # Prefix for temporary data files.
@@ -87,6 +92,7 @@ def _concat_h5_files(name, chunk_id, id_chunk_list, indices_chunks, nsnap, data_
 
         pos[:,idx_list,:] = np.array(h5in['Coordinates'])
         vel[:,idx_list,:] = np.array(h5in['Velocities'])
+        acc[:,idx_list,:] = np.array(h5in['Acceleration'])
         time[idx_list] = np.array(h5in['Time'])
 
         h5in.close()
@@ -94,6 +100,7 @@ def _concat_h5_files(name, chunk_id, id_chunk_list, indices_chunks, nsnap, data_
     h5out.create_dataset("ParticleIDs", data=id_chunk_list)
     h5out.create_dataset("Coordinates", data=pos)
     h5out.create_dataset("Velocities", data=vel)
+    h5out.create_dataset("Acceleration", data=acc)
     h5out.create_dataset("Time", data=time)
 
     h5out.close()
@@ -143,8 +150,8 @@ if __name__ == '__main__':
     Nbody = 'Nbody'
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
-    pair_list = [(Nbody, 'lvl4', 64), (Nbody, 'lvl3', 64),
-                 (phgvS2Rc35, 'lvl4', 64), (phgvS2Rc35, 'lvl3', 64)]
+    pair_list = [(Nbody, 'lvl4', 64), (Nbody, 'lvl3', 2*64),
+                 (phgvS2Rc35, 'lvl4', 64), (phgvS2Rc35, 'lvl3', 2*64)]
 
     name_list   = [           p[0] + '-' + p[1] for p in pair_list]
     path_list   = [basepath + p[0] + '/' + p[1] for p in pair_list]
