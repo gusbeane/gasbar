@@ -7,6 +7,7 @@ import glob
 import os
 import re
 import time
+from numba import njit
 
 from joblib import Parallel, delayed
 
@@ -15,6 +16,44 @@ def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocit
     fname = path + '/output'
     
     return arepo.Snapshot(fname, idx, parttype=parttype, fields=fields, combineFiles=True)
+
+@njit
+def sort_by_id(chunk_ids, tot_ids, pos, vel, acc):
+    # This goes through the chunk ids and matches up with total ids
+    # but this assumes chunk ids and total ids are already sorted, which greatly
+    # speeds things up.
+
+    # also properly handles missing ids (e.g. in the case of stars)
+
+    Nchunk = len(chunk_ids)
+    pos_chunk = np.zeros((Nchunk, 3))
+    vel_chunk = np.zeros((Nchunk, 3))
+    acc_chunk = np.zeros((Nchunk, 3))
+    
+    itot = 0
+    
+    for ichunk in range(Nchunk):
+        chk_id = chunk_ids[ichunk]
+        
+        while chk_id > tot_ids[itot]:
+            itot += 1
+        
+        if chk_id == tot_ids[itot]:
+            for j in range(3):
+                pos_chunk[ichunk][j] = pos[itot][j]
+                vel_chunk[ichunk][j] = vel[itot][j]
+                acc_chunk[ichunk][j] = acc[itot][j]
+        
+        else:
+            for j in range(3):
+                pos_chunk[ichunk][j] = np.nan
+                vel_chunk[ichunk][j] = np.nan
+                acc_chunk[ichunk][j] = np.nan
+        
+        itot += 1
+    
+    return pos_chunk, vel_chunk, acc_chunk
+
 
 def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, data_dir='data_tmp/'):
     
@@ -60,28 +99,31 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, 
                        fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs', 'Acceleration'])
         # Sort by ID
         key_disk = np.argsort(sn.part2.id)
-        pos_disk_ = sn.part2.pos.value[key_disk]
-        vel_disk_ = sn.part2.vel.value[key_disk]
-        acc_disk_ = sn.part2.acce[key_disk]
+        pos_disk = sn.part2.pos.value[key_disk]
+        vel_disk = sn.part2.vel.value[key_disk]
+        acc_disk = sn.part2.acce[key_disk]
 
         key_bulge = np.argsort(sn.part3.id)
-        pos_bulge_ = sn.part2.pos.value[key_bulge]
-        vel_bulge_ = sn.part2.vel.value[key_bulge]
-        acc_bulge_ = sn.part2.acce[key_bulge]
+        pos_bulge = sn.part3.pos.value[key_bulge]
+        vel_bulge = sn.part3.vel.value[key_bulge]
+        acc_bulge = sn.part3.acce[key_bulge]
+
+        disk_ids_sorted = sn.part2.id[key_disk]
+        bulge_ids_sorted = sn.part3.id[key_bulge]
 
         for j,(id_chunk_disk_list, id_chunk_bulge_list) in enumerate(zip(id_chunks_disk, id_chunks_bulge)):
-            in_key_disk = np.isin(np.sort(sn.part2.id), id_chunk_disk_list)
-            in_key_bulge = np.isin(np.sort(sn.part3.id), id_chunk_bulge_list)
+            pos_chunk_disk, vel_chunk_disk, acc_chunk_disk = sort_by_id(id_chunk_disk_list, disk_ids_sorted, pos_disk, vel_disk, acc_disk)
+            pos_chunk_bulge, vel_chunk_bulge, acc_chunk_bulge = sort_by_id(id_chunk_bulge_list, bulge_ids_sorted, pos_bulge, vel_bulge, acc_bulge)
 
             h5out_list[j]['Time'][i] = sn.Time.value
 
-            h5out_list[j]['PartType2/Coordinates'][:,i,:] = pos_disk_[in_key_disk]
-            h5out_list[j]['PartType2/Velocities'][:,i,:] = vel_disk_[in_key_disk]
-            h5out_list[j]['PartType2/Acceleration'][:,i,:] = acc_disk_[in_key_disk]
+            h5out_list[j]['PartType2/Coordinates'][:,i,:] = pos_chunk_disk
+            h5out_list[j]['PartType2/Velocities'][:,i,:] = vel_chunk_disk
+            h5out_list[j]['PartType2/Acceleration'][:,i,:] = acc_chunk_disk
 
-            h5out_list[j]['PartType3/Coordinates'][:,i,:] = pos_bulge_[in_key_bulge]
-            h5out_list[j]['PartType3/Velocities'][:,i,:] = vel_bulge_[in_key_bulge]
-            h5out_list[j]['PartType3/Acceleration'][:,i,:] = acc_bulge_[in_key_bulge]
+            h5out_list[j]['PartType3/Coordinates'][:,i,:] = pos_chunk_bulge
+            h5out_list[j]['PartType3/Velocities'][:,i,:] = vel_chunk_bulge
+            h5out_list[j]['PartType3/Acceleration'][:,i,:] = acc_chunk_bulge
 
     
     # Close h5 files.

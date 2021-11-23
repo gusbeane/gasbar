@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -p itc_cluster,shared,hernquist,conroy
 ##SBATCH --constraint=intel
-#SBATCH -J orbits 
+#SBATCH -J phspce 
 #SBATCH -n 12
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
