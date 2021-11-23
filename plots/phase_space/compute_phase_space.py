@@ -16,7 +16,7 @@ def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocit
     
     return arepo.Snapshot(fname, idx, parttype=parttype, fields=fields, combineFiles=True)
 
-def _run_thread(path, name, idx_list, snap_id, id_chunks, data_dir='data_tmp/'):
+def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, data_dir='data_tmp/'):
     
     h5out_list = []
 
@@ -28,60 +28,87 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks, data_dir='data_tmp/'):
         os.mkdir(prefix)
     
     # Loop through each id chunk and create the file with temporary output.
-    for i,id_chunk_list in enumerate(id_chunks):
-        Nids = len(id_chunk_list)
+    for i,(id_chunk_disk_list, id_chunk_bulge_list) in enumerate(zip(id_chunks_disk, id_chunks_bulge)):
+        Nids_disk = len(id_chunk_disk_list)
+        Nids_bulge = len(id_chunk_bulge_list)
 
         fout = prefix + '/tmp' + str(i) + '.hdf5'
         h5out = h5.File(fout, mode='w')
 
-        pos = np.zeros((Nids, Nsnap, 3))
+        pos_disk = np.zeros((Nids_disk, Nsnap, 3))
+        pos_bulge = np.zeros((Nids_bulge, Nsnap, 3))
         time = np.zeros(Nsnap)
         
-        h5out.create_dataset("ParticleIDs", data=id_chunk_list)
         h5out.create_dataset("Time", data=time)
-        h5out.create_dataset("Coordinates", data=pos)
-        h5out.create_dataset("Velocities", data=pos)
-        h5out.create_dataset("Acceleration", data=pos)
+
+        h5out.create_dataset("PartType2/ParticleIDs", data=id_chunk_disk_list)
+        h5out.create_dataset("PartType2/Coordinates", data=pos_disk)
+        h5out.create_dataset("PartType2/Velocities", data=pos_disk)
+        h5out.create_dataset("PartType2/Acceleration", data=pos_disk)
+
+        h5out.create_dataset("PartType3/ParticleIDs", data=id_chunk_bulge_list)
+        h5out.create_dataset("PartType3/Coordinates", data=pos_bulge)
+        h5out.create_dataset("PartType3/Velocities", data=pos_bulge)
+        h5out.create_dataset("PartType3/Acceleration", data=pos_bulge)
 
         h5out_list.append(h5out)
     
     # Now loop through each index, read the snapshot, then loop through each
     # id chunk and write to the relevant file.
     for i,idx in enumerate(idx_list):
-        sn = read_snap(path, idx, parttype=[2], 
+        sn = read_snap(path, idx, parttype=[2, 3], 
                        fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs', 'Acceleration'])
         # Sort by ID
-        key = np.argsort(sn.part2.id)
-        pos_ = sn.part2.pos.value[key]
-        vel_ = sn.part2.vel.value[key]
-        acc_ = sn.part2.acce[key]
+        key_disk = np.argsort(sn.part2.id)
+        pos_disk_ = sn.part2.pos.value[key_disk]
+        vel_disk_ = sn.part2.vel.value[key_disk]
+        acc_disk_ = sn.part2.acce[key_disk]
 
-        for j,id_chunk_list in enumerate(id_chunks):
-            in_key = np.isin(np.sort(sn.part2.id), id_chunk_list)
+        key_bulge = np.argsort(sn.part3.id)
+        pos_bulge_ = sn.part2.pos.value[key_bulge]
+        vel_bulge_ = sn.part2.vel.value[key_bulge]
+        acc_bulge_ = sn.part2.acce[key_bulge]
 
-            h5out_list[j]['Coordinates'][:,i,:] = pos_[in_key]
-            h5out_list[j]['Velocities'][:,i,:] = vel_[in_key]
-            h5out_list[j]['Acceleration'][:,i,:] = acc_[in_key]
+        for j,(id_chunk_disk_list, id_chunk_bulge_list) in enumerate(zip(id_chunks_disk, id_chunks_bulge)):
+            in_key_disk = np.isin(np.sort(sn.part2.id), id_chunk_disk_list)
+            in_key_bulge = np.isin(np.sort(sn.part3.id), id_chunk_bulge_list)
+
             h5out_list[j]['Time'][i] = sn.Time.value
+
+            h5out_list[j]['PartType2/Coordinates'][:,i,:] = pos_disk_[in_key_disk]
+            h5out_list[j]['PartType2/Velocities'][:,i,:] = vel_disk_[in_key_disk]
+            h5out_list[j]['PartType2/Acceleration'][:,i,:] = acc_disk_[in_key_disk]
+
+            h5out_list[j]['PartType3/Coordinates'][:,i,:] = pos_bulge_[in_key_bulge]
+            h5out_list[j]['PartType3/Velocities'][:,i,:] = vel_bulge_[in_key_bulge]
+            h5out_list[j]['PartType3/Acceleration'][:,i,:] = acc_bulge_[in_key_bulge]
+
     
     # Close h5 files.
-    for i,_ in enumerate(id_chunks):
+    for i,_ in enumerate(id_chunks_disk):
         h5out_list[i].close()
     
     return None
 
-def _concat_h5_files(name, chunk_id, id_chunk_list, indices_chunks, nsnap, data_dir='data_tmp/'):
+def _concat_h5_files(name, chunk_id, id_chunk_disk_list, id_chunk_bulge_list, indices_chunks, nsnap, data_dir='data_tmp/'):
     # First create hdf5 output file
     fout = data_dir + name + '/phase_space_' + name + '.' + str(chunk_id) + '.hdf5'
     h5out = h5.File(fout, mode='w')
 
     # Temporary arrays for storing output
-    Nids = len(id_chunk_list)
+    Nids_disk = len(id_chunk_disk_list)
+    Nids_bulge = len(id_chunk_bulge_list)
 
-    pos = np.zeros((Nids, nsnap, 3))
-    vel = np.zeros((Nids, nsnap, 3))
-    acc = np.zeros((Nids, nsnap, 3))
     time = np.zeros(nsnap)
+
+    pos_disk = np.zeros((Nids_disk, nsnap, 3))
+    vel_disk = np.zeros((Nids_disk, nsnap, 3))
+    acc_disk = np.zeros((Nids_disk, nsnap, 3))
+
+    pos_bulge = np.zeros((Nids_bulge, nsnap, 3))
+    vel_bulge = np.zeros((Nids_bulge, nsnap, 3))
+    acc_bulge = np.zeros((Nids_bulge, nsnap, 3))
+
 
     # Prefix for temporary data files.
     prefix = data_dir + name + '/tmp'
@@ -90,38 +117,53 @@ def _concat_h5_files(name, chunk_id, id_chunk_list, indices_chunks, nsnap, data_
         fin = prefix + str(j) + '/tmp' + str(chunk_id) + '.hdf5'
         h5in = h5.File(fin, mode='r')
 
-        pos[:,idx_list,:] = np.array(h5in['Coordinates'])
-        vel[:,idx_list,:] = np.array(h5in['Velocities'])
-        acc[:,idx_list,:] = np.array(h5in['Acceleration'])
         time[idx_list] = np.array(h5in['Time'])
+
+        pos_disk[:,idx_list,:] = np.array(h5in['PartType2/Coordinates'])
+        vel_disk[:,idx_list,:] = np.array(h5in['PartType2/Velocities'])
+        acc_disk[:,idx_list,:] = np.array(h5in['PartType2/Acceleration'])
+
+        pos_bulge[:,idx_list,:] = np.array(h5in['PartType3/Coordinates'])
+        vel_bulge[:,idx_list,:] = np.array(h5in['PartType3/Velocities'])
+        acc_bulge[:,idx_list,:] = np.array(h5in['PartType3/Acceleration'])
 
         h5in.close()
 
-    h5out.create_dataset("ParticleIDs", data=id_chunk_list)
-    h5out.create_dataset("Coordinates", data=pos)
-    h5out.create_dataset("Velocities", data=vel)
-    h5out.create_dataset("Acceleration", data=acc)
     h5out.create_dataset("Time", data=time)
+
+    h5out.create_dataset("PartType2/ParticleIDs", data=id_chunk_disk_list)
+    h5out.create_dataset("PartType2/Coordinates", data=pos_disk)
+    h5out.create_dataset("PartType2/Velocities", data=vel_disk)
+    h5out.create_dataset("PartType2/Acceleration", data=acc_disk)
+
+    h5out.create_dataset("PartType3/ParticleIDs", data=id_chunk_disk_list)
+    h5out.create_dataset("PartType3/Coordinates", data=pos_disk)
+    h5out.create_dataset("PartType3/Velocities", data=vel_disk)
+    h5out.create_dataset("PartType3/Acceleration", data=acc_disk)
 
     h5out.close()
 
 def get_id_indices_chunks(nsnap, path, nchunk, nproc):
     indices = np.arange(nsnap)
 
-    sn = read_snap(path, indices[-1], parttype=[2])
-    ids = sn.part2.id
-    ids = np.sort(ids)
+    sn = read_snap(path, indices[-1], parttype=[2, 3])
+    ids_disk = sn.part2.id
+    ids_disk = np.sort(ids_disk)
 
-    id_chunks = np.array_split(ids, nchunk)
+    ids_bulge = sn.part3.id
+    ids_bulge = np.sort(ids_bulge)
+
+    id_chunks_disk = np.array_split(ids_disk, nchunk)
+    id_chunks_bulge = np.array_split(ids_bulge, nchunk)
 
     indices_chunks = np.array_split(indices, 4*nproc)
 
-    return id_chunks, indices_chunks
+    return id_chunks_disk, id_chunks_bulge, indices_chunks
 
 def run(path, name, nsnap, nproc, nchunk, data_dir='data_tmp/'):
     
     # Split up particle ids and snapshot indices into chunks to be processed individually
-    id_chunks, indices_chunks = get_id_indices_chunks(nsnap, path, nchunk, nproc)
+    id_chunks_disk, id_chunks_bulge, indices_chunks = get_id_indices_chunks(nsnap, path, nchunk, nproc)
 
     # If output directory does not exist, make it
     if not os.path.isdir(data_dir+name):
@@ -129,14 +171,14 @@ def run(path, name, nsnap, nproc, nchunk, data_dir='data_tmp/'):
 
     # Runs through each chunk of indices and reads the snapshot of each index. Each chunk of ids is written to a different temporary file.
     t0 = time.time()
-    _ = Parallel(n_jobs=nproc) (delayed(_run_thread)(path, name, indices_chunks[i], i, id_chunks) for i in tqdm(range(len(indices_chunks))))
+    _ = Parallel(n_jobs=nproc) (delayed(_run_thread)(path, name, indices_chunks[i], i, id_chunks_disk, id_chunks_bulge) for i in tqdm(range(len(indices_chunks))))
     t1 = time.time()
     print('First loop took', t1-t0, 's')
 
     # Runs through each chunk of ids and reads the temporary files from the previous step, then writes a single file spanning all indices
     # for each chunk of ids.
     t0 = time.time()
-    _ = Parallel(n_jobs=nproc) (delayed(_concat_h5_files)(name, i, id_chunks[i], indices_chunks, nsnap) for i in tqdm(range(len(id_chunks))))
+    _ = Parallel(n_jobs=nproc) (delayed(_concat_h5_files)(name, i, id_chunks_disk[i], id_chunks_bulge[i], indices_chunks, nsnap) for i in tqdm(range(len(id_chunks_disk))))
     t1 = time.time()
     print('Second loop took', t1-t0, 's')
 
