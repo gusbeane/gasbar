@@ -261,6 +261,50 @@ void array_split_int(int Nchunk, int *List, int NList, int ***OutList, int **Out
     }
 }
 
+void array_split_llong(int Nchunk, long long *List, int NList, long long ***OutList, long long **OutNPerList){
+    // splits the array List, of size Nlist, into Nchunk lists, stored in OutList, where each OutList
+    // has size stored in OutNPerList
+
+    // First, compute the number of items per output list.
+    // printf("Nchunk=%d, NList=%d\n", Nchunk, NList);
+    // printf("%g\n", ceil(NList/Nchunk));
+    long long NperListMax = (NList - 1)/Nchunk + 1;
+    long long NLeftOver = NperListMax * Nchunk - NList;
+
+    // Allocate and write down the number of items in each chunk
+    printf("NperListMax=%lld\n", NperListMax);
+    *OutNPerList = (long long *)malloc(sizeof(long long) * Nchunk);
+    for(int i=0; i<Nchunk; i++){
+        (*OutNPerList)[i] = NperListMax;
+        if(i >= (Nchunk - NLeftOver))
+            (*OutNPerList)[i] -= 1;
+    }
+
+    // verify
+    long long chk = 0;
+    for(int i=0; i<Nchunk; i++)
+    {
+        printf("i=%lld, chk=%lld, OutNPerList[i]=%lld\n", i, chk, (*OutNPerList)[i]);
+        chk += (*OutNPerList)[i];
+    }
+    printf("chk=%lld, NList=%lld\n", chk, NList);
+    if(chk != NList)
+        printf("WARNING chk=%lld is not equal to NList=%lld\n", chk, NList);
+
+    // Now allocate output list for each chunk
+    *OutList = (long long **)malloc(sizeof(long long *) * Nchunk);
+    for(int i=0; i<Nchunk; i++){
+        (*OutList)[i] = (long long *)malloc(sizeof(long long) * (*OutNPerList)[i]);
+    }
+
+    // Now copy the list into each chunk
+    long long Ncum = 0;
+    for(int i=0; i<Nchunk; i++){
+        memcpy((*OutList)[i], List + Ncum, sizeof(long long) * (*OutNPerList)[i]);
+        Ncum += (*OutNPerList)[i];
+    }
+}
+
 int main(int argc, char* argv[]) {
     char name[100];
     char lvl[100];
@@ -313,9 +357,16 @@ int main(int argc, char* argv[]) {
     for(int i=0; i<Nsnap; i++)
         SnapList[i] = i;
 
+    // Create snapshot chunked arrays
     int **SnapChunkList;
     int *SnapChunkListNumPer;
     array_split_int(Nchunk_snap, SnapList, Nsnap, &SnapChunkList, &SnapChunkListNumPer);
+
+    // Create IDs chunked arrays
+    long long **DiskIDsChunkList, **BulgeIDsChunkList;
+    long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer;
+    array_split_llong(Nchunk_id, DiskIDs, NumPart_Total[2], &DiskIDsChunkList, &DiskIDsChunkListNumPer);
+    array_split_llong(Nchunk_id, BulgeIDs, NumPart_Total[2], &BulgeIDsChunkList, &BulgeIDsChunkListNumPer);
 
     int i;
     i = 0;
