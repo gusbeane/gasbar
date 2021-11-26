@@ -166,12 +166,12 @@ long long cmprID (const void *a, const void *b){
     return (partA->ID - partB->ID);
 }
 
-void get_part(char* basepath, int Nsnap, int PartType, struct Part ** part)
+void get_part(char* basepath, int SnapIdx, int PartType, struct Part ** part)
 {
     // read final snapshot
     char fname[1000], output_dir[1000];
     uint NumPart_Total[NTYPES];
-    sprintf(fname, "%s/output/snapdir_%03d/snapshot_%03d.0.hdf5", basepath, Nsnap-1, Nsnap-1);
+    sprintf(fname, "%s/output/snapdir_%03d/snapshot_%03d.0.hdf5", basepath, SnapIdx, SnapIdx);
     printf("fname=%s\n", fname);
     hid_t file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
 
@@ -181,13 +181,13 @@ void get_part(char* basepath, int Nsnap, int PartType, struct Part ** part)
     // read disk ids
     long long *DiskIDs;
     sprintf(output_dir, "%s/output/", basepath);
-    read_parttype_ids(output_dir, Nsnap-1, PartType, &DiskIDs);
+    read_parttype_ids(output_dir, SnapIdx, PartType, &DiskIDs);
     
     // read phase space coordinates
     double *DiskPos, *DiskVel, *DiskAcc;
-    read_parttype_vec(output_dir, Nsnap-1, PartType, "Coordinates", &DiskPos);
-    read_parttype_vec(output_dir, Nsnap-1, PartType, "Velocities", &DiskVel);
-    read_parttype_vec(output_dir, Nsnap-1, PartType, "Acceleration", &DiskAcc);
+    read_parttype_vec(output_dir, SnapIdx, PartType, "Coordinates", &DiskPos);
+    read_parttype_vec(output_dir, SnapIdx, PartType, "Velocities", &DiskVel);
+    read_parttype_vec(output_dir, SnapIdx, PartType, "Acceleration", &DiskAcc);
 
     *part = (struct Part *)malloc(sizeof(struct Part) * NumPart_Total[PartType]);
 
@@ -263,8 +263,8 @@ int main(int argc, char* argv[]) {
 
     // Pull out particles from the last snapshot
     struct Part *DiskPart, *BulgePart;
-    get_part(basepath, Nsnap, 2, &DiskPart);
-    get_part(basepath, Nsnap, 3, &BulgePart);
+    get_part(basepath, Nsnap-1, 2, &DiskPart);
+    get_part(basepath, Nsnap-1, 3, &BulgePart);
 
     qsort(DiskPart, NumPart_Total[2], sizeof(struct Part), cmprID);
     qsort(BulgePart, NumPart_Total[3], sizeof(struct Part), cmprID);
