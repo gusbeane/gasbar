@@ -166,7 +166,7 @@ long long cmprID (const void *a, const void *b){
     return (partA->ID - partB->ID);
 }
 
-void get_part(char* basepath, int Nsnap, int Nchunk_id, int PartType, struct Part ** part)
+void get_part(char* basepath, int Nsnap, int PartType, struct Part ** part)
 {
     // read final snapshot
     char fname[1000], output_dir[1000];
@@ -263,8 +263,8 @@ int main(int argc, char* argv[]) {
 
     // Pull out particles from the last snapshot
     struct Part *DiskPart, *BulgePart;
-    get_part(basepath, Nsnap, Nchunk_id, 2, &DiskPart);
-    get_part(basepath, Nsnap, Nchunk_id, 3, &BulgePart);
+    get_part(basepath, Nsnap, 2, &DiskPart);
+    get_part(basepath, Nsnap, 3, &BulgePart);
 
     qsort(DiskPart, NumPart_Total[2], sizeof(struct Part), cmprID);
     qsort(BulgePart, NumPart_Total[3], sizeof(struct Part), cmprID);
