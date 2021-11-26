@@ -154,12 +154,6 @@ void read_parttype_vec(char *output_dir, int snap_idx, int PartType, char *prope
     return;
 }
 
-    // double *DiskCoordinates;
-    // DiskCoordinates = (double *)malloc(sizeof(double) * NumPart_Total[2] * 3);
-    // read_parttype_dataset(file_id, H5T_NATIVE_DOUBLE, 2, "Coordinates", DiskCoordinates);
-    // printf("DiskCoordinates[0]=%g|%g|%g  [1]=%g|%g|%g\n", DiskCoordinates[IDX(0, 0)], DiskCoordinates[IDX(0, 1)], DiskCoordinates[IDX(0, 2)],
-    //                                                       DiskCoordinates[IDX(1, 0)], DiskCoordinates[IDX(1, 1)], DiskCoordinates[IDX(1, 2)]);
-
 long long cmprID (const void *a, const void *b){
     struct Part *partA = (struct Part *)a;
     struct Part *partB = (struct Part *)b;
@@ -224,8 +218,48 @@ long long * get_IDs_from_part(struct Part * part, uint Npart){
     return IDs;
 }
 
-    // sort disk ids
-    // qsort(DiskIDs, NumPart_Total[2], sizeof(long long), cmprllong);
+void array_split_int(int Nchunk, int *List, int NList, int ***OutList, int **OutNPerList){
+    // splits the array List, of size Nlist, into Nchunk lists, stored in OutList, where each OutList
+    // has size stored in OutNPerList
+
+    // First, compute the number of items per output list.
+    // printf("Nchunk=%d, NList=%d\n", Nchunk, NList);
+    // printf("%g\n", ceil(NList/Nchunk));
+    int NperListMax = (NList - 1)/Nchunk + 1;
+    int NLeftOver = NperListMax * Nchunk - NList;
+
+    printf("NperListMax=%d\n", NperListMax);
+    printf("NLeftOver=%d\n", NLeftOver);
+
+    // Allocate and write down the number of items in each chunk
+    *OutNPerList = (int *)malloc(sizeof(int) * Nchunk);
+    for(int i=0; i<Nchunk; i++){
+        printf("i=%d\n", i);
+        (*OutNPerList)[i] = NperListMax;
+        if(i >= (Nchunk - NLeftOver))
+            (*OutNPerList)[i] -= 1;
+    }
+
+    // verify
+    int chk = 0;
+    for(int i=0; i<Nchunk; i++)
+        chk += (*OutNPerList)[i];
+    if(chk != NList)
+        printf("WARNING chk=%d is not equal to NList=%d\n", chk, NList);
+
+    // Now allocate output list for each chunk
+    *OutList = (int **)malloc(sizeof(int *) * Nchunk);
+    for(int i=0; i<Nchunk; i++){
+        (*OutList)[i] = (int *)malloc(sizeof(int) * (*OutNPerList)[i]);
+    }
+
+    // Now copy the list into each chunk
+    int Ncum = 0;
+    for(int i=0; i<Nchunk; i++){
+        memcpy((*OutList)[i], List + Ncum, sizeof(int) * (*OutNPerList)[i]);
+        Ncum += (*OutNPerList)[i];
+    }
+}
 
 int main(int argc, char* argv[]) {
     char name[100];
@@ -274,7 +308,14 @@ int main(int argc, char* argv[]) {
     DiskIDs = get_IDs_from_part(DiskPart, NumPart_Total[2]);
     BulgeIDs = get_IDs_from_part(BulgePart, NumPart_Total[3]);
     
+    int * SnapList;
+    SnapList = (int *)malloc(sizeof(int) * Nsnap);
+    for(int i=0; i<Nsnap; i++)
+        SnapList[i] = i;
 
+    int **SnapChunkList;
+    int *SnapChunkListNumPer;
+    array_split_int(Nchunk_snap, SnapList, Nsnap, &SnapChunkList, &SnapChunkListNumPer);
 
     int i;
     i = 0;
