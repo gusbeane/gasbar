@@ -37,7 +37,7 @@ hid_t my_H5Gopen(hid_t loc_id, const char *groupname, hid_t fapl_id)
 void compute_Nchunk(int *Nchunk_id, int *Nchunk_snap){
     // TODO: compute these according to memory requirements
     *Nchunk_id = 64;
-    *Nchunk_snap = 128;
+    *Nchunk_snap = 32;
     return;
 }
 
@@ -542,6 +542,171 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
     printf("finished with chunk %d\n", i);
 }
 
+void process_id_chunk(int i, char *name, char *lvl, 
+                      long long *DiskIDsChunk, long long DiskIDsChunkNum, 
+                      long long *BulgeIDsChunk, long long BulgeIDsChunkNum, 
+                      int Nchunk_snap, int *SnapChunkListNumPer, int Nsnap){
+    int j;
+    char data_dir[1000], fname[1000];
+    sprintf(data_dir, "./data/%s-%s/", name, lvl);
+    hid_t file_id, grp_id, dset;
+
+    double *DiskPos, *DiskVel, *DiskAcc;
+    double *BulgePos, *BulgeVel, *BulgeAcc;
+    double *Time;
+
+    Time = (double *)malloc(sizeof(double) * Nsnap);
+    DiskPos = (double *)malloc(sizeof(double) * Nsnap * DiskIDsChunkNum * 3);
+    DiskVel = (double *)malloc(sizeof(double) * Nsnap * DiskIDsChunkNum * 3);
+    DiskAcc = (double *)malloc(sizeof(double) * Nsnap * DiskIDsChunkNum * 3);
+    BulgePos = (double *)malloc(sizeof(double) * Nsnap * BulgeIDsChunkNum * 3);
+    BulgeVel = (double *)malloc(sizeof(double) * Nsnap * BulgeIDsChunkNum * 3);
+    BulgeAcc = (double *)malloc(sizeof(double) * Nsnap * BulgeIDsChunkNum * 3);
+
+    int Ncum_time = 0;
+    long long Ncum_Disk, Ncum_Bulge;
+    Ncum_Disk = Ncum_Bulge = 0;
+    for(j=0; j<Nchunk_snap; j++){
+        // j is snapshot chunk idx, i is id chunk idx
+        sprintf(fname, "%s/tmp%d/tmp%d.hdf5", data_dir, j, i);
+
+        file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+        
+        // read time
+        dset = H5Dopen(file_id, "Time", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(Time[Ncum_time]));
+        H5Dclose(dset);
+
+        grp_id = H5Gopen(file_id, "PartType2", H5P_DEFAULT);
+        // read disk pos
+        dset = H5Dopen(grp_id, "Coordinates", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(DiskPos[Ncum_Disk]));
+        H5Dclose(dset);
+
+        dset = H5Dopen(grp_id, "Velocities", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(DiskVel[Ncum_Disk]));
+        H5Dclose(dset);
+
+        dset = H5Dopen(grp_id, "Acceleration", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(DiskAcc[Ncum_Disk]));
+        H5Dclose(dset);
+        H5Gclose(grp_id);
+
+
+        grp_id = H5Gopen(file_id, "PartType3", H5P_DEFAULT);
+        // read disk pos
+        dset = H5Dopen(grp_id, "Coordinates", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(BulgePos[Ncum_Bulge]));
+        H5Dclose(dset);
+
+        dset = H5Dopen(grp_id, "Velocities", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(BulgeVel[Ncum_Bulge]));
+        H5Dclose(dset);
+
+        dset = H5Dopen(grp_id, "Acceleration", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(BulgeAcc[Ncum_Bulge]));
+        H5Dclose(dset);
+        H5Gclose(grp_id);
+
+        H5Fclose(file_id);
+
+        Ncum_time += SnapChunkListNumPer[j];
+        Ncum_Disk += 3 * DiskIDsChunkNum * SnapChunkListNumPer[j];
+        Ncum_Bulge += 3 * BulgeIDsChunkNum * SnapChunkListNumPer[j];
+    }
+
+    // now write to output file
+    sprintf(fname, "%s/phase_space_%s-%s.%d.hdf5", data_dir, name, lvl, i);
+
+    hsize_t disk_dims[3], bulge_dims[3], time_dims[2], disk_id_dims[2], bulge_id_dims[2];
+    disk_dims[0] = bulge_dims[0] = time_dims[0] = Nsnap;
+    disk_dims[2] = bulge_dims[2] = 3;
+    time_dims[1] = 1;
+    hid_t grp_disk, grp_bulge, disk_dspace_vec, bulge_dspace_vec, time_dspace;
+    hid_t disk_dspace_ids, bulge_dspace_ids;
+    
+    disk_dims[1] = DiskIDsChunkNum;
+    bulge_dims[1] = BulgeIDsChunkNum;
+
+    disk_id_dims[0] = DiskIDsChunkNum;
+    bulge_id_dims[0] = DiskIDsChunkNum;
+    disk_id_dims[1] = bulge_id_dims[1] = 1;
+
+    file_id = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    if(file_id < 0)
+        printf("UNABLE TO CREATE FILE %s", fname);
+
+    grp_disk = H5Gcreate1(file_id, "PartType2", 0);
+    grp_bulge = H5Gcreate1(file_id, "PartType3", 0);
+
+    disk_dspace_vec = H5Screate_simple(3, disk_dims, NULL);
+    bulge_dspace_vec = H5Screate_simple(3, bulge_dims, NULL);
+    disk_dspace_ids = H5Screate_simple(1, disk_id_dims, NULL);
+    bulge_dspace_ids = H5Screate_simple(1, bulge_id_dims, NULL);
+    time_dspace = H5Screate_simple(1, time_dims, NULL);
+
+
+    // Write time.
+    dset = H5Dcreate1(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, Time);
+    H5Dclose(dset);
+
+    // // Write disk IDs.
+    dset = H5Dcreate1(grp_disk, "ParticleIDs", H5T_NATIVE_LLONG, disk_dspace_ids, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskIDsChunk);
+    H5Dclose(dset);
+
+    // // Write disk coordinates.
+    dset = H5Dcreate1(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskPos);
+    H5Dclose(dset);
+
+    // // Write disk velocities.
+    dset = H5Dcreate1(grp_disk, "Velocities", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskVel);
+    H5Dclose(dset);
+
+    // // Write disk accelerations.
+    dset = H5Dcreate1(grp_disk, "Acceleration", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskAcc);
+    H5Dclose(dset);
+
+    // // Write bulge IDs.
+    dset = H5Dcreate1(grp_bulge, "ParticleIDs", H5T_NATIVE_LLONG, bulge_dspace_ids, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeIDsChunk);
+    H5Dclose(dset);
+
+    // // Write bulge coordinates.
+    dset = H5Dcreate1(grp_bulge, "Coordinates", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgePos);
+    H5Dclose(dset);
+
+    // // Write bulge velocities.
+    dset = H5Dcreate1(grp_bulge, "Velocities", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeVel);
+    H5Dclose(dset);
+
+    // // Write bulge acclerations.
+    dset = H5Dcreate1(grp_bulge, "Acceleration", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
+    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeAcc);
+    H5Dclose(dset);
+
+    H5Gclose(grp_disk);
+    H5Gclose(grp_bulge);
+    H5Fclose(file_id);
+
+
+    free(DiskPos);
+    free(DiskVel);
+    free(DiskAcc);
+    free(BulgePos);
+    free(BulgeVel);
+    free(BulgeAcc);
+    
+    free(Time);
+
+}
+
 int main(int argc, char* argv[]) {
     int rank, size;
     MPI_Init(&argc, &argv);
@@ -590,6 +755,7 @@ int main(int argc, char* argv[]) {
     {
         // Write down basepath/output dir and search for the number of snapshots
         Nsnap = compute_nsnap(basepath);
+        Nsnap = 200;
 
         sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, 0, 0);
         file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
@@ -672,23 +838,22 @@ int main(int argc, char* argv[]) {
 
     MPI_Barrier(MPI_COMM_WORLD);
 
+    // loop through chunks of snapshots and write to temporary output files
     for(int i=ChunkStart; i<ChunkEnd; i++){
         process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
                            DiskIDsChunkList, DiskIDsChunkListNumPer,
                            BulgeIDsChunkList, BulgeIDsChunkListNumPer);
     }
 
-    // printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskPart[0].ID, DiskPart[100].ID, DiskPart[NumPart_Total_LastSnap[2]-1].ID);
-    // printf("BulgeIDs[0]=%lld, BulgeIDs[100]=%lld, BulgeIDs[last]=%lld\n", BulgePart[0].ID, BulgePart[100].ID, BulgePart[NumPart_Total_LastSnap[3]-1].ID);
+    MPI_Barrier(MPI_COMM_WORLD);
 
-    // printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskIDs[0], DiskIDs[100], DiskIDs[NumPart_Total_LastSnap[2]-1]);
-    // printf("BulgeIDs[0]=%lld, BulgeIDs[100]=%lld, BulgeIDs[last]=%lld\n", BulgeIDs[0], BulgeIDs[100], BulgeIDs[NumPart_Total_LastSnap[3]-1]);
+    // now loop through chunks of ids and read temporary output files, concatting into final output files
+    compute_chunk_start_end(rank, size, Nchunk_id, &ChunkStart, &ChunkEnd);
 
-    // printf("part[0] ID=%lld, Pos=%g|%g|%g, Vel=%g|%g|%g, Acc=%g|%g|%g\n", BulgePart[i].ID, BulgePart[i].Pos[0], BulgePart[i].Pos[1], BulgePart[i].Pos[2],
-    //                                                                       BulgePart[i].Vel[0], BulgePart[i].Vel[1], BulgePart[i].Vel[2], 
-    //                                                                       BulgePart[i].Acc[0], BulgePart[i].Acc[1], BulgePart[i].Acc[2]);
-
-    // Compute nsnap
+    for(int i=ChunkStart; i<ChunkEnd; i++){
+        process_id_chunk(i, name, lvl, DiskIDsChunkList[i], DiskIDsChunkListNumPer[i], BulgeIDsChunkList[i], BulgeIDsChunkListNumPer[i],
+                         Nchunk_snap, SnapChunkListNumPer, Nsnap);
+    }
 
     free(SnapList);
     return 0;
