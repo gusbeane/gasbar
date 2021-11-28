@@ -99,6 +99,7 @@ void read_parttype_ids(char *output_dir, int snap_idx, int PartType, long long *
         H5Dclose(dset);
         H5Gclose(grp);
         H5Fclose(file_id);
+        free(IDs_ThisFile);
     }
 
     return;
@@ -152,6 +153,7 @@ void read_parttype_vec(char *output_dir, int snap_idx, int PartType, char *prope
         H5Dclose(dset);
         H5Gclose(grp);
         H5Fclose(file_id);
+        free(Vec_ThisFile);
     }
 
     return;
@@ -205,6 +207,11 @@ void get_part(char* output_dir, int SnapIdx, int PartType, struct Part ** part)
             (*part)[i].Acc[j] = DiskAcc[IDX(i, j)];
         }
     }
+
+    free(DiskPos);
+    free(DiskVel);
+    free(DiskAcc);
+    free(DiskIDs);
 
     // now 
 
@@ -366,22 +373,6 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
     BulgePos = (double **)malloc(sizeof(double *) * Nchunk_id);
     BulgeVel = (double **)malloc(sizeof(double *) * Nchunk_id);
     BulgeAcc = (double **)malloc(sizeof(double *) * Nchunk_id);
-    // for(int ii=0; ii<Nchunk_id; ii++){
-    //     DiskPos[ii] = (double **)malloc(sizeof(double *) * NSnapInChunk);
-    //     DiskVel[ii] = (double **)malloc(sizeof(double *) * NSnapInChunk);
-    //     DiskAcc[ii] = (double **)malloc(sizeof(double *) * NSnapInChunk);
-    //     BulgePos[ii] = (double **)malloc(sizeof(double *) * NSnapInChunk);
-    //     BulgeVel[ii] = (double **)malloc(sizeof(double *) * NSnapInChunk);
-    //     BulgeAcc[ii] = (double **)malloc(sizeof(double *) * NSnapInChunk);
-    //     for(int jj=0; jj<NSnapInChunk; jj++){
-    //         DiskPos[ii][jj] = (double *)malloc(sizeof(double) * 3 * DiskIDsChunkListNumPer[ii]);
-    //         DiskVel[ii][jj] = (double *)malloc(sizeof(double) * 3 * DiskIDsChunkListNumPer[ii]);
-    //         DiskAcc[ii][jj] = (double *)malloc(sizeof(double) * 3 * DiskIDsChunkListNumPer[ii]);
-    //         BulgePos[ii][jj] = (double *)malloc(sizeof(double) * 3 * BulgeIDsChunkListNumPer[ii]);
-    //         BulgeVel[ii][jj] = (double *)malloc(sizeof(double) * 3 * BulgeIDsChunkListNumPer[ii]);
-    //         BulgeAcc[ii][jj] = (double *)malloc(sizeof(double) * 3 * BulgeIDsChunkListNumPer[ii]);
-    //     }
-    // }
     for(int ii=0; ii<Nchunk_id; ii++){
         DiskPos[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * DiskIDsChunkListNumPer[ii]);
         DiskVel[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * DiskIDsChunkListNumPer[ii]);
@@ -431,7 +422,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
             bacc_off = &(BulgeAcc[k][offset_bulge[k]]);
             sort_by_id(DiskIDsChunkList[k], DiskIDsChunkListNumPer[k], DiskPart, 
                        &dpos_off, &dvel_off, &dacc_off);
-            sort_by_id(BulgeIDsChunkList[k], BulgeIDsChunkListNumPer[k], BulgePart, 
+            sort_by_id(BulgeIDsChunkList[k], BulgeIDsChunkListNumPer[k], BulgePart,
                        &bpos_off, &bvel_off, &bacc_off);
             offset_disk[k] += 3 * DiskIDsChunkListNumPer[k];
             offset_bulge[k] += 3 * BulgeIDsChunkListNumPer[k];
@@ -502,12 +493,23 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
         H5Gclose(grp_bulge);
         H5Fclose(file_id);
     }
+
+    for(int ii=0; ii<Nchunk_id; ii++){
+        free(DiskPos[ii]);
+        free(DiskVel[ii]);
+        free(DiskAcc[ii]);
+        free(BulgePos[ii]);
+        free(BulgeVel[ii]);
+        free(BulgeAcc[ii]);
+    }
     free(DiskPos);
     free(DiskVel);
     free(DiskAcc);
     free(BulgePos);
     free(BulgeVel);
     free(BulgeAcc);
+    
+    free(Time);
 
     printf("finished with chunk %d\n", i);
 }
@@ -610,6 +612,7 @@ int main(int argc, char* argv[]) {
 
     // Compute nsnap
 
+    free(SnapList);
 
     return 0;
 }
