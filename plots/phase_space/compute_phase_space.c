@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <math.h>
+#include <mpi.h>
 
 #define NTYPES 6
 #define IDX(i, j) i*3+j
@@ -20,6 +21,18 @@ struct Part
     double Acc[3];
     long index;
 };
+
+hid_t my_H5Gopen(hid_t loc_id, const char *groupname, hid_t fapl_id)
+{
+  hid_t group = H5Gopen(loc_id, groupname, fapl_id);
+
+  if(group < 0)
+    {
+      printf("Error detected in HDF5: unable to open group %s\n", groupname);
+      exit(1);
+    }
+  return group;
+}
 
 void compute_Nchunk(int *Nchunk_id, int *Nchunk_snap){
     // TODO: compute these according to memory requirements
@@ -45,7 +58,7 @@ int compute_nsnap(char* basepath){
 
 void read_header_attribute(hid_t file_id, hid_t DTYPE, char* attr_name, void *buf)
 {
-    hid_t header = H5Gopen(file_id, "/Header", H5P_DEFAULT);
+    hid_t header = my_H5Gopen(file_id, "/Header", H5P_DEFAULT);
     hid_t hdf5_attribute = H5Aopen(header, attr_name, H5P_DEFAULT);
     H5Aread(hdf5_attribute, DTYPE, buf);
     H5Aclose(hdf5_attribute);
@@ -87,7 +100,7 @@ void read_parttype_ids(char *output_dir, int snap_idx, int PartType, long long *
         read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_ThisFile", NumPart_ThisFile);
         IDs_ThisFile = (long long *) malloc(sizeof(long long) * NumPart_ThisFile[PartType]);
 
-        hid_t grp = H5Gopen(file_id, grp_name, H5P_DEFAULT);
+        hid_t grp = my_H5Gopen(file_id, grp_name, H5P_DEFAULT);
         hid_t dset = H5Dopen(grp, dset_name, H5P_DEFAULT);
         H5Dread(dset, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, IDs_ThisFile);
 
@@ -141,7 +154,7 @@ void read_parttype_vec(char *output_dir, int snap_idx, int PartType, char *prope
         read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_ThisFile", NumPart_ThisFile);
         Vec_ThisFile = (double *) malloc(3 * sizeof(double) * NumPart_ThisFile[PartType]);
 
-        hid_t grp = H5Gopen(file_id, grp_name, H5P_DEFAULT);
+        hid_t grp = my_H5Gopen(file_id, grp_name, H5P_DEFAULT);
         hid_t dset = H5Dopen(grp, dset_name, H5P_DEFAULT);
         H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, Vec_ThisFile);
 
@@ -511,7 +524,10 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
 }
 
 int main(int argc, char* argv[]) {
-
+    int rank, size;
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
     
     char name[100];
     char lvl[100];
@@ -525,96 +541,150 @@ int main(int argc, char* argv[]) {
     long long **DiskIDsChunkList, **BulgeIDsChunkList;
     long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer;
     int * SnapList;
-
-    #pragma omp parallel private(output_dir, name, lvl, Nchunk_id, DiskIDsChunkList, DiskIDsChunkListNumPer, BulgeIDsChunkList, BulgeIDsChunkListNumPer, NumPart_Total_LastSnap)
-{
+    struct Part *DiskPart, *BulgePart;
+    hid_t file_id;
+    struct stat st;
 
     // Check to make sure right number of arguments.
     if(argc != 3){
-        printf("Usage: ./compute_phase_space.o name lvl\n");
-        // return -1;
+        if(rank == 0)
+            printf("Usage: ./compute_phase_space.o name lvl\n");
+        exit(1);
     }
 
     // Copy name and lvl, print.
     strcpy(name, argv[1]);
     strcpy(lvl, argv[2]);
 
-    printf("Running for name=%s, lvl=%s\n", name, lvl);
+    if(rank == 0)
+        printf("Running for name=%s, lvl=%s\n", name, lvl);
 
     // compute Nchunks
     compute_Nchunk(&Nchunk_id, &Nchunk_snap);
     printf("Nchunk_id=%d, Nchunk_snap=%d\n", Nchunk_id, Nchunk_snap);
 
-    // Write down basepath/output dir and search for the number of snapshots
     sprintf(basepath, "../../runs/%s/%s/", name, lvl);
     sprintf(output_dir, "%s/output/", basepath);
-    Nsnap = compute_nsnap(basepath);
 
-    sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, 0, 0);
-    hid_t file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
-    read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_Total", NumPart_Total);
-    read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_Total", NumPart_Total_LastSnap);
-    H5Fclose(file_id);
+    // only do this next section on the 0th thread
+    if (rank ==0)
+    {
+        // Write down basepath/output dir and search for the number of snapshots
+        Nsnap = compute_nsnap(basepath);
 
-    // Pull out particles from the last snapshot
-    struct Part *DiskPart, *BulgePart;
-    get_part(output_dir, Nsnap-1, 2, &DiskPart);
-    get_part(output_dir, Nsnap-1, 3, &BulgePart);
+        sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, 0, 0);
+        file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
+        read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_Total", NumPart_Total);
+        read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_Total", NumPart_Total_LastSnap);
+        H5Fclose(file_id);
 
-    // sort particles
-    qsort(DiskPart, NumPart_Total_LastSnap[2], sizeof(struct Part), cmprID);
-    qsort(BulgePart, NumPart_Total_LastSnap[3], sizeof(struct Part), cmprID);
+        // Pull out particles from the last snapshot
+        get_part(output_dir, Nsnap-1, 2, &DiskPart);
+        get_part(output_dir, Nsnap-1, 3, &BulgePart);
 
-    // construct sorted ID list
-    DiskIDs = get_IDs_from_part(DiskPart, NumPart_Total_LastSnap[2]);
-    BulgeIDs = get_IDs_from_part(BulgePart, NumPart_Total_LastSnap[3]);
+        // sort particles
+        qsort(DiskPart, NumPart_Total_LastSnap[2], sizeof(struct Part), cmprID);
+        qsort(BulgePart, NumPart_Total_LastSnap[3], sizeof(struct Part), cmprID);
+
+        // construct sorted ID list
+        DiskIDs = get_IDs_from_part(DiskPart, NumPart_Total_LastSnap[2]);
+        BulgeIDs = get_IDs_from_part(BulgePart, NumPart_Total_LastSnap[3]);
     
-    SnapList = (int *)malloc(sizeof(int) * Nsnap);
-    for(int i=0; i<Nsnap; i++)
-        SnapList[i] = i;
+        // free disk part and bulge part
+        free(DiskPart);
+        free(BulgePart);
+
+        SnapList = (int *)malloc(sizeof(int) * Nsnap);
+        for(int i=0; i<Nsnap; i++)
+            SnapList[i] = i;
+    }
+
+    // Now broadcast from the 0th rank to all the others
+    MPI_Bcast(&Nsnap, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(NumPart_Total_LastSnap, NTYPES, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+
+    // non-0 rank processes need to allocate
+    if(rank != 0){
+        DiskIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[2]);
+        BulgeIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[3]);
+        SnapList = (int *)malloc(sizeof(int) * Nsnap);
+    }
+
+    MPI_Bcast(DiskIDs, NumPart_Total_LastSnap[2], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(BulgeIDs, NumPart_Total_LastSnap[3], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(SnapList, Nsnap, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Create snapshot chunked arrays
-    
     array_split_int(Nchunk_snap, SnapList, Nsnap, &SnapChunkList, &SnapChunkListNumPer);
 
     // Create IDs chunked arrays
     array_split_llong(Nchunk_id, DiskIDs, NumPart_Total_LastSnap[2], &DiskIDsChunkList, &DiskIDsChunkListNumPer);
     array_split_llong(Nchunk_id, BulgeIDs, NumPart_Total_LastSnap[3], &BulgeIDsChunkList, &BulgeIDsChunkListNumPer);
 
-    // Create output data directory if it doesn't exist
-    struct stat st = {0};
-    if (stat("./data", &st) == -1) {
-        mkdir("./data", 0700);
-    }
-    char data_dir[1000];
-    sprintf(data_dir, "./data/%s-%s", name, lvl);
-    if (stat(data_dir, &st) == -1) {
-        mkdir(data_dir, 0700);
+    if(rank ==0){
+        // Create output data directory if it doesn't exist
+        // struct stat st = {0};
+        if (stat("./data", &st) == -1) {
+            mkdir("./data", 0700);
+        }
+        char data_dir[1000];
+        sprintf(data_dir, "./data/%s-%s", name, lvl);
+        if (stat(data_dir, &st) == -1) {
+            mkdir(data_dir, 0700);
+        }
     }
 
-#pragma omp for
-    for(int i=0; i<Nchunk_snap; i++){
+    // now we need to split the snapshot chunks into chunks across the processors (i know, confusing..)
+    // but each processor has its own copy of all the snapshot chunks, so we just need to construct an array
+    // of size Nchunk_snap and each processor gets its own
+    // we can do this pretty easily with the array_split function from earlier
+    // 
+    // to make it easier to understand, we are essentially parallelizing thsi for loop:
+    // for(int i=0; i<Nchunk_snap; i++){
+    //     process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
+    //                        DiskIDsChunkList, DiskIDsChunkListNumPer,
+    //                        BulgeIDsChunkList, BulgeIDsChunkListNumPer);
+    // }
+
+    int *ChunkRange;
+    int **ChunkList, *ChunkListNumPer;
+    ChunkRange = (int *)malloc(sizeof(int) * Nchunk_snap);
+    for(int i=0; i<Nchunk_snap; i++)
+        ChunkRange[i] = i;
+    
+    array_split_int(size, ChunkRange, Nchunk_snap, &ChunkList, &ChunkListNumPer);
+    int *ChunkListDisplacement;
+    ChunkListDisplacement = (int *)malloc(sizeof(int) * size);
+    ChunkListDisplacement[0] = 0;
+    for(int i=1; i<size; i++)
+        ChunkListDisplacement[i] = ChunkListDisplacement[i-1] + ChunkListNumPer[i-1];
+
+    int *MyChunks;
+    MyChunks = (int *)malloc(sizeof(int) * Nchunk_snap);
+    MPI_Scatterv(ChunkRange, ChunkListNumPer, ChunkListDisplacement, MPI_INT, MyChunks, ChunkListNumPer[rank], MPI_INT, 0, MPI_COMM_WORLD);
+
+    printf("rank %d has chunks %d to %d\n", rank, MyChunks[0], MyChunks[ChunkListNumPer[rank]-1]);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    for(int i=MyChunks[0]; i<MyChunks[ChunkListNumPer[rank]-1]; i++){
         process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
                            DiskIDsChunkList, DiskIDsChunkListNumPer,
                            BulgeIDsChunkList, BulgeIDsChunkListNumPer);
     }
-    int i;
-    i = 0;
 
+    // printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskPart[0].ID, DiskPart[100].ID, DiskPart[NumPart_Total_LastSnap[2]-1].ID);
+    // printf("BulgeIDs[0]=%lld, BulgeIDs[100]=%lld, BulgeIDs[last]=%lld\n", BulgePart[0].ID, BulgePart[100].ID, BulgePart[NumPart_Total_LastSnap[3]-1].ID);
 
-    printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskPart[0].ID, DiskPart[100].ID, DiskPart[NumPart_Total_LastSnap[2]-1].ID);
-    printf("BulgeIDs[0]=%lld, BulgeIDs[100]=%lld, BulgeIDs[last]=%lld\n", BulgePart[0].ID, BulgePart[100].ID, BulgePart[NumPart_Total_LastSnap[3]-1].ID);
+    // printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskIDs[0], DiskIDs[100], DiskIDs[NumPart_Total_LastSnap[2]-1]);
+    // printf("BulgeIDs[0]=%lld, BulgeIDs[100]=%lld, BulgeIDs[last]=%lld\n", BulgeIDs[0], BulgeIDs[100], BulgeIDs[NumPart_Total_LastSnap[3]-1]);
 
-    printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskIDs[0], DiskIDs[100], DiskIDs[NumPart_Total_LastSnap[2]-1]);
-    printf("BulgeIDs[0]=%lld, BulgeIDs[100]=%lld, BulgeIDs[last]=%lld\n", BulgeIDs[0], BulgeIDs[100], BulgeIDs[NumPart_Total_LastSnap[3]-1]);
-
-    printf("part[0] ID=%lld, Pos=%g|%g|%g, Vel=%g|%g|%g, Acc=%g|%g|%g\n", BulgePart[i].ID, BulgePart[i].Pos[0], BulgePart[i].Pos[1], BulgePart[i].Pos[2],
-                                                                          BulgePart[i].Vel[0], BulgePart[i].Vel[1], BulgePart[i].Vel[2], 
-                                                                          BulgePart[i].Acc[0], BulgePart[i].Acc[1], BulgePart[i].Acc[2]);
+    // printf("part[0] ID=%lld, Pos=%g|%g|%g, Vel=%g|%g|%g, Acc=%g|%g|%g\n", BulgePart[i].ID, BulgePart[i].Pos[0], BulgePart[i].Pos[1], BulgePart[i].Pos[2],
+    //                                                                       BulgePart[i].Vel[0], BulgePart[i].Vel[1], BulgePart[i].Vel[2], 
+    //                                                                       BulgePart[i].Acc[0], BulgePart[i].Acc[1], BulgePart[i].Acc[2]);
 
     // Compute nsnap
 
     free(SnapList);
-}
     return 0;
 }
