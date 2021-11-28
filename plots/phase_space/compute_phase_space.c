@@ -213,10 +213,6 @@ void get_part(char* output_dir, int SnapIdx, int PartType, struct Part ** part)
     free(DiskAcc);
     free(DiskIDs);
 
-    // now 
-
-    // printf("DiskIDs[0]=%lld, DiskIDs[100]=%lld, DiskIDs[last]=%lld\n", DiskIDs[0], DiskIDs[100], DiskIDs[NumPart_Total[2]-1]);
-
     herr_t status = H5Fclose(file_id);
 
 }
@@ -402,7 +398,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
         read_header_attribute(file_id, H5T_NATIVE_DOUBLE, "Time", &this_time);
         H5Fclose(file_id);
         Time[j] = this_time;
-        printf("processing snap %d of %d, time=%g\n", j, NSnapInChunk, Time[j]);
+        printf("processing snap %d (%d of %d), time=%g\n", SnapChunk[j], j, NSnapInChunk, Time[j]);
 
         // load in the snapshots
         get_part(output_dir, SnapChunk[j], 2, &DiskPart);
@@ -515,17 +511,28 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
 }
 
 int main(int argc, char* argv[]) {
+
+    
     char name[100];
     char lvl[100];
     int Nchunk_id, Nchunk_snap, Nsnap;
     char basepath[1000], output_dir[1000], fname[1000];
     int *id_chunks_disk, *indices_chunks;
     uint NumPart_Total[NTYPES];
+    long long *DiskIDs, *BulgeIDs;
+    int **SnapChunkList;
+    int *SnapChunkListNumPer;
+    long long **DiskIDsChunkList, **BulgeIDsChunkList;
+    long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer;
+    int * SnapList;
+
+    #pragma omp parallel private(output_dir, name, lvl, Nchunk_id, DiskIDsChunkList, DiskIDsChunkListNumPer, BulgeIDsChunkList, BulgeIDsChunkListNumPer, NumPart_Total_LastSnap)
+{
 
     // Check to make sure right number of arguments.
     if(argc != 3){
         printf("Usage: ./compute_phase_space.o name lvl\n");
-        return -1;
+        // return -1;
     }
 
     // Copy name and lvl, print.
@@ -559,23 +566,18 @@ int main(int argc, char* argv[]) {
     qsort(BulgePart, NumPart_Total_LastSnap[3], sizeof(struct Part), cmprID);
 
     // construct sorted ID list
-    long long *DiskIDs, *BulgeIDs;
     DiskIDs = get_IDs_from_part(DiskPart, NumPart_Total_LastSnap[2]);
     BulgeIDs = get_IDs_from_part(BulgePart, NumPart_Total_LastSnap[3]);
     
-    int * SnapList;
     SnapList = (int *)malloc(sizeof(int) * Nsnap);
     for(int i=0; i<Nsnap; i++)
         SnapList[i] = i;
 
     // Create snapshot chunked arrays
-    int **SnapChunkList;
-    int *SnapChunkListNumPer;
+    
     array_split_int(Nchunk_snap, SnapList, Nsnap, &SnapChunkList, &SnapChunkListNumPer);
 
     // Create IDs chunked arrays
-    long long **DiskIDsChunkList, **BulgeIDsChunkList;
-    long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer;
     array_split_llong(Nchunk_id, DiskIDs, NumPart_Total_LastSnap[2], &DiskIDsChunkList, &DiskIDsChunkListNumPer);
     array_split_llong(Nchunk_id, BulgeIDs, NumPart_Total_LastSnap[3], &BulgeIDsChunkList, &BulgeIDsChunkListNumPer);
 
@@ -590,12 +592,12 @@ int main(int argc, char* argv[]) {
         mkdir(data_dir, 0700);
     }
 
+#pragma omp for
     for(int i=0; i<Nchunk_snap; i++){
         process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
                            DiskIDsChunkList, DiskIDsChunkListNumPer,
                            BulgeIDsChunkList, BulgeIDsChunkListNumPer);
     }
-
     int i;
     i = 0;
 
@@ -613,6 +615,6 @@ int main(int argc, char* argv[]) {
     // Compute nsnap
 
     free(SnapList);
-
+}
     return 0;
 }
