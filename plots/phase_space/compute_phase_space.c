@@ -283,6 +283,25 @@ void array_split_int(int Nchunk, int *List, int NList, int ***OutList, int **Out
     }
 }
 
+void compute_chunk_start_end(int rank, int size, int Nchunk, int *ChunkStart, int *ChunkEnd){
+    int NperMax = (Nchunk -1)/size + 1;
+    int NLeftOver = NperMax * size - Nchunk;
+    *ChunkStart = 0;
+    int itr = 0;
+    int i;
+    for(i=0; i<rank; i++){
+        itr = NperMax;
+        if(i >= (size - NLeftOver))
+            itr--;
+        *ChunkStart += itr;
+    }
+    itr = NperMax;
+    if(i >= (size - NLeftOver))
+        itr--;
+    *ChunkEnd = *ChunkStart + itr;
+    return;
+}
+
 void array_split_llong(int Nchunk, long long *List, int NList, long long ***OutList, long long **OutNPerList){
     // splits the array List, of size Nlist, into Nchunk lists, stored in OutList, where each OutList
     // has size stored in OutNPerList
@@ -646,28 +665,14 @@ int main(int argc, char* argv[]) {
     //                        BulgeIDsChunkList, BulgeIDsChunkListNumPer);
     // }
 
-    int *ChunkRange;
-    int **ChunkList, *ChunkListNumPer;
-    ChunkRange = (int *)malloc(sizeof(int) * Nchunk_snap);
-    for(int i=0; i<Nchunk_snap; i++)
-        ChunkRange[i] = i;
-    
-    array_split_int(size, ChunkRange, Nchunk_snap, &ChunkList, &ChunkListNumPer);
-    int *ChunkListDisplacement;
-    ChunkListDisplacement = (int *)malloc(sizeof(int) * size);
-    ChunkListDisplacement[0] = 0;
-    for(int i=1; i<size; i++)
-        ChunkListDisplacement[i] = ChunkListDisplacement[i-1] + ChunkListNumPer[i-1];
+    int ChunkStart, ChunkEnd;
 
-    int *MyChunks;
-    MyChunks = (int *)malloc(sizeof(int) * Nchunk_snap);
-    MPI_Scatterv(ChunkRange, ChunkListNumPer, ChunkListDisplacement, MPI_INT, MyChunks, ChunkListNumPer[rank], MPI_INT, 0, MPI_COMM_WORLD);
-
-    printf("rank %d has chunks %d to %d\n", rank, MyChunks[0], MyChunks[ChunkListNumPer[rank]-1]);
+    compute_chunk_start_end(rank, size, Nchunk_snap, &ChunkStart, &ChunkEnd);
+    printf("on rank=%d, we have ChunkStart=%d and ChunkEnd=%d\n", rank, ChunkStart, ChunkEnd);
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    for(int i=MyChunks[0]; i<MyChunks[ChunkListNumPer[rank]-1]; i++){
+    for(int i=ChunkStart; i<ChunkEnd; i++){
         process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
                            DiskIDsChunkList, DiskIDsChunkListNumPer,
                            BulgeIDsChunkList, BulgeIDsChunkListNumPer);
