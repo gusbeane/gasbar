@@ -13,6 +13,8 @@
 
 uint NumPart_Total_LastSnap[NTYPES];
 int Nsnap; // total number of snapshots
+int rank, size;
+
 
 // Variables related to the number of chunks
 int Nchunk_id, Nchunk_snap; // number of chunks to place ids and snapshots into
@@ -73,19 +75,17 @@ void compute_Nchunk(){
     return;
 }
 
-int compute_nsnap(char* basepath){
-    char output_dir[1000], fname[1000];
-    sprintf(output_dir, "%s/output/", basepath);
-
+void compute_Nsnap(char* output_dir){
+    char fname[1000];
     int i=0;
+
     sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, i, i);
-    while (access(fname, F_OK) == 0)
-    {
+    while (access(fname, F_OK) == 0){
         i++;
         sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, i, i);
     }
-    
-    return i;
+    Nsnap = i;
+    Nsnap = 32;
 }
 
 void read_header_attribute(hid_t file_id, hid_t DTYPE, char* attr_name, void *buf)
@@ -699,54 +699,22 @@ void process_id_chunk(int i, char *name, char *lvl){
 
 }
 
-int main(int argc, char* argv[]) {
-    int rank, size;
-    MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    
-    char name[100];
-    char lvl[100];
-    char basepath[1000], output_dir[1000], fname[1000];
-    int *id_chunks_disk, *indices_chunks;
-    uint NumPart_Total[NTYPES];
-    long long *DiskIDs, *BulgeIDs;
+void construct_id_snap_chunks(char *output_dir)
+{
     int * SnapList;
-    struct Part *DiskPart, *BulgePart;
+    long long *DiskIDs, *BulgeIDs;
+    char fname[1000];
     hid_t file_id;
-    struct stat st;
+    struct Part *DiskPart, *BulgePart;
 
-    // Check to make sure right number of arguments.
-    if(argc != 3){
-        if(rank == 0)
-            printf("Usage: ./compute_phase_space.o name lvl\n");
-        exit(1);
-    }
-
-    // Copy name and lvl, print.
-    strcpy(name, argv[1]);
-    strcpy(lvl, argv[2]);
-
-    if(rank == 0)
-        printf("Running for name=%s, lvl=%s\n", name, lvl);
-
-    // compute Nchunks
-    compute_Nchunk();
-    printf("Nchunk_id=%d, Nchunk_snap=%d\n", Nchunk_id, Nchunk_snap);
-
-    sprintf(basepath, "../../runs/%s/%s/", name, lvl);
-    sprintf(output_dir, "%s/output/", basepath);
-
-    // only do this next section on the 0th thread
+    // only do this section on the 0th thread
     if (rank ==0)
     {
-        // Write down basepath/output dir and search for the number of snapshots
-        Nsnap = compute_nsnap(basepath);
-        Nsnap = 32;
+        // search for the number of snapshots
+        compute_Nsnap(output_dir);
 
-        sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, 0, 0);
+        sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, Nsnap-1, Nsnap-1);
         file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
-        read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_Total", NumPart_Total);
         read_header_attribute(file_id, H5T_NATIVE_UINT, "NumPart_Total", NumPart_Total_LastSnap);
         H5Fclose(file_id);
 
@@ -766,6 +734,7 @@ int main(int argc, char* argv[]) {
         free(DiskPart);
         free(BulgePart);
 
+        // Construct snapshot list
         SnapList = (int *)malloc(sizeof(int) * Nsnap);
         for(int i=0; i<Nsnap; i++)
             SnapList[i] = i;
@@ -793,6 +762,51 @@ int main(int argc, char* argv[]) {
     array_split_llong(Nchunk_id, DiskIDs, NumPart_Total_LastSnap[2], &DiskIDsChunkList, &DiskIDsChunkListNumPer);
     array_split_llong(Nchunk_id, BulgeIDs, NumPart_Total_LastSnap[3], &BulgeIDsChunkList, &BulgeIDsChunkListNumPer);
 
+    // Now free DiskIDs and BulgeIDs, no longer needed
+    free(DiskIDs);
+    free(BulgeIDs);
+    free(SnapList);
+}
+
+int main(int argc, char* argv[]) {
+    int rank, size;
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    char name[100];
+    char lvl[100];
+    char basepath[1000], output_dir[1000], fname[1000];
+    int *id_chunks_disk, *indices_chunks;
+    uint NumPart_Total[NTYPES];
+    long long *DiskIDs, *BulgeIDs;
+    struct Part *DiskPart, *BulgePart;
+    hid_t file_id;
+    struct stat st;
+
+    // Check to make sure right number of arguments.
+    if(argc != 3){
+        if(rank == 0)
+            printf("Usage: ./compute_phase_space.o name lvl\n");
+        exit(1);
+    }
+
+    // Copy name and lvl, print.
+    strcpy(name, argv[1]);
+    strcpy(lvl, argv[2]);
+
+    if(rank == 0)
+        printf("Running for name=%s, lvl=%s\n", name, lvl);
+
+    // compute Nchunks
+    compute_Nchunk();
+    printf("Nchunk_id=%d, Nchunk_snap=%d\n", Nchunk_id, Nchunk_snap);
+
+    sprintf(basepath, "../../runs/%s/%s/", name, lvl);
+    sprintf(output_dir, "%s/output/", basepath);
+    
+    construct_id_snap_chunks(output_dir);
+
     if(rank ==0){
         // Create output data directory if it doesn't exist
         // struct stat st = {0};
@@ -807,17 +821,6 @@ int main(int argc, char* argv[]) {
     }
 
     // now we need to split the snapshot chunks into chunks across the processors (i know, confusing..)
-    // but each processor has its own copy of all the snapshot chunks, so we just need to construct an array
-    // of size Nchunk_snap and each processor gets its own
-    // we can do this pretty easily with the array_split function from earlier
-    // 
-    // to make it easier to understand, we are essentially parallelizing thsi for loop:
-    // for(int i=0; i<Nchunk_snap; i++){
-    //     process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
-    //                        DiskIDsChunkList, DiskIDsChunkListNumPer,
-    //                        BulgeIDsChunkList, BulgeIDsChunkListNumPer);
-    // }
-
     int ChunkStart, ChunkEnd;
 
     compute_chunk_start_end(rank, size, Nchunk_snap, &ChunkStart, &ChunkEnd);
@@ -839,6 +842,5 @@ int main(int argc, char* argv[]) {
         process_id_chunk(i, name, lvl);
     }
 
-    free(SnapList);
     return 0;
 }
