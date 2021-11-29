@@ -12,7 +12,8 @@
 #define IDX(i, j) i*3+j
 
 uint NumPart_Total_LastSnap[NTYPES];
-int Nsnap;
+int Nsnap; // total number of snapshots
+int Nchunk_id, Nchunk_snap; // number of chunks to place ids and snapshots into
 
 struct Part
 {
@@ -59,10 +60,10 @@ void write_Dset(hid_t loc_id, char *dname, hid_t mem_type_id, hid_t dspace, void
 //     H5Dclose(dset);
 // }
 
-void compute_Nchunk(int *Nchunk_id, int *Nchunk_snap){
+void compute_Nchunk(){
     // TODO: compute these according to memory requirements
-    *Nchunk_id = 64;
-    *Nchunk_snap = 32;
+    Nchunk_id = 64;
+    Nchunk_snap = 32;
     return;
 }
 
@@ -400,7 +401,7 @@ void sort_by_id(long long *chunk_ids, long long Nids_in_chunk, struct Part * par
     }
 }
 
-void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *SnapChunk, int NSnapInChunk, int Nchunk_id,
+void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *SnapChunk, int NSnapInChunk,
                            long long **DiskIDsChunkList, long long *DiskIDsChunkListNumPer,
                            long long **BulgeIDsChunkList, long long *BulgeIDsChunkListNumPer){
     // i is the snap chunk idx
@@ -550,7 +551,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
 void process_id_chunk(int i, char *name, char *lvl, 
                       long long *DiskIDsChunk, long long DiskIDsChunkNum, 
                       long long *BulgeIDsChunk, long long BulgeIDsChunkNum, 
-                      int Nchunk_snap, int *SnapChunkListNumPer){
+                      int *SnapChunkListNumPer){
     int j;
     char data_dir[1000], fname[1000];
     sprintf(data_dir, "./data/%s-%s/", name, lvl);
@@ -690,7 +691,6 @@ int main(int argc, char* argv[]) {
     
     char name[100];
     char lvl[100];
-    int Nchunk_id, Nchunk_snap;
     char basepath[1000], output_dir[1000], fname[1000];
     int *id_chunks_disk, *indices_chunks;
     uint NumPart_Total[NTYPES];
@@ -719,7 +719,7 @@ int main(int argc, char* argv[]) {
         printf("Running for name=%s, lvl=%s\n", name, lvl);
 
     // compute Nchunks
-    compute_Nchunk(&Nchunk_id, &Nchunk_snap);
+    compute_Nchunk();
     printf("Nchunk_id=%d, Nchunk_snap=%d\n", Nchunk_id, Nchunk_snap);
 
     sprintf(basepath, "../../runs/%s/%s/", name, lvl);
@@ -815,7 +815,7 @@ int main(int argc, char* argv[]) {
 
     // loop through chunks of snapshots and write to temporary output files
     for(int i=ChunkStart; i<ChunkEnd; i++){
-        process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i], Nchunk_id,
+        process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i],
                            DiskIDsChunkList, DiskIDsChunkListNumPer,
                            BulgeIDsChunkList, BulgeIDsChunkListNumPer);
     }
@@ -827,7 +827,7 @@ int main(int argc, char* argv[]) {
 
     for(int i=ChunkStart; i<ChunkEnd; i++){
         process_id_chunk(i, name, lvl, DiskIDsChunkList[i], DiskIDsChunkListNumPer[i], BulgeIDsChunkList[i], BulgeIDsChunkListNumPer[i],
-                         Nchunk_snap, SnapChunkListNumPer);
+                        SnapChunkListNumPer);
     }
 
     free(SnapList);
