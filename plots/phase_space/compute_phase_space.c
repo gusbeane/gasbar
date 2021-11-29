@@ -34,6 +34,30 @@ hid_t my_H5Gopen(hid_t loc_id, const char *groupname, hid_t fapl_id)
   return group;
 }
 
+void write_Dset(hid_t loc_id, char *dname, hid_t mem_type_id, hid_t dspace, void *buf){
+    hid_t dset    = H5Dcreate1(loc_id, dname, mem_type_id, dspace, H5P_DEFAULT);
+    herr_t status = H5Dwrite(dset, mem_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, buf);
+    
+    if(status < 0){
+        printf("ERROR: failed writing dataset with name %s\n", dname);
+        exit(1);
+    }
+    
+    H5Dclose(dset);
+}
+
+// void read_Dset(hid_t loc_id, char *dname, hid_t mem_type_id, void **buf){
+//     hid_t dset = H5Dopen(loc_id, dname, H5P_DEFAULT);
+//     herr_t = H5Dread(dset, mem_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, *buf);
+
+//     if(status < 0){
+//         printf("ERROR: failed reading dataset with name %s\n", dname);
+//         exit(1);
+//     }
+
+//     H5Dclose(dset);
+// }
+
 void compute_Nchunk(int *Nchunk_id, int *Nchunk_snap){
     // TODO: compute these according to memory requirements
     *Nchunk_id = 64;
@@ -483,45 +507,25 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
         time_dspace = H5Screate_simple(1, time_dims, NULL);
 
         // Write time.
-        dset = H5Dcreate1(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, Time);
-        H5Dclose(dset);
+        write_Dset(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, Time);
 
-        // Write disk coordinates.
-        dset = H5Dcreate1(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskPos[j]);
-        H5Dclose(dset);
+        // Write disk output.
+        write_Dset(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskPos[j]);
+        write_Dset(grp_disk, "Velocities", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskVel[j]);
+        write_Dset(grp_disk, "Acceleration", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskAcc[j]);
 
-        // Write disk velocities.
-        dset = H5Dcreate1(grp_disk, "Velocities", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskVel[j]);
-        H5Dclose(dset);
+        // Write bulge output.
+        write_Dset(grp_bulge, "Coordinates", H5T_NATIVE_DOUBLE, bulge_dspace_vec, BulgePos[j]);
+        write_Dset(grp_bulge, "Velocities", H5T_NATIVE_DOUBLE, bulge_dspace_vec, BulgeVel[j]);
+        write_Dset(grp_bulge, "Acceleration", H5T_NATIVE_DOUBLE, bulge_dspace_vec, BulgeAcc[j]);
 
-        // Write disk accelerations.
-        dset = H5Dcreate1(grp_disk, "Acceleration", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskAcc[j]);
-        H5Dclose(dset);
-
-        // Write bulge coordinates.
-        dset = H5Dcreate1(grp_bulge, "Coordinates", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgePos[j]);
-        H5Dclose(dset);
-
-        // Write bulge velocities.
-        dset = H5Dcreate1(grp_bulge, "Velocities", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeVel[j]);
-        H5Dclose(dset);
-
-        // Write bulge acclerations.
-        dset = H5Dcreate1(grp_bulge, "Acceleration", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
-        H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeAcc[j]);
-        H5Dclose(dset);
-
+        // Close hdf5 stuff.
         H5Gclose(grp_disk);
         H5Gclose(grp_bulge);
         H5Fclose(file_id);
     }
 
+    // Free everything.
     for(int ii=0; ii<Nchunk_id; ii++){
         free(DiskPos[ii]);
         free(DiskVel[ii]);
@@ -645,57 +649,27 @@ void process_id_chunk(int i, char *name, char *lvl,
     bulge_dspace_ids = H5Screate_simple(1, bulge_id_dims, NULL);
     time_dspace = H5Screate_simple(1, time_dims, NULL);
 
-
     // Write time.
-    dset = H5Dcreate1(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, Time);
-    H5Dclose(dset);
+    write_Dset(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, Time);
+    
+    // Write disk stuff.
+    write_Dset(grp_disk, "ParticleIDs", H5T_NATIVE_LLONG, disk_dspace_ids, DiskIDsChunk);
+    write_Dset(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskPos);
+    write_Dset(grp_disk, "Velocities", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskVel);
+    write_Dset(grp_disk, "Acceleration", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskAcc);
 
-    // // Write disk IDs.
-    dset = H5Dcreate1(grp_disk, "ParticleIDs", H5T_NATIVE_LLONG, disk_dspace_ids, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskIDsChunk);
-    H5Dclose(dset);
+    // Write bulge stuff.
+    write_Dset(grp_bulge, "ParticleIDs", H5T_NATIVE_LLONG, bulge_dspace_ids, BulgeIDsChunk);
+    write_Dset(grp_bulge, "Coordinates", H5T_NATIVE_DOUBLE, bulge_dspace_vec, BulgePos);
+    write_Dset(grp_bulge, "Velocities", H5T_NATIVE_DOUBLE, bulge_dspace_vec, BulgeVel);
+    write_Dset(grp_bulge, "Acceleration", H5T_NATIVE_DOUBLE, bulge_dspace_vec, BulgeAcc);
 
-    // // Write disk coordinates.
-    dset = H5Dcreate1(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskPos);
-    H5Dclose(dset);
-
-    // // Write disk velocities.
-    dset = H5Dcreate1(grp_disk, "Velocities", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskVel);
-    H5Dclose(dset);
-
-    // // Write disk accelerations.
-    dset = H5Dcreate1(grp_disk, "Acceleration", H5T_NATIVE_DOUBLE, disk_dspace_vec, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, DiskAcc);
-    H5Dclose(dset);
-
-    // // Write bulge IDs.
-    dset = H5Dcreate1(grp_bulge, "ParticleIDs", H5T_NATIVE_LLONG, bulge_dspace_ids, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeIDsChunk);
-    H5Dclose(dset);
-
-    // // Write bulge coordinates.
-    dset = H5Dcreate1(grp_bulge, "Coordinates", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgePos);
-    H5Dclose(dset);
-
-    // // Write bulge velocities.
-    dset = H5Dcreate1(grp_bulge, "Velocities", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeVel);
-    H5Dclose(dset);
-
-    // // Write bulge acclerations.
-    dset = H5Dcreate1(grp_bulge, "Acceleration", H5T_NATIVE_DOUBLE, bulge_dspace_vec, H5P_DEFAULT);
-    H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, BulgeAcc);
-    H5Dclose(dset);
-
+    // Close hdf5 stuff.
     H5Gclose(grp_disk);
     H5Gclose(grp_bulge);
     H5Fclose(file_id);
 
-
+    // Free everything.
     free(DiskPos);
     free(DiskVel);
     free(DiskAcc);
@@ -755,7 +729,7 @@ int main(int argc, char* argv[]) {
     {
         // Write down basepath/output dir and search for the number of snapshots
         Nsnap = compute_nsnap(basepath);
-        Nsnap = 200;
+        Nsnap = 32;
 
         sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, 0, 0);
         file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
