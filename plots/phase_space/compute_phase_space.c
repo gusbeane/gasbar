@@ -629,7 +629,7 @@ void process_id_chunk(int i, char *name, char *lvl,
     bulge_dims[1] = BulgeIDsChunkNum;
 
     disk_id_dims[0] = DiskIDsChunkNum;
-    bulge_id_dims[0] = DiskIDsChunkNum;
+    bulge_id_dims[0] = BulgeIDsChunkNum;
     disk_id_dims[1] = bulge_id_dims[1] = 1;
 
     file_id = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
