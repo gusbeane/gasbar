@@ -13,7 +13,13 @@
 
 uint NumPart_Total_LastSnap[NTYPES];
 int Nsnap; // total number of snapshots
+
+// Variables related to the number of chunks
 int Nchunk_id, Nchunk_snap; // number of chunks to place ids and snapshots into
+int **SnapChunkList;
+int *SnapChunkListNumPer;
+long long **DiskIDsChunkList, **BulgeIDsChunkList;
+long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer;
 
 struct Part
 {
@@ -401,9 +407,8 @@ void sort_by_id(long long *chunk_ids, long long Nids_in_chunk, struct Part * par
     }
 }
 
-void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *SnapChunk, int NSnapInChunk,
-                           long long **DiskIDsChunkList, long long *DiskIDsChunkListNumPer,
-                           long long **BulgeIDsChunkList, long long *BulgeIDsChunkListNumPer){
+void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
+    
     // i is the snap chunk idx
     // j loops through the disk id and bulge id chunks
     // we output into data/phase_space_name/tmp"i"/tmp"j".hdf5
@@ -415,6 +420,12 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
     if (stat(prefix, &st) == -1) {
         mkdir(prefix, 0700);
     }
+
+    // pull out the snap chunk and number in the snap chunk
+    int NSnapInChunk;
+    int *SnapChunk;
+    SnapChunk = SnapChunkList[i];
+    NSnapInChunk = SnapChunkListNumPer[i];
 
     double *Time;
     Time = (double *)malloc(sizeof(double) * NSnapInChunk);
@@ -548,14 +559,19 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
     printf("finished with chunk %d\n", i);
 }
 
-void process_id_chunk(int i, char *name, char *lvl, 
-                      long long *DiskIDsChunk, long long DiskIDsChunkNum, 
-                      long long *BulgeIDsChunk, long long BulgeIDsChunkNum, 
-                      int *SnapChunkListNumPer){
+void process_id_chunk(int i, char *name, char *lvl){
     int j;
     char data_dir[1000], fname[1000];
     sprintf(data_dir, "./data/%s-%s/", name, lvl);
     hid_t file_id, grp_id, dset;
+
+    long long *DiskIDsChunk, *BulgeIDsChunk;
+    long long DiskIDsChunkNum, BulgeIDsChunkNum;
+    DiskIDsChunk = DiskIDsChunkList[i];
+    BulgeIDsChunk = BulgeIDsChunkList[i];
+    DiskIDsChunkNum = DiskIDsChunkListNumPer[i];
+    BulgeIDsChunkNum = BulgeIDsChunkListNumPer[i];
+
 
     double *DiskPos, *DiskVel, *DiskAcc;
     double *BulgePos, *BulgeVel, *BulgeAcc;
@@ -695,10 +711,6 @@ int main(int argc, char* argv[]) {
     int *id_chunks_disk, *indices_chunks;
     uint NumPart_Total[NTYPES];
     long long *DiskIDs, *BulgeIDs;
-    int **SnapChunkList;
-    int *SnapChunkListNumPer;
-    long long **DiskIDsChunkList, **BulgeIDsChunkList;
-    long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer;
     int * SnapList;
     struct Part *DiskPart, *BulgePart;
     hid_t file_id;
@@ -815,9 +827,7 @@ int main(int argc, char* argv[]) {
 
     // loop through chunks of snapshots and write to temporary output files
     for(int i=ChunkStart; i<ChunkEnd; i++){
-        process_snap_chunk(i, output_dir, name, lvl, SnapChunkList[i], SnapChunkListNumPer[i],
-                           DiskIDsChunkList, DiskIDsChunkListNumPer,
-                           BulgeIDsChunkList, BulgeIDsChunkListNumPer);
+        process_snap_chunk(i, output_dir, name, lvl);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -826,8 +836,7 @@ int main(int argc, char* argv[]) {
     compute_chunk_start_end(rank, size, Nchunk_id, &ChunkStart, &ChunkEnd);
 
     for(int i=ChunkStart; i<ChunkEnd; i++){
-        process_id_chunk(i, name, lvl, DiskIDsChunkList[i], DiskIDsChunkListNumPer[i], BulgeIDsChunkList[i], BulgeIDsChunkListNumPer[i],
-                        SnapChunkListNumPer);
+        process_id_chunk(i, name, lvl);
     }
 
     free(SnapList);
