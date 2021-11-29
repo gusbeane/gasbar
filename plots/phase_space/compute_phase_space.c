@@ -12,6 +12,7 @@
 #define IDX(i, j) i*3+j
 
 uint NumPart_Total_LastSnap[NTYPES];
+int Nsnap;
 
 struct Part
 {
@@ -549,7 +550,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl, int *Sna
 void process_id_chunk(int i, char *name, char *lvl, 
                       long long *DiskIDsChunk, long long DiskIDsChunkNum, 
                       long long *BulgeIDsChunk, long long BulgeIDsChunkNum, 
-                      int Nchunk_snap, int *SnapChunkListNumPer, int Nsnap){
+                      int Nchunk_snap, int *SnapChunkListNumPer){
     int j;
     char data_dir[1000], fname[1000];
     sprintf(data_dir, "./data/%s-%s/", name, lvl);
@@ -689,7 +690,7 @@ int main(int argc, char* argv[]) {
     
     char name[100];
     char lvl[100];
-    int Nchunk_id, Nchunk_snap, Nsnap;
+    int Nchunk_id, Nchunk_snap;
     char basepath[1000], output_dir[1000], fname[1000];
     int *id_chunks_disk, *indices_chunks;
     uint NumPart_Total[NTYPES];
@@ -826,7 +827,7 @@ int main(int argc, char* argv[]) {
 
     for(int i=ChunkStart; i<ChunkEnd; i++){
         process_id_chunk(i, name, lvl, DiskIDsChunkList[i], DiskIDsChunkListNumPer[i], BulgeIDsChunkList[i], BulgeIDsChunkListNumPer[i],
-                         Nchunk_snap, SnapChunkListNumPer, Nsnap);
+                         Nchunk_snap, SnapChunkListNumPer);
     }
 
     free(SnapList);
