@@ -19,8 +19,8 @@ int rank, size;
 int Nchunk_id, Nchunk_snap; // number of chunks to place ids and snapshots into
 int **SnapChunkList;
 int *SnapChunkListNumPer;
-long long **DiskIDsChunkList, **BulgeIDsChunkList, **StarIDsChunkList;
-long long *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer, *StarIDsChunkListNumPer;
+long long **HaloIDsChunkList, **DiskIDsChunkList, **BulgeIDsChunkList, **StarIDsChunkList;
+long long *HaloIDsChunkListNumPer, *DiskIDsChunkListNumPer, *BulgeIDsChunkListNumPer, *StarIDsChunkListNumPer;
 
 struct Part
 {
@@ -91,8 +91,8 @@ void mpi_printf(const char *fmt, ...)
 
 void compute_Nchunk(){
     // TODO: compute these according to memory requirements
-    Nchunk_id = 64;
-    Nchunk_snap = 128;
+    Nchunk_id = 1024;
+    Nchunk_snap = 256;
     return;
 }
 
@@ -107,6 +107,7 @@ void compute_Nsnap(char* output_dir){
     }
     Nsnap = i;
     // Nsnap = 8;
+
 }
 
 void read_header_attribute(hid_t file_id, hid_t DTYPE, char* attr_name, void *buf)
@@ -455,9 +456,13 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
     double *Time;
     Time = (double *)malloc(sizeof(double) * NSnapInChunk);
 
+    double **HaloPos, **HaloVel, **HaloAcc;
     double **DiskPos, **DiskVel, **DiskAcc;
     double **BulgePos, **BulgeVel, **BulgeAcc;
     double **StarPos, **StarVel, **StarAcc;
+    HaloPos = (double **)malloc(sizeof(double *) * Nchunk_id);
+    HaloVel = (double **)malloc(sizeof(double *) * Nchunk_id);
+    HaloAcc = (double **)malloc(sizeof(double *) * Nchunk_id);
     DiskPos = (double **)malloc(sizeof(double *) * Nchunk_id);
     DiskVel = (double **)malloc(sizeof(double *) * Nchunk_id);
     DiskAcc = (double **)malloc(sizeof(double *) * Nchunk_id);
@@ -465,6 +470,9 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
     BulgeVel = (double **)malloc(sizeof(double *) * Nchunk_id);
     BulgeAcc = (double **)malloc(sizeof(double *) * Nchunk_id);
     for(int ii=0; ii<Nchunk_id; ii++){
+        HaloPos[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * HaloIDsChunkListNumPer[ii]);
+        HaloVel[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * HaloIDsChunkListNumPer[ii]);
+        HaloAcc[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * HaloIDsChunkListNumPer[ii]);
         DiskPos[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * DiskIDsChunkListNumPer[ii]);
         DiskVel[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * DiskIDsChunkListNumPer[ii]);
         DiskAcc[ii] = (double *)malloc(sizeof(double) * NSnapInChunk * 3 * DiskIDsChunkListNumPer[ii]);
@@ -485,16 +493,18 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
     }
 
     // load in the snapshots
-    struct Part *DiskPart, *BulgePart, *StarPart;
+    struct Part *HaloPart, *DiskPart, *BulgePart, *StarPart;
     double this_time;
     hid_t file_id;
-    long long offset_disk[Nchunk_id], offset_bulge[Nchunk_id], offset_star[Nchunk_id];
+    long long offset_halo[Nchunk_id], offset_disk[Nchunk_id], offset_bulge[Nchunk_id], offset_star[Nchunk_id];
     for(j=0; j<Nchunk_id; j++){
+        offset_halo[j] = 0;
         offset_disk[j] = 0;
         offset_bulge[j] = 0;
         offset_star[j] = 0;
     }
 
+    double *hpos_off, *hvel_off, *hacc_off;
     double *dpos_off, *dvel_off, *dacc_off;
     double *bpos_off, *bvel_off, *bacc_off;
     double *spos_off, *svel_off, *sacc_off;
@@ -509,6 +519,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
         printf("processing snap %d (%d of %d), time=%g\n", SnapChunk[j], j, NSnapInChunk, Time[j]);
 
         // load in the snapshots
+        get_part(output_dir, SnapChunk[j], 1, &HaloPart);
         get_part(output_dir, SnapChunk[j], 2, &DiskPart);
         get_part(output_dir, SnapChunk[j], 3, &BulgePart);
         if(NumPart_Total[4] > 0){
@@ -516,6 +527,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
         }
 
         // sort by ID
+        qsort(HaloPart, NumPart_Total[1], sizeof(struct Part), cmprID);
         qsort(DiskPart, NumPart_Total[2], sizeof(struct Part), cmprID);
         qsort(BulgePart, NumPart_Total[3], sizeof(struct Part), cmprID);
         if(NumPart_Total[4] > 0){
@@ -525,12 +537,17 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
 
         // now loop through chunks and sort pos and vel into output
         for(int k=0; k<Nchunk_id; k++){
+            hpos_off = &(HaloPos[k][offset_halo[k]]);
+            hvel_off = &(HaloVel[k][offset_halo[k]]);
+            hacc_off = &(HaloAcc[k][offset_halo[k]]);
             dpos_off = &(DiskPos[k][offset_disk[k]]);
             dvel_off = &(DiskVel[k][offset_disk[k]]);
             dacc_off = &(DiskAcc[k][offset_disk[k]]);
             bpos_off = &(BulgePos[k][offset_bulge[k]]);
             bvel_off = &(BulgeVel[k][offset_bulge[k]]);
             bacc_off = &(BulgeAcc[k][offset_bulge[k]]);
+            sort_by_id(HaloIDsChunkList[k], HaloIDsChunkListNumPer[k], HaloPart, 
+                       &hpos_off, &hvel_off, &hacc_off);
             sort_by_id(DiskIDsChunkList[k], DiskIDsChunkListNumPer[k], DiskPart, 
                        &dpos_off, &dvel_off, &dacc_off);
             sort_by_id(BulgeIDsChunkList[k], BulgeIDsChunkListNumPer[k], BulgePart,
@@ -543,11 +560,13 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
                 sort_by_id(StarIDsChunkList[k], StarIDsChunkListNumPer[k], StarPart,
                        &spos_off, &svel_off, &sacc_off);
             }
+            offset_halo[k] += 3 * HaloIDsChunkListNumPer[k];
             offset_disk[k] += 3 * DiskIDsChunkListNumPer[k];
             offset_bulge[k] += 3 * BulgeIDsChunkListNumPer[k];
             offset_star[k] += 3 * StarIDsChunkListNumPer[k];
         }
 
+        free(HaloPart);
         free(DiskPart);
         free(BulgePart);
         if(NumPart_Total[4] > 0)
@@ -567,13 +586,14 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
     }
 
     // now loop through each ID chunk and write to a temporary file
-    hsize_t disk_dims[3], bulge_dims[3], star_dims[3], time_dims[2];
-    disk_dims[0] = bulge_dims[0] = star_dims[0] = time_dims[0] = NSnapInChunk;
-    disk_dims[2] = bulge_dims[2] = star_dims[2] = 3;
-    time_dims[1];
-    hid_t grp_disk, grp_bulge, grp_star;
-    hid_t disk_dspace_vec, bulge_dspace_vec, star_dspace_vec, time_dspace, dset;
+    hsize_t halo_dims[3], disk_dims[3], bulge_dims[3], star_dims[3], time_dims[2];
+    halo_dims[0] = disk_dims[0] = bulge_dims[0] = star_dims[0] = time_dims[0] = NSnapInChunk;
+    halo_dims[2] = disk_dims[2] = bulge_dims[2] = star_dims[2] = 3;
+    time_dims[1] = 1;
+    hid_t grp_halo, grp_disk, grp_bulge, grp_star;
+    hid_t halo_dspace_vec, disk_dspace_vec, bulge_dspace_vec, star_dspace_vec, time_dspace, dset;
     for(j=0; j<Nchunk_id; j++){
+        halo_dims[1] = HaloIDsChunkListNumPer[j];
         disk_dims[1] = DiskIDsChunkListNumPer[j];
         bulge_dims[1] = BulgeIDsChunkListNumPer[j];
         star_dims[1] = StarIDsChunkListNumPer[j];
@@ -583,9 +603,11 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
         if(file_id < 0)
             printf("UNABLE TO CREATE FILE %s", fname);
 
+        grp_halo = H5Gcreate1(file_id, "PartType1", 0);
         grp_disk = H5Gcreate1(file_id, "PartType2", 0);
         grp_bulge = H5Gcreate1(file_id, "PartType3", 0);
 
+        halo_dspace_vec = H5Screate_simple(3, halo_dims, NULL);
         disk_dspace_vec = H5Screate_simple(3, disk_dims, NULL);
         bulge_dspace_vec = H5Screate_simple(3, bulge_dims, NULL);
         star_dspace_vec = H5Screate_simple(3, star_dims, NULL);
@@ -593,6 +615,11 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
 
         // Write time.
         write_Dset(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, Time);
+
+        // Write disk output.
+        write_Dset(grp_halo, "Coordinates", H5T_NATIVE_DOUBLE, halo_dspace_vec, HaloPos[j]);
+        write_Dset(grp_halo, "Velocities", H5T_NATIVE_DOUBLE, halo_dspace_vec, HaloVel[j]);
+        write_Dset(grp_halo, "Acceleration", H5T_NATIVE_DOUBLE, halo_dspace_vec, HaloAcc[j]);
 
         // Write disk output.
         write_Dset(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskPos[j]);
@@ -614,6 +641,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
         }
 
         // Close hdf5 stuff.
+        H5Gclose(grp_halo);
         H5Gclose(grp_disk);
         H5Gclose(grp_bulge);
         H5Fclose(file_id);
@@ -621,6 +649,9 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
 
     // Free everything.
     for(int ii=0; ii<Nchunk_id; ii++){
+        free(HaloPos[ii]);
+        free(HaloVel[ii]);
+        free(HaloAcc[ii]);
         free(DiskPos[ii]);
         free(DiskVel[ii]);
         free(DiskAcc[ii]);
@@ -633,6 +664,9 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
             free(StarAcc[ii]);
         }
     }
+    free(HaloPos);
+    free(HaloVel);
+    free(HaloAcc);
     free(DiskPos);
     free(DiskVel);
     free(DiskAcc);
@@ -656,24 +690,29 @@ void process_id_chunk(int i, char *name, char *lvl){
     sprintf(data_dir, "./data/%s-%s/", name, lvl);
     hid_t file_id, grp_id, dset;
 
-    long long *DiskIDsChunk, *BulgeIDsChunk, *StarIDsChunk;
-    long long DiskIDsChunkNum, BulgeIDsChunkNum, StarIDsChunkNum;
+    long long *HaloIDsChunk, *DiskIDsChunk, *BulgeIDsChunk, *StarIDsChunk;
+    long long HaloIDsChunkNum, DiskIDsChunkNum, BulgeIDsChunkNum, StarIDsChunkNum;
+    HaloIDsChunk = HaloIDsChunkList[i];
     DiskIDsChunk = DiskIDsChunkList[i];
     BulgeIDsChunk = BulgeIDsChunkList[i];
     if(NumPart_Total_LastSnap[4]>0)
         StarIDsChunk = StarIDsChunkList[i];
 
+    HaloIDsChunkNum = HaloIDsChunkListNumPer[i];
     DiskIDsChunkNum = DiskIDsChunkListNumPer[i];
     BulgeIDsChunkNum = BulgeIDsChunkListNumPer[i];
     StarIDsChunkNum = StarIDsChunkListNumPer[i];
 
-
+    double *HaloPos, *HaloVel, *HaloAcc;
     double *DiskPos, *DiskVel, *DiskAcc;
     double *BulgePos, *BulgeVel, *BulgeAcc;
     double *StarPos, *StarVel, *StarAcc;
     double *Time;
 
     Time = (double *)malloc(sizeof(double) * Nsnap);
+    HaloPos = (double *)malloc(sizeof(double) * Nsnap * HaloIDsChunkNum * 3);
+    HaloVel = (double *)malloc(sizeof(double) * Nsnap * HaloIDsChunkNum * 3);
+    HaloAcc = (double *)malloc(sizeof(double) * Nsnap * HaloIDsChunkNum * 3);
     DiskPos = (double *)malloc(sizeof(double) * Nsnap * DiskIDsChunkNum * 3);
     DiskVel = (double *)malloc(sizeof(double) * Nsnap * DiskIDsChunkNum * 3);
     DiskAcc = (double *)malloc(sizeof(double) * Nsnap * DiskIDsChunkNum * 3);
@@ -687,8 +726,8 @@ void process_id_chunk(int i, char *name, char *lvl){
     }
 
     int Ncum_time = 0;
-    long long Ncum_Disk, Ncum_Bulge, Ncum_Star;
-    Ncum_Disk = Ncum_Bulge = Ncum_Star = 0;
+    long long Ncum_Halo, Ncum_Disk, Ncum_Bulge, Ncum_Star;
+    Ncum_Halo = Ncum_Disk = Ncum_Bulge = Ncum_Star = 0;
     for(j=0; j<Nchunk_snap; j++){
         // j is snapshot chunk idx, i is id chunk idx
         sprintf(fname, "%s/tmp%d/tmp%d.hdf5", data_dir, j, i);
@@ -699,6 +738,23 @@ void process_id_chunk(int i, char *name, char *lvl){
         dset = H5Dopen(file_id, "Time", H5P_DEFAULT);
         H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(Time[Ncum_time]));
         H5Dclose(dset);
+
+
+        grp_id = H5Gopen(file_id, "PartType1", H5P_DEFAULT);
+        // read disk pos
+        dset = H5Dopen(grp_id, "Coordinates", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(HaloPos[Ncum_Halo]));
+        H5Dclose(dset);
+
+        dset = H5Dopen(grp_id, "Velocities", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(HaloVel[Ncum_Halo]));
+        H5Dclose(dset);
+
+        dset = H5Dopen(grp_id, "Acceleration", H5P_DEFAULT);
+        H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(HaloAcc[Ncum_Halo]));
+        H5Dclose(dset);
+        H5Gclose(grp_id);
+
 
         grp_id = H5Gopen(file_id, "PartType2", H5P_DEFAULT);
         // read disk pos
@@ -714,7 +770,6 @@ void process_id_chunk(int i, char *name, char *lvl){
         H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(DiskAcc[Ncum_Disk]));
         H5Dclose(dset);
         H5Gclose(grp_id);
-
 
         grp_id = H5Gopen(file_id, "PartType3", H5P_DEFAULT);
         // read disk pos
@@ -751,6 +806,7 @@ void process_id_chunk(int i, char *name, char *lvl){
         H5Fclose(file_id);
 
         Ncum_time += SnapChunkListNumPer[j];
+        Ncum_Halo += 3 * HaloIDsChunkNum * SnapChunkListNumPer[j];
         Ncum_Disk += 3 * DiskIDsChunkNum * SnapChunkListNumPer[j];
         Ncum_Bulge += 3 * BulgeIDsChunkNum * SnapChunkListNumPer[j];
         Ncum_Star += 3 * StarIDsChunkNum * SnapChunkListNumPer[j];
@@ -759,35 +815,42 @@ void process_id_chunk(int i, char *name, char *lvl){
     // now write to output file
     sprintf(fname, "%s/phase_space_%s-%s.%d.hdf5", data_dir, name, lvl, i);
 
-    hsize_t disk_dims[3], bulge_dims[3], star_dims[3], time_dims[2];
-    hsize_t disk_id_dims[2], bulge_id_dims[2], star_id_dims[2];
-    disk_dims[0] = bulge_dims[0] = star_dims[0] = time_dims[0] = Nsnap;
-    disk_dims[2] = bulge_dims[2] = star_dims[2] = 3;
+    hsize_t halo_dims[3], disk_dims[3], bulge_dims[3], star_dims[3], time_dims[2];
+    hsize_t halo_id_dims[2], disk_id_dims[2], bulge_id_dims[2], star_id_dims[2];
+    halo_dims[0] = disk_dims[0] = bulge_dims[0] = star_dims[0] = time_dims[0] = Nsnap;
+    halo_dims[2] = disk_dims[2] = bulge_dims[2] = star_dims[2] = 3;
     time_dims[1] = 1;
-    hid_t grp_disk, grp_bulge, grp_star, disk_dspace_vec, bulge_dspace_vec, star_dspace_vec, time_dspace;
-    hid_t disk_dspace_ids, bulge_dspace_ids, star_dspace_ids;
+    hid_t grp_halo, grp_disk, grp_bulge, grp_star;
+    hid_t halo_dspace_vec, disk_dspace_vec, bulge_dspace_vec, star_dspace_vec, time_dspace;
+    hid_t halo_dspace_ids, disk_dspace_ids, bulge_dspace_ids, star_dspace_ids;
     
+    halo_dims[1] = HaloIDsChunkNum;
     disk_dims[1] = DiskIDsChunkNum;
     bulge_dims[1] = BulgeIDsChunkNum;
     star_dims[1] = StarIDsChunkNum;
 
+    halo_id_dims[0] = HaloIDsChunkNum;
     disk_id_dims[0] = DiskIDsChunkNum;
     bulge_id_dims[0] = BulgeIDsChunkNum;
     star_id_dims[0] = StarIDsChunkNum;
-    disk_id_dims[1] = bulge_id_dims[1] = star_id_dims[1] = 1;
+    halo_id_dims[1] = disk_id_dims[1] = bulge_id_dims[1] = star_id_dims[1] = 1;
 
     file_id = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     if(file_id < 0)
         printf("UNABLE TO CREATE FILE %s", fname);
 
+    grp_halo = H5Gcreate1(file_id, "PartType1", 0);
     grp_disk = H5Gcreate1(file_id, "PartType2", 0);
     grp_bulge = H5Gcreate1(file_id, "PartType3", 0);
     if(NumPart_Total_LastSnap[4] > 0)
         grp_star = H5Gcreate1(file_id, "PartType4", 0);
 
+    halo_dspace_vec = H5Screate_simple(3, halo_dims, NULL);
     disk_dspace_vec = H5Screate_simple(3, disk_dims, NULL);
     bulge_dspace_vec = H5Screate_simple(3, bulge_dims, NULL);
     star_dspace_vec = H5Screate_simple(3, star_dims, NULL);
+    
+    halo_dspace_ids = H5Screate_simple(1, halo_id_dims, NULL);
     disk_dspace_ids = H5Screate_simple(1, disk_id_dims, NULL);
     bulge_dspace_ids = H5Screate_simple(1, bulge_id_dims, NULL);
     star_dspace_ids = H5Screate_simple(1, star_id_dims, NULL);
@@ -796,6 +859,12 @@ void process_id_chunk(int i, char *name, char *lvl){
     // Write time.
     write_Dset(file_id, "Time", H5T_NATIVE_DOUBLE, time_dspace, Time);
     
+    // Write disk stuff.
+    write_Dset(grp_halo, "ParticleIDs", H5T_NATIVE_LLONG, halo_dspace_ids, HaloIDsChunk);
+    write_Dset(grp_halo, "Coordinates", H5T_NATIVE_DOUBLE, halo_dspace_vec, HaloPos);
+    write_Dset(grp_halo, "Velocities", H5T_NATIVE_DOUBLE, halo_dspace_vec, HaloVel);
+    write_Dset(grp_halo, "Acceleration", H5T_NATIVE_DOUBLE, halo_dspace_vec, HaloAcc);
+
     // Write disk stuff.
     write_Dset(grp_disk, "ParticleIDs", H5T_NATIVE_LLONG, disk_dspace_ids, DiskIDsChunk);
     write_Dset(grp_disk, "Coordinates", H5T_NATIVE_DOUBLE, disk_dspace_vec, DiskPos);
@@ -818,11 +887,15 @@ void process_id_chunk(int i, char *name, char *lvl){
     }
 
     // Close hdf5 stuff.
+    H5Gclose(grp_halo);
     H5Gclose(grp_disk);
     H5Gclose(grp_bulge);
     H5Fclose(file_id);
 
     // Free everything.
+    free(HaloPos);
+    free(HaloVel);
+    free(HaloAcc);
     free(DiskPos);
     free(DiskVel);
     free(DiskAcc);
@@ -841,11 +914,17 @@ void process_id_chunk(int i, char *name, char *lvl){
 
 void construct_id_snap_chunks(char *output_dir)
 {
+
+    printf("on rank=%d, we got to 0.05\n", rank);
+    fflush(stdout);
     int * SnapList;
-    long long *DiskIDs, *BulgeIDs, *StarIDs;
+    long long *HaloIDs, *DiskIDs, *BulgeIDs, *StarIDs;
     char fname[1000];
     hid_t file_id;
-    struct Part *DiskPart, *BulgePart, *StarPart;
+    struct Part *HaloPart, *DiskPart, *BulgePart, *StarPart;
+
+    
+
 
     // only do this section on the 0th thread
     if (rank ==0)
@@ -859,18 +938,23 @@ void construct_id_snap_chunks(char *output_dir)
         H5Fclose(file_id);
 
         // Pull out particles from the last snapshot
+        get_part(output_dir, Nsnap-1, 1, &HaloPart);
         get_part(output_dir, Nsnap-1, 2, &DiskPart);
         get_part(output_dir, Nsnap-1, 3, &BulgePart);
 
         // sort particles
+        qsort(HaloPart, NumPart_Total_LastSnap[1], sizeof(struct Part), cmprID);
         qsort(DiskPart, NumPart_Total_LastSnap[2], sizeof(struct Part), cmprID);
         qsort(BulgePart, NumPart_Total_LastSnap[3], sizeof(struct Part), cmprID);
 
+
         // construct sorted ID list
+        HaloIDs = get_IDs_from_part(HaloPart, NumPart_Total_LastSnap[1]);
         DiskIDs = get_IDs_from_part(DiskPart, NumPart_Total_LastSnap[2]);
         BulgeIDs = get_IDs_from_part(BulgePart, NumPart_Total_LastSnap[3]);
     
         // free disk part and bulge part
+        free(HaloPart);
         free(DiskPart);
         free(BulgePart);
 
@@ -888,12 +972,15 @@ void construct_id_snap_chunks(char *output_dir)
             SnapList[i] = i;
     }
 
+    printf("on rank=%d, we got to 0.1\n", rank);
+
     // Now broadcast from the 0th rank to all the others
     MPI_Bcast(&Nsnap, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(NumPart_Total_LastSnap, NTYPES, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     // non-0 rank processes need to allocate
     if(rank != 0){
+        HaloIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[1]);
         DiskIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[2]);
         BulgeIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[3]);
         SnapList = (int *)malloc(sizeof(int) * Nsnap);
@@ -901,6 +988,9 @@ void construct_id_snap_chunks(char *output_dir)
             StarIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[4]);
     }
 
+    printf("on rank=%d, we got to 0.2\n", rank);
+
+    MPI_Bcast(HaloIDs, NumPart_Total_LastSnap[1], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(DiskIDs, NumPart_Total_LastSnap[2], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(BulgeIDs, NumPart_Total_LastSnap[3], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
     if(NumPart_Total_LastSnap[4] > 0)
@@ -911,6 +1001,8 @@ void construct_id_snap_chunks(char *output_dir)
     array_split_int(Nchunk_snap, SnapList, Nsnap, &SnapChunkList, &SnapChunkListNumPer);
 
     // Create IDs chunked arrays
+    array_split_llong(Nchunk_id, HaloIDs, NumPart_Total_LastSnap[1], &HaloIDsChunkList, &HaloIDsChunkListNumPer);
+    printf("on rank=%d, we got to 0.3\n", rank);
     array_split_llong(Nchunk_id, DiskIDs, NumPart_Total_LastSnap[2], &DiskIDsChunkList, &DiskIDsChunkListNumPer);
     array_split_llong(Nchunk_id, BulgeIDs, NumPart_Total_LastSnap[3], &BulgeIDsChunkList, &BulgeIDsChunkListNumPer);
     if(NumPart_Total_LastSnap[4] > 0)
@@ -923,6 +1015,7 @@ void construct_id_snap_chunks(char *output_dir)
     }
 
     // Now free DiskIDs and BulgeIDs, no longer needed
+    free(HaloIDs);
     free(DiskIDs);
     free(BulgeIDs);
     free(SnapList);
@@ -931,7 +1024,6 @@ void construct_id_snap_chunks(char *output_dir)
 }
 
 int main(int argc, char* argv[]) {
-    int rank, size;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -966,7 +1058,9 @@ int main(int argc, char* argv[]) {
     sprintf(basepath, "../../runs/%s/%s/", name, lvl);
     sprintf(output_dir, "%s/output/", basepath);
     
+    printf("on rank=%d, we got to 0\n", rank);
     construct_id_snap_chunks(output_dir);
+    printf("on rank=%d, we got to 1\n", rank);
 
     if(rank ==0){
         // Create output data directory if it doesn't exist
