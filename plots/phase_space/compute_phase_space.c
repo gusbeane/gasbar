@@ -92,7 +92,7 @@ void mpi_printf(const char *fmt, ...)
 void compute_Nchunk(){
     // TODO: compute these according to memory requirements
     Nchunk_id = 1024;
-    Nchunk_snap = 256;
+    Nchunk_snap = 1600;
     return;
 }
 
@@ -401,7 +401,7 @@ void array_split_llong(int Nchunk, long long *List, int NList, long long ***OutL
     }
 }
 
-void sort_by_id(long long *chunk_ids, long long Nids_in_chunk, struct Part * part, double **out_pos, double **out_vel, double **out_acc)
+void sort_by_id(long long *chunk_ids, long long Nids_in_chunk, struct Part * part, uint Npart, double **out_pos, double **out_vel, double **out_acc)
 {
     long long itot=0;
     long long ichunk, chk_id;
@@ -412,8 +412,11 @@ void sort_by_id(long long *chunk_ids, long long Nids_in_chunk, struct Part * par
         chk_id = chunk_ids[ichunk];
         while(chk_id > part[itot].ID)
         {
-            // printf("itot=%d\n", itot);
             itot++;
+            if(itot >= Npart){
+                itot--;
+                break;
+            }
         }
 
         if(chk_id == part[itot].ID){
@@ -516,7 +519,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
         read_header_attribute(file_id, H5T_NATIVE_DOUBLE, "Time", &this_time);
         H5Fclose(file_id);
         Time[j] = this_time;
-        printf("processing snap %d (%d of %d), time=%g\n", SnapChunk[j], j, NSnapInChunk, Time[j]);
+        printf("processing snap %d (%d of %d), time=%g, rank=%d\n", SnapChunk[j], j, NSnapInChunk-1, Time[j], rank);
 
         // load in the snapshots
         get_part(output_dir, SnapChunk[j], 1, &HaloPart);
@@ -526,6 +529,8 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
             get_part(output_dir, SnapChunk[j], 4, &StarPart);
         }
 
+        // printf("rank=%d got to before qsort\n", rank);
+
         // sort by ID
         qsort(HaloPart, NumPart_Total[1], sizeof(struct Part), cmprID);
         qsort(DiskPart, NumPart_Total[2], sizeof(struct Part), cmprID);
@@ -534,9 +539,11 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
             qsort(StarPart, NumPart_Total[4], sizeof(struct Part), cmprID);
         }
 
+        // printf("rank=%d got to after qsort\n", rank);
 
         // now loop through chunks and sort pos and vel into output
         for(int k=0; k<Nchunk_id; k++){
+            // printf("rank=%d got to 0\n", rank);
             hpos_off = &(HaloPos[k][offset_halo[k]]);
             hvel_off = &(HaloVel[k][offset_halo[k]]);
             hacc_off = &(HaloAcc[k][offset_halo[k]]);
@@ -546,25 +553,33 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
             bpos_off = &(BulgePos[k][offset_bulge[k]]);
             bvel_off = &(BulgeVel[k][offset_bulge[k]]);
             bacc_off = &(BulgeAcc[k][offset_bulge[k]]);
-            sort_by_id(HaloIDsChunkList[k], HaloIDsChunkListNumPer[k], HaloPart, 
+            // printf("rank=%d got to 1\n", rank);
+            sort_by_id(HaloIDsChunkList[k], HaloIDsChunkListNumPer[k], HaloPart, NumPart_Total[1],
                        &hpos_off, &hvel_off, &hacc_off);
-            sort_by_id(DiskIDsChunkList[k], DiskIDsChunkListNumPer[k], DiskPart, 
+            sort_by_id(DiskIDsChunkList[k], DiskIDsChunkListNumPer[k], DiskPart, NumPart_Total[2],
                        &dpos_off, &dvel_off, &dacc_off);
-            sort_by_id(BulgeIDsChunkList[k], BulgeIDsChunkListNumPer[k], BulgePart,
+            sort_by_id(BulgeIDsChunkList[k], BulgeIDsChunkListNumPer[k], BulgePart, NumPart_Total[3],
                        &bpos_off, &bvel_off, &bacc_off);
+            // printf("rank=%d got to 2\n", rank);
             
+
             if(NumPart_Total[4] > 0){
                 spos_off = &(StarPos[k][offset_star[k]]);
                 svel_off = &(StarVel[k][offset_star[k]]);
                 sacc_off = &(StarAcc[k][offset_star[k]]);
-                sort_by_id(StarIDsChunkList[k], StarIDsChunkListNumPer[k], StarPart,
+                sort_by_id(StarIDsChunkList[k], StarIDsChunkListNumPer[k], StarPart, NumPart_Total[4],
                        &spos_off, &svel_off, &sacc_off);
             }
+
             offset_halo[k] += 3 * HaloIDsChunkListNumPer[k];
             offset_disk[k] += 3 * DiskIDsChunkListNumPer[k];
             offset_bulge[k] += 3 * BulgeIDsChunkListNumPer[k];
             offset_star[k] += 3 * StarIDsChunkListNumPer[k];
+
         }
+
+        // printf("rank=%d got to after chunk loop\n", rank);
+
 
         free(HaloPart);
         free(DiskPart);
@@ -681,7 +696,7 @@ void process_snap_chunk(int i, char *output_dir, char *name, char *lvl){
     
     free(Time);
 
-    printf("finished with chunk %d\n", i);
+    printf("finished with chunk %d on rank=%d\n", i, rank);
 }
 
 void process_id_chunk(int i, char *name, char *lvl){
@@ -915,7 +930,6 @@ void process_id_chunk(int i, char *name, char *lvl){
 void construct_id_snap_chunks(char *output_dir)
 {
 
-    printf("on rank=%d, we got to 0.05\n", rank);
     fflush(stdout);
     int * SnapList;
     long long *HaloIDs, *DiskIDs, *BulgeIDs, *StarIDs;
@@ -972,7 +986,6 @@ void construct_id_snap_chunks(char *output_dir)
             SnapList[i] = i;
     }
 
-    printf("on rank=%d, we got to 0.1\n", rank);
 
     // Now broadcast from the 0th rank to all the others
     MPI_Bcast(&Nsnap, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -988,7 +1001,6 @@ void construct_id_snap_chunks(char *output_dir)
             StarIDs = (long long *)malloc(sizeof(long long) * NumPart_Total_LastSnap[4]);
     }
 
-    printf("on rank=%d, we got to 0.2\n", rank);
 
     MPI_Bcast(HaloIDs, NumPart_Total_LastSnap[1], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(DiskIDs, NumPart_Total_LastSnap[2], MPI_LONG_LONG_INT, 0, MPI_COMM_WORLD);
@@ -1002,7 +1014,6 @@ void construct_id_snap_chunks(char *output_dir)
 
     // Create IDs chunked arrays
     array_split_llong(Nchunk_id, HaloIDs, NumPart_Total_LastSnap[1], &HaloIDsChunkList, &HaloIDsChunkListNumPer);
-    printf("on rank=%d, we got to 0.3\n", rank);
     array_split_llong(Nchunk_id, DiskIDs, NumPart_Total_LastSnap[2], &DiskIDsChunkList, &DiskIDsChunkListNumPer);
     array_split_llong(Nchunk_id, BulgeIDs, NumPart_Total_LastSnap[3], &BulgeIDsChunkList, &BulgeIDsChunkListNumPer);
     if(NumPart_Total_LastSnap[4] > 0)
@@ -1058,9 +1069,7 @@ int main(int argc, char* argv[]) {
     sprintf(basepath, "../../runs/%s/%s/", name, lvl);
     sprintf(output_dir, "%s/output/", basepath);
     
-    printf("on rank=%d, we got to 0\n", rank);
     construct_id_snap_chunks(output_dir);
-    printf("on rank=%d, we got to 1\n", rank);
 
     if(rank ==0){
         // Create output data directory if it doesn't exist
