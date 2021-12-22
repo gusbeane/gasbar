@@ -73,8 +73,8 @@ def compute_freq(t, N):
     
     f[0] = f[2]
     f[0] = f[1]
-    f[-1] = f[-3]
-    f[-2] = f[-3]
+    f[N-1] = f[N-3]
+    f[N-2] = f[N-3]
 
     return f
 
@@ -92,8 +92,8 @@ def compute_phi_freq(t, N, tneg, M):
 
     f[0] = f[2]
     f[0] = f[1]
-    f[-1] = f[-3]
-    f[-2] = f[-3]
+    f[N-1] = f[N-3]
+    f[N-2] = f[N-3]
 
     return f
 
@@ -106,15 +106,16 @@ def find_apoapses_compute_freq(orbit, tlist, indices):
 
     t_apo_phi_neg = tlist[key_apo_phi_neg]
 
-    freq_apo_R = compute_freq(t_apo_R, len(key_apo_R))
-    freq_apo_phi = compute_phi_freq(t_apo_phi, len(key_apo_phi), t_apo_phi_neg, len(t_apo_phi_neg))
-    freq_apo_z = compute_freq(t_apo_z, len(key_apo_z))
 
     # make phi freqs negative if the apoapse crossing was negative
 
     # print(len(key_apo_R), len(key_apo_phi), len(key_apo_z))
 
     if ((len(key_apo_R) > 8) and (len(key_apo_phi) > 8) and (len(key_apo_z) > 8)):
+        freq_apo_R = compute_freq(t_apo_R, len(key_apo_R))
+        freq_apo_phi = compute_phi_freq(t_apo_phi, len(key_apo_phi), t_apo_phi_neg, len(t_apo_phi_neg))
+        freq_apo_z = compute_freq(t_apo_z, len(key_apo_z))
+
         fR = np.interp(tlist, t_apo_R, freq_apo_R)
         fphi = np.interp(tlist, t_apo_phi, freq_apo_phi)
         fz = np.interp(tlist, t_apo_z, freq_apo_z)
@@ -211,6 +212,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
 
     # bar_angle = np.mod(bar_angle_out['bar_angle'][indices], 2.*np.pi)
     # h5out.create_dataset('bar_angle', data=bar_angle)
+
+    h5out.close()
+    h5in.close()
     return 0
 
 def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data/'):
@@ -229,6 +233,7 @@ def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plo
     _ = Parallel(n_jobs=nproc) (delayed(_run_chunk)(name, i, prefix, phase_space_path, center, indices) for i in tqdm(range(nchunk)))
         
     # for i in tqdm(range(nchunk)):
+        # print(i)
         # _run_chunk(name, i, prefix, phase_space_path, center, indices)
 
 if __name__ == '__main__':
