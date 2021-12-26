@@ -1,9 +1,10 @@
 #!/bin/sh
 ##SBATCH -p hernquist,conroy,shared,itc_cluster
 #SBATCH -p hernquist,conroy
+##SBATCH -p itc_cluster,shared
 ##SBATCH --constraint=intel
 #SBATCH -J frq 
-#SBATCH -n 16
+#SBATCH -n 42
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err

@@ -9,6 +9,7 @@ import os
 from numba import njit
 import re
 from sklearn.cluster import KMeans
+import shutil
 
 from joblib import Parallel, delayed
 
@@ -21,6 +22,71 @@ def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocit
     fname = path + '/output'
     
     return arepo.Snapshot(fname, idx, parttype=parttype, fields=fields, combineFiles=True)
+
+def get_bar_angle(phi, firstkey):
+    out = np.zeros(len(phi))
+
+    # set the first bar angle
+    first_bar_angle = phi[firstkey]/2.0
+    out[firstkey] = first_bar_angle
+    
+    # set all subsequent angles
+    for i in np.arange(firstkey+1, len(out)):
+        dphi = phi[i] - phi[i-1]
+        if dphi < -np.pi:
+            dphi += 2.*np.pi
+        out[i] = out[i-1] + dphi/2.0
+
+    # set all previous angles to be the bar angle
+    for i in np.arange(0, firstkey):
+        out[i] = first_bar_angle
+
+    return out
+
+def get_sorted_keys(dat):
+    keys = list(dat.keys())
+    # only keep keys that are snapshot keys
+    keys = [k for k in keys if 'snapshot' in k]
+
+    # extract and sort indices
+    indices = [int(re.findall(r'\d?\d?\d\d\d', k)[0]) for k in keys]
+    sorted_arg = np.argsort(indices)
+    keys_sorted = [keys[i] for i in sorted_arg]
+
+    return keys_sorted
+
+def get_A2_angle(dat, keys, Rbin):
+    Rlist = np.array([np.array(dat[k]['Rlist']) for k in keys])
+    A2r = np.array([np.array(dat[k]['A2r']) for k in keys])
+    A2i = np.array([np.array(dat[k]['A2i']) for k in keys])
+    phi = np.arctan2(A2i, A2r)
+    phi = phi[:,Rbin]
+    R_at_Rbin = Rlist[:,Rbin]
+    
+    time = np.array(dat['time'])
+
+    return time, R_at_Rbin, phi
+
+def main_bar_angle(dat, Rbin = 5, firstkey = 150, nmax = 10):
+    # try loading snapshot
+#     dat = h5.File(fname, mode='r')
+    out = {}
+
+    keys = get_sorted_keys(dat)
+    time, R, phi = get_A2_angle(dat, keys, Rbin)
+    bar_angle = get_bar_angle(phi, firstkey)
+
+    pattern_speed = np.gradient(bar_angle, time) / u.Myr
+    pattern_speed = pattern_speed.to_value(u.km/u.s/u.kpc)
+
+    out['time'] = time
+    out['firstkey'] = firstkey
+    out['R'] = R
+    out['phi'] = phi
+    out['bar_angle'] = bar_angle
+    out['pattern_speed'] = pattern_speed
+
+    return out
 
 @njit
 def compute_apoapses(orbit):
@@ -139,28 +205,73 @@ def loop_freq(pos, tlist, idx_list):
 
     return np.array(ans)
 
-def preprocess_center(name):
-    if 'Nbody' in name:
-        center = np.array([0., 0., 0.])
-        firstkey=150
-        indices = np.arange(nsnap)
-        # indices_analyze = np.arange(500, 1100, 20)
+@njit
+def find_single_resonance(OmR, Omphi, Omz, Omp, lRlist, lphilist, lzlist, tol):
+    best = 1E99
+    best_l = (np.nan, np.nan, np.nan)
+    
+    for lR in lRlist:
+        for lphi in lphilist:
+            for lz in lzlist:
+                merit = (lR * OmR + lphi * Omphi + lz*Omz) / Omp - 1.0
+                if np.abs(merit) < best:
+                    best = np.abs(merit)
+                    best_l = (lR, lphi, lz)
+
+    if best < tol:
+        return best_l
     else:
-        center = np.array([200, 200, 200])
-        firstkey=0
-        indices = np.arange(nsnap)
+        return (np.nan, np.nan, np.nan)
 
-    return center, firstkey, indices
+@njit
+def find_resonances(Om, Omp):
+    N = len(Om)
+    res = np.zeros((N, 3))
 
-def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
+    lRmin = lphimin = lzmin = -5
+    lRmax = lphimax = lzmax = 5
+    tol = 0.05
+    
+    lRlist = np.arange(lRmin, lRmax+1)
+    lphilist = np.arange(lphimin, lphimax+1)
+    lzlist = np.arange(lzmin, lzmax+1)
+    
+    for i in range(N):
+        OmR = Om[i][0]
+        Omphi = Om[i][1]
+        Omz = Om[i][2]
+        
+        this_res = find_single_resonance(OmR, Omphi, Omz, Omp, lRlist, lphilist, lzlist, tol)
+        res[i][0] = this_res[0]
+        res[i][1] = this_res[1]
+        res[i][2] = this_res[2]
+    
+    return res
+
+def loop_res(freq, pspeed):
+    Nsnap = freq.shape[1]
+    res = []
+
+    for i in range(Nsnap):
+        if pspeed[i] > 0.0:
+            res.append(find_resonances(freq[:,i,:], pspeed[i]))
+        else:
+            res.append(np.full(np.shape(freq[:,i,:]), np.nan))
+    
+    return np.array(res)
+
+def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices, pattern_speed):
     fin = phase_space_path + name + '/phase_space_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5in = h5.File(fin, mode='r')
     
     indices = np.array(h5in['Time'])
     indices = np.arange(len(indices))
 
+    # to be copied to later
     fout = prefix + 'freq_' + name + '.' + str(chunk_idx) + '.hdf5'
-    h5out = h5.File(fout, mode='w')
+
+    tmpout = '/scratch/' + 'freq_' + name + '.' + str(chunk_idx) + '.hdf5'
+    h5out = h5.File(tmpout, mode='w')
 
     tlist = np.array(h5in['Time'])
 
@@ -170,7 +281,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     pos -= center
         
     ans = loop_freq(pos, tlist, indices)
+    res = loop_res(ans, pattern_speed)
     h5out.create_dataset('PartType1/Frequencies', data=ans)
+    h5out.create_dataset('PartType1/Resonances', data=res)
     h5out.create_dataset('PartType1/ParticleIDs', data=ids)
 
     # load disk particles
@@ -179,7 +292,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     pos -= center
         
     ans = loop_freq(pos, tlist, indices)
+    res = loop_res(ans, pattern_speed)
     h5out.create_dataset('PartType2/Frequencies', data=ans)
+    h5out.create_dataset('PartType2/Resonances', data=res)
     h5out.create_dataset('PartType2/ParticleIDs', data=ids)
 
     # load bulge particles
@@ -188,7 +303,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     pos -= center
         
     ans = loop_freq(pos, tlist, indices)
+    res = loop_res(ans, pattern_speed)
     h5out.create_dataset('PartType3/Frequencies', data=ans)
+    h5out.create_dataset('PartType3/Resonances', data=res)
     h5out.create_dataset('PartType3/ParticleIDs', data=ids)
 
     # load star particles (if they exist)
@@ -199,7 +316,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
         pos -= center
         
         ans = loop_freq(pos, tlist, indices)
+        res = loop_res(ans, pattern_speed)
         h5out.create_dataset('PartType4/Frequencies', data=ans)
+        h5out.create_dataset('PartType4/Resonances', data=res)
         h5out.create_dataset('PartType4/ParticleIDs', data=ids)
 
     # for j in range(len(ans)):
@@ -215,7 +334,25 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
 
     h5out.close()
     h5in.close()
+
+    # copy from local storage to actual output directory
+    shutil.copy(tmpout, fout)
+    os.remove(tmpout)
+
     return 0
+
+def preprocess_center(name):
+    if 'Nbody' in name:
+        center = np.array([0., 0., 0.])
+        firstkey=150
+        indices = np.arange(nsnap)
+        # indices_analyze = np.arange(500, 1100, 20)
+    else:
+        center = np.array([200, 200, 200])
+        firstkey=0
+        indices = np.arange(nsnap)
+
+    return center, firstkey, indices
 
 def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data/'):
     prefix = 'data/freq_' + name +'/'
@@ -224,13 +361,16 @@ def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plo
 
     # get some preliminary variables
     center, firstkey, indices = preprocess_center(name)
+    fourier = read_fourier(name)
+    fourier_out = main_bar_angle(fourier, firstkey=firstkey)
+    pspeed = fourier_out['pattern_speed']
     
     # do standard fourier and bar angle stuff
 
     nchunk = len(glob.glob(phase_space_path+name+'/phase_space_'+name+'.*.hdf5'))
     print(nchunk)
     # tot_ids = []
-    _ = Parallel(n_jobs=nproc) (delayed(_run_chunk)(name, i, prefix, phase_space_path, center, indices) for i in tqdm(range(nchunk)))
+    _ = Parallel(n_jobs=nproc) (delayed(_run_chunk)(name, i, prefix, phase_space_path, center, indices, pspeed) for i in tqdm(range(nchunk)))
         
     # for i in tqdm(range(nchunk)):
         # print(i)
