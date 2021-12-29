@@ -133,33 +133,29 @@ def compute_apoapses(orbit):
 @njit
 def compute_freq(t, N):
     f = np.zeros(N)
-    for i in range(2, N-2):
-        dt = t[i+2] - t[i-2]
-        f[i] = 2.*np.pi*4./dt
+    for i in range(1, N-1):
+        dt = t[i+1] - t[i-1]
+        f[i] = 2.*np.pi*2./dt
     
-    f[0] = f[2]
-    f[0] = f[1]
-    f[N-1] = f[N-3]
-    f[N-2] = f[N-3]
+    f[0] = np.nan
+    f[N-1] = np.nan
 
     return f
 
 @njit
 def compute_phi_freq(t, N, tneg, M):
     f = np.zeros(N)
-    for i in range(2, N-2):
-        dt = t[i+2] - t[i-2]
-        f[i] = 2.*np.pi*4./dt
+    for i in range(1, N-1):
+        dt = t[i+1] - t[i-1]
+        f[i] = 2.*np.pi*2./dt
 
         for j in range(M):
             if t[i] == tneg[j]:
                 f[i] = -f[i]
                 break
 
-    f[0] = f[2]
-    f[0] = f[1]
-    f[N-1] = f[N-3]
-    f[N-2] = f[N-3]
+    f[0] = np.nan
+    f[N-1] = np.nan
 
     return f
 
@@ -213,7 +209,7 @@ def find_single_resonance(OmR, Omphi, Omz, Omp, lRlist, lphilist, lzlist, tol):
     for lR in lRlist:
         for lphi in lphilist:
             for lz in lzlist:
-                merit = (lR * OmR + lphi * Omphi + lz*Omz) / Omp - 1.0
+                merit = (lR * OmR + lphi * Omphi + lz*Omz) /(2.* Omp) - 1.0
                 if np.abs(merit) < best:
                     best = np.abs(merit)
                     best_l = (lR, lphi, lz)
@@ -228,8 +224,8 @@ def find_resonances(Om, Omp):
     N = len(Om)
     res = np.zeros((N, 3))
 
-    lRmin = lphimin = lzmin = -5
-    lRmax = lphimax = lzmax = 5
+    lRmin = lphimin = lzmin = -7
+    lRmax = lphimax = lzmax = 7
     tol = 0.05
     
     lRlist = np.arange(lRmin, lRmax+1)
@@ -248,17 +244,27 @@ def find_resonances(Om, Omp):
     
     return res
 
-def loop_res(freq, pspeed):
+@njit
+def _loop_res(freq, pspeed):
     Nsnap = freq.shape[1]
-    res = []
+    res = np.zeros(freq.shape)
 
     for i in range(Nsnap):
         if pspeed[i] > 0.0:
-            res.append(find_resonances(freq[:,i,:], pspeed[i]))
+            this_res = find_resonances(freq[:,i,:], pspeed[i])
+
+            for j in range(len(this_res)):
+                for k in range(3):
+                    res[j][i][k] = this_res[j][k]
         else:
-            res.append(np.full(np.shape(freq[:,i,:]), np.nan))
+            for j in range(len(res)):
+                for k in range(3):
+                    res[j][i][k] = np.nan
     
-    return np.array(res)
+    return res
+
+def loop_res(freq, pspeed):
+    return _loop_res(freq, pspeed)
 
 def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices, pattern_speed):
     fin = phase_space_path + name + '/phase_space_' + name + '.' + str(chunk_idx) + '.hdf5'
