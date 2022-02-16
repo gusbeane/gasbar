@@ -1,6 +1,8 @@
 module purge
-module load gcc/8.2.0-fasrc01 
-module load openmpi/4.0.1-fasrc01
+#module load gcc/8.2.0-fasrc01 
+#module load openmpi/4.0.1-fasrc01
+module load gcc/7.1.0-fasrc01
+module load openmpi/3.1.3-fasrc01
 module load gsl
 module load hdf5
 module load python/3.6.3-fasrc02
