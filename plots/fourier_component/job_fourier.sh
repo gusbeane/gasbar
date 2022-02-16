@@ -2,7 +2,7 @@
 #SBATCH -p hernquist,conroy,shared,itc_cluster
 ##SBATCH --constraint=intel
 #SBATCH -J fourier 
-#SBATCH -n 16
+#SBATCH -n 42
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
