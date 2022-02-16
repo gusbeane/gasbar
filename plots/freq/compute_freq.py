@@ -17,10 +17,10 @@ def read_fourier(name, basepath='/n/home01/abeane/starbar/plots/'):
     f = h5.File(basepath+'/fourier_component/data/fourier_' + name + '.hdf5', mode='r')
     return f
 
-def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs']):
+def read_snap(idx, name, parttype=[0], fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs'],
+              basepath = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'):
     
-    fname = path + '/output'
-    
+    fname = basepath + name + '/output'
     return arepo.Snapshot(fname, idx, parttype=parttype, fields=fields, combineFiles=True)
 
 def get_bar_angle(phi, firstkey):
@@ -266,12 +266,45 @@ def _loop_res(freq, pspeed):
 def loop_res(freq, pspeed):
     return _loop_res(freq, pspeed)
 
+# @njit
+def loop_dLz(pos, vel, mass, half_width=100, delta=200):
+    Lz = pos[:,:,0] * vel[:,:,1] - pos[:,:,1] * vel[:,:,0]
+    Lz *= mass
+
+    Nsnap = Lz.shape[0]
+    Npart = Lz.shape[1]
+
+    dLz = np.zeros(Lz.shape)
+
+    for i in range(Nsnap):
+        if i < half_width or i >= Nsnap - half_width - delta:
+            dLz[i] = np.full(Npart, np.nan)
+        else:
+            mean_Lz_1 = np.mean(Lz[i+delta-half_width:i+delta+half_width], axis=0)
+            mean_Lz_0 = np.mean(Lz[i-half_width:i+half_width], axis=0)
+            dLz[i] = mean_Lz_1 - mean_Lz_0
+
+            # for j in range(Npart):
+                # mean_Lz_1 = np.mean(Lz[i+delta-half_width:i+delta+half_width][j])
+                # mean_Lz_0 = np.mean(Lz[i-half_width:i+half_width][j])
+                # dLz[i][j] = mean_Lz_1 - mean_Lz_0
+
+    return dLz
+
+
 def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices, pattern_speed):
     fin = phase_space_path + name + '/phase_space_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5in = h5.File(fin, mode='r')
     
     indices = np.array(h5in['Time'])
     indices = np.arange(len(indices))
+
+    # read mass
+    half_width = 100
+    delta = 200
+
+    sn = read_snap(0, name.replace('-lvl', '/lvl'))
+    mass = sn.MassTable[1]
 
     # to be copied to later
     fout = prefix + 'freq_' + name + '.' + str(chunk_idx) + '.hdf5'
@@ -283,13 +316,16 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices, patte
 
     # halo particles
     pos = np.array(h5in['PartType1/Coordinates'])
+    vel = np.array(h5in['PartType1/Velocities'])
     ids = np.array(h5in['PartType1/ParticleIDs'])
     pos -= center
         
     ans = loop_freq(pos, tlist, indices)
     res = loop_res(ans, pattern_speed)
+    dLz = loop_dLz(pos, vel, mass, half_width, delta)
     h5out.create_dataset('PartType1/Frequencies', data=ans)
     h5out.create_dataset('PartType1/Resonances', data=res)
+    h5out.create_dataset('PartType1/DeltaLz', data=dLz)
     h5out.create_dataset('PartType1/ParticleIDs', data=ids)
 
     # load disk particles
@@ -334,6 +370,7 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices, patte
     h5out.create_dataset('tlist', data=tlist)
     # h5out.create_dataset('id_list', data=ids)
     h5out.create_dataset('idx_list', data=indices)
+    h5out.create_dataset('PatternSpeed', data=pattern_speed)
 
     # bar_angle = np.mod(bar_angle_out['bar_angle'][indices], 2.*np.pi)
     # h5out.create_dataset('bar_angle', data=bar_angle)
@@ -378,9 +415,9 @@ def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plo
     # tot_ids = []
     _ = Parallel(n_jobs=nproc) (delayed(_run_chunk)(name, i, prefix, phase_space_path, center, indices, pspeed) for i in tqdm(range(nchunk)))
         
-    # for i in tqdm(range(nchunk)):
-        # print(i)
-        # _run_chunk(name, i, prefix, phase_space_path, center, indices)
+    #for i in tqdm(range(nchunk)):
+    #    print(i)
+    #    _run_chunk(name, i, prefix, phase_space_path, center, indices, pspeed)
 
 if __name__ == '__main__':
     nproc = int(sys.argv[1])
