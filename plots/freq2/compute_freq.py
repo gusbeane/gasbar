@@ -60,7 +60,6 @@ def find_apoapses_compute_freq(orbit, tlist, indices, idx_analyze_list, width):
 
     return ans
 
-
 def loop_freq(pos, tlist, idx_list, idx_analyze_list, width):
     N = pos.shape[1]
     ans = []
@@ -69,11 +68,55 @@ def loop_freq(pos, tlist, idx_list, idx_analyze_list, width):
     assert idx_analyze_list[0] >= half_width
     assert len(tlist) - idx_analyze_list[-1] >= half_width
     
-    for i in range(N):
-        out = find_apoapses_compute_freq(pos[:,i,:], tlist, idx_list, idx_analyze_list, width)
-        ans.append(out)
+    R = np.linalg.norm(pos[:,:,:2], axis=2)
+    phi = np.arctan2(pos[:,:,1], pos[:,:,0])
+    z = pos[:,:,2]
+
+    dt = (tlist[-1]-tlist[0])/(len(tlist)-1)
+
+    freqR_list = []
+    freqphi_list = []
+    freqz_list = []
+
+    for idx_analyze in idx_analyze_list:
+        R_ = R[idx_analyze-half_width:idx_analyze+half_width,:]
+        phi_ = phi[idx_analyze-half_width:idx_analyze+half_width,:]
+        z_ = z[idx_analyze-half_width:idx_analyze+half_width,:]
+
+        freq = np.fft.rfftfreq(len(R_), dt)
+        ftR = np.fft.rfft(R_, axis=0)
+        ftphi = np.fft.rfft(phi_, axis=0)
+        ftz = np.fft.rfft(z_, axis=0)
+
+        freqR = freq[np.argsort(np.abs(ftR), axis=0)[-2,:]]
+        freqphi = freq[np.argsort(np.abs(ftphi), axis=0)[-2,:]]
+        freqz = freq[np.argsort(np.abs(ftz), axis=0)[-2,:]]
+
+        freqR_list.append(freqR)
+        freqphi_list.append(freqphi)
+        freqz_list.append(freqz)
+    
+    ans = np.array([freqR_list, freqphi_list, freqz_list])
+    ans = np.swapaxes(ans, 0, 1)
+    ans = np.swapaxes(ans, 1, 2)
+    # order should now be (time, particle, freq)
 
     return np.array(ans)
+
+
+# def loop_freq(pos, tlist, idx_list, idx_analyze_list, width):
+#     N = pos.shape[1]
+#     ans = []
+
+#     half_width = int(width/2.0)
+#     assert idx_analyze_list[0] >= half_width
+#     assert len(tlist) - idx_analyze_list[-1] >= half_width
+    
+#     for i in range(N):
+#         out = find_apoapses_compute_freq(pos[:,i,:], tlist, idx_list, idx_analyze_list, width)
+#         ans.append(out)
+
+#     return np.array(ans)
 
 def preprocess_center(name):
     if 'Nbody' in name:
@@ -109,10 +152,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     pos -= center
         
     ans = loop_freq(pos, tlist, indices, idx_analyze_list, width)
-    h5out.create_dataset('PartType1/FrequencyTimes', data=ans[0,:,0])
-    h5out.create_dataset('PartType1/OmegaR', data=ans[:,:,1])
-    h5out.create_dataset('PartType1/OmegaPhi', data=ans[:,:,2])
-    h5out.create_dataset('PartType1/OmegaZ', data=ans[:,:,3])
+    h5out.create_dataset('PartType1/OmegaR', data=ans[:,:,0])
+    h5out.create_dataset('PartType1/OmegaPhi', data=ans[:,:,1])
+    h5out.create_dataset('PartType1/OmegaZ', data=ans[:,:,2])
     h5out.create_dataset('PartType1/ParticleIDs', data=ids)
 
     # load disk particles
@@ -121,10 +163,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     pos -= center
         
     ans = loop_freq(pos, tlist, indices, idx_analyze_list, width)
-    h5out.create_dataset('PartType2/FrequencyTimes', data=ans[0,:,0])
-    h5out.create_dataset('PartType2/OmegaR', data=ans[:,:,1])
-    h5out.create_dataset('PartType2/OmegaPhi', data=ans[:,:,2])
-    h5out.create_dataset('PartType2/OmegaZ', data=ans[:,:,3])
+    h5out.create_dataset('PartType2/OmegaR', data=ans[:,:,0])
+    h5out.create_dataset('PartType2/OmegaPhi', data=ans[:,:,1])
+    h5out.create_dataset('PartType2/OmegaZ', data=ans[:,:,2])
     h5out.create_dataset('PartType2/ParticleIDs', data=ids)
 
     # load bulge particles
@@ -133,10 +174,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     pos -= center
         
     ans = loop_freq(pos, tlist, indices, idx_analyze_list, width)
-    h5out.create_dataset('PartType3/FrequencyTimes', data=ans[0,:,0])
-    h5out.create_dataset('PartType3/OmegaR', data=ans[:,:,1])
-    h5out.create_dataset('PartType3/OmegaPhi', data=ans[:,:,2])
-    h5out.create_dataset('PartType3/OmegaZ', data=ans[:,:,3])
+    h5out.create_dataset('PartType3/OmegaR', data=ans[:,:,0])
+    h5out.create_dataset('PartType3/OmegaPhi', data=ans[:,:,1])
+    h5out.create_dataset('PartType3/OmegaZ', data=ans[:,:,2])
     h5out.create_dataset('PartType3/ParticleIDs', data=ids)
 
     # load star particles (if they exist)
@@ -147,10 +187,9 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
         pos -= center
         
         ans = loop_freq(pos, tlist, indices, idx_analyze_list, width)
-        h5out.create_dataset('PartType4/FrequencyTimes', data=ans[0,:,0])
-        h5out.create_dataset('PartType4/OmegaR', data=ans[:,:,1])
-        h5out.create_dataset('PartType4/OmegaPhi', data=ans[:,:,2])
-        h5out.create_dataset('PartType4/OmegaZ', data=ans[:,:,3])
+        h5out.create_dataset('PartType4/OmegaR', data=ans[:,:,0])
+        h5out.create_dataset('PartType4/OmegaPhi', data=ans[:,:,1])
+        h5out.create_dataset('PartType4/OmegaZ', data=ans[:,:,2])
         h5out.create_dataset('PartType4/ParticleIDs', data=ids)
 
     # for j in range(len(ans)):
@@ -161,6 +200,7 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, indices):
     # h5out.create_dataset('id_list', data=ids)
     h5out.create_dataset('idx_list', data=indices)
     h5out.create_dataset('idx_analyze_list', data=idx_analyze_list)
+    h5out.create_dataset('FrequencyTimes', data=tlist[idx_analyze_list])
     h5out.create_dataset('width', data=width)
 
     h5out.close()
