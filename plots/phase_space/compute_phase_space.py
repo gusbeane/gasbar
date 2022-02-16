@@ -9,6 +9,8 @@ import re
 import time
 from numba import njit
 
+import cProfile
+
 from joblib import Parallel, delayed
 
 def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs']):
@@ -53,8 +55,9 @@ def sort_by_id(chunk_ids, tot_ids, pos, vel, acc):
     return pos_chunk, vel_chunk, acc_chunk
 
 
-def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, id_chunks_star=None, data_dir='data/'):
-    
+def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, id_chunks_star=None, data_dir='data_old/'):
+    print('starting thread: ', snap_id)
+
     h5out_list = []
 
     Nsnap = len(idx_list)
@@ -106,6 +109,8 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, 
 
         h5out_list.append(h5out)
     
+    print('ended first loop on thread', snap_id)
+
     # Now loop through each index, read the snapshot, then loop through each
     # id chunk and write to the relevant file.
     for i,idx in enumerate(idx_list):
@@ -154,14 +159,17 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, 
                 h5out_list[j]['PartType4/Velocities'][:,i,:] = vel_chunk_star
                 h5out_list[j]['PartType4/Acceleration'][:,i,:] = acc_chunk_star
 
-    
+    print('ended second loop on thread', snap_id)
+
     # Close h5 files.
     for i,_ in enumerate(id_chunks_disk):
         h5out_list[i].close()
     
+    print('closed h5 files on thread', snap_id)
+
     return None
 
-def _concat_h5_files(name, chunk_id, id_chunk_disk_list, id_chunk_bulge_list, indices_chunks, nsnap, id_chunk_star_list=None, data_dir='data/'):
+def _concat_h5_files(name, chunk_id, id_chunk_disk_list, id_chunk_bulge_list, indices_chunks, nsnap, id_chunk_star_list=None, data_dir='data_old/'):
     # First create hdf5 output file
     fout = data_dir + name + '/phase_space_' + name + '.' + str(chunk_id) + '.hdf5'
     h5out = h5.File(fout, mode='w')
@@ -256,11 +264,11 @@ def get_id_indices_chunks(nsnap, path, nchunk, nproc):
     id_chunks_bulge = np.array_split(ids_bulge, nchunk)
 
 
-    indices_chunks = np.array_split(indices, 4*nproc)
+    indices_chunks = np.array_split(indices, 64)
 
     return id_chunks_disk, id_chunks_bulge, id_chunks_star, indices_chunks
 
-def run(path, name, nsnap, nproc, nchunk, data_dir='data/'):
+def run(path, name, nsnap, nproc, nchunk, data_dir='data_old/'):
     
     print('running ', name)
     print('h5py version: ', h5.__version__)
@@ -275,6 +283,8 @@ def run(path, name, nsnap, nproc, nchunk, data_dir='data/'):
     # Runs through each chunk of indices and reads the snapshot of each index. Each chunk of ids is written to a different temporary file.
     t0 = time.time()
     _ = Parallel(n_jobs=nproc) (delayed(_run_thread)(path, name, indices_chunks[i], i, id_chunks_disk, id_chunks_bulge, id_chunks_star) for i in tqdm(range(len(indices_chunks))))
+    # i = 0
+    # _run_thread(path, name, indices_chunks[i], i, id_chunks_disk, id_chunks_bulge, id_chunks_star)
     t1 = time.time()
     print('First loop took', t1-t0, 's')
 
@@ -298,7 +308,7 @@ if __name__ == '__main__':
     Nbody = 'Nbody'
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
-    pair_list = [(Nbody, 'lvl4', 64), (Nbody, 'lvl3', 2*64),
+    pair_list = [(Nbody, 'lvl4', 128), (Nbody, 'lvl3', 2*64),
                  (phgvS2Rc35, 'lvl4', 64), (phgvS2Rc35, 'lvl3', 2*64)]
 
     name_list   = [           p[0] + '-' + p[1] for p in pair_list]
@@ -314,7 +324,8 @@ if __name__ == '__main__':
         nsnap = nsnap_list[i]
         nchunk = nchunk_list[i]
 
-        out = run(path, name, nsnap, nproc, nchunk)
+        # out = run(path, name, nsnap, nproc, nchunk)
+        cProfile.run("run(path, name, nsnap, nproc, nchunk)", filename='prof.dat')
     else:
         for path, name, nsnap, nchunk in zip(tqdm(path_list), name_list, nsnap_list, nchunk_list):
             out = run(path, name, nsnap, nproc, nchunk)

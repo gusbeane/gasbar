@@ -92,7 +92,7 @@ void mpi_printf(const char *fmt, ...)
 void compute_Nchunk(){
     // TODO: compute these according to memory requirements
     Nchunk_id = 1024;
-    Nchunk_snap = 1600;
+    Nchunk_snap = 256
     return;
 }
 
