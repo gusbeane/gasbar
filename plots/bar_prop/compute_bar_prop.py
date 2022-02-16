@@ -22,7 +22,7 @@ def compute_bar_properties(name, mass, in_bar_out, center):
     nsnap = np.shape(in_bar_out[0])[0]
     idx_list = np.arange(0, nsnap, 50)
 
-    phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data_tmp/'
+    phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data/'
     nchunk = len(glob.glob(phase_space_path+name+'/phase_space_'+name+'.*.hdf5'))
 
     bar_prop_list = np.zeros((len(idx_list), 5))
@@ -115,7 +115,7 @@ def _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, chunk_idx):
     idx_list = np.array(h5_in_bar['idx_list'])
     
     bar_prop_list = {}
-    for key in ['tlist', 'bar_frac', 'Rbar', 'Mbar', 'Lzbar']:
+    for key in ['tlist', 'bar_frac', 'Rbar', 'Mbar', 'Lzbar', 'Izbar']:
         bar_prop_list[key] = np.zeros(len(idx_list))
     
     print(len(idx_list))
@@ -124,8 +124,20 @@ def _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, chunk_idx):
     mass, center = get_mass_and_center_from_name(name)
 
     # load phase space properties
-    pos_tot = np.array(h5_phase_space['Coordinates']) - center
-    vel_tot = np.array(h5_phase_space['Velocities'])
+    # load disk particles
+    pos_tot = np.array(h5_phase_space['PartType2/Coordinates']).swapaxes(0, 1)
+    vel_tot = np.array(h5_phase_space['PartType2/Velocities']).swapaxes(0, 1)
+
+    # load bulge particles
+    pos_tot = np.concatenate((pos_tot, np.array(h5_phase_space['PartType3/Coordinates']).swapaxes(0, 1) ))
+    vel_tot = np.concatenate((vel_tot, np.array(h5_phase_space['PartType3/Velocities']).swapaxes(0, 1) ))
+
+    # load star particles (if they exist)
+    if 'PartType4' in h5_phase_space.keys():
+        pos_tot = np.concatenate((pos_tot, np.array(h5_phase_space['PartType4/Coordinates']).swapaxes(0, 1) ))
+        vel_tot = np.concatenate((vel_tot, np.array(h5_phase_space['PartType4/Velocities']).swapaxes(0, 1) ))
+
+    pos_tot = pos_tot - center
     tlist = np.array(h5_phase_space['Time'])
 
 
@@ -151,12 +163,15 @@ def _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, chunk_idx):
         Mbar = mass * len(pos_inbar)
         Lzbar = mass * np.sum(np.cross(pos_inbar, vel_inbar)[:,2])
 
+        Rlist[idx] = np.linalg.norm(pos_inbar[:,:2], axis=1)
+        Izbar = mass * np.sum(Rlist[idx]**2)
+
         # output
         bar_prop_list['tlist'][j] = tlist[idx]
         bar_prop_list['Mbar'][j]  = Mbar
         bar_prop_list['Lzbar'][j] = Lzbar
+        bar_prop_list['Izbar'][j] = Izbar
 
-        Rlist[idx] = np.linalg.norm(pos_inbar[:,:2], axis=1)
     
     # close h5 files
     h5_in_bar.close()
@@ -170,7 +185,7 @@ def process_bar_prop_out(bar_prop_out):
     nchunk = len(bar_prop_out)
     
     bar_prop = {}
-    for key in ['tlist', 'bar_frac', 'Rbar', 'Mbar', 'Lzbar']:
+    for key in ['tlist', 'bar_frac', 'Rbar', 'Mbar', 'Lzbar', 'Izbar']:
         bar_prop[key] = np.zeros(nsnap)
 
     N_inbar = np.zeros(nsnap)
@@ -187,6 +202,7 @@ def process_bar_prop_out(bar_prop_out):
         # add the Mbar and Lzbar
         bar_prop['Mbar']  += bar_prop_i['Mbar']
         bar_prop['Lzbar'] += bar_prop_i['Lzbar']
+        bar_prop['Izbar'] += bar_prop_i['Izbar']
 
         # concat the Rlist
         for j in range(nsnap):
@@ -228,7 +244,7 @@ def get_other_output(prefix_in_bar, name):
 
 def run(name, nproc, basepath = '/n/home01/abeane/starbar/plots/bar_orbits/data/'):
     prefix_in_bar = '../in_bar/data/in_bar_' + name + '/'
-    prefix_phase_space = '/n/home01/abeane/starbar/plots/phase_space/data_tmp/' + name + '/'
+    prefix_phase_space = '/n/home01/abeane/starbar/plots/phase_space/data/' + name + '/'
 
     nchunk = len(glob.glob(prefix_in_bar+'/in_bar_'+name+'.*.hdf5'))
 
@@ -266,7 +282,8 @@ if __name__ == '__main__':
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
     pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3')]
+                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3-rstHalo')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
