@@ -65,7 +65,8 @@ phgvS2Rc35_rf = 'phantom-vacuum-Sg20-Rc3.5-RadFeed'
 phgS1 = 'phantom-Sg10-Rc4.0'
 phgvS1Ngbft = 'phantom-vacuum-Sg10-Rc4.0-DesNumNgbEnrichment512-ftrap'
 
-pair_list = [#(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
+pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'), (Nbody, 'lvl2'),
+             (Nbody, 'lvl3-GMCs'),
              #(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
              #(fid_dP_c1, 'lvl5'), (fid_dP_c1, 'lvl4'), (fid_dP_c1, 'lvl3'),
              #(fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3'),
@@ -100,8 +101,9 @@ pair_list = [#(Nbody, 'lvl5'), (Nbody, 'lvl4'), (Nbody, 'lvl3'),
              #(phgvS2Rc35_rf, 'lvl3-eta1-eta2'), (phgvS2Rc35_rf, 'lvl3-eta1-eta2-OBbugfix'),
              #(phgvS2Rc35_rf, 'lvl4-Paulfix'), (phgvS2Rc35_rf, 'lvl4-GFM'), (phgvS2Rc35_rf, 'lvl3-Paulfix')]
              (phgvS2Rc35, 'lvl3'),#, (phgvS2Rc35, 'lvl4-GFM')]
-             (phgvS2Rc35, 'lvl3-GFM'),
-             (phgvS2Rc35, 'lvl3-GFM-snap050')]#, (phgvS2Rc35, 'lvl4-GFM')]
+             (phgvS2Rc35, 'lvl3-rstHalo'),
+             (phgvS2Rc35, 'lvl3-GFM')]
+             #(phgvS2Rc35, 'lvl3-GFM-snap050')]#, (phgvS2Rc35, 'lvl4-GFM')]
              #(f_noMB_Ngb512, 'lvl3'),
              #(f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
              #(f_Sg10, 'lvl4'), (f_Sg10, 'lvl3'),

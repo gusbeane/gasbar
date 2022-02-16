@@ -21,9 +21,13 @@ def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocit
 @njit
 def process_id(ID, bar_metr, t, tlist, nsnap):
     in_bar = np.full(nsnap, 0, dtype=np.bool_)
+    Naps = t.shape[0]
     for j,idx in enumerate(range(nsnap)):
         Tanalyze = tlist[idx]
         key = np.argmin(np.abs(t - Tanalyze))
+
+        if key==0 or key==Naps-1:
+            continue
         
         metr = bar_metr[key]
         
@@ -92,7 +96,8 @@ if __name__ == '__main__':
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
     pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3')]
+                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3-rstHalo')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
