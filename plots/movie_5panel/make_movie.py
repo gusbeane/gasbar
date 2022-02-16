@@ -57,7 +57,7 @@ def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmi
     # initialize im
     extent = [-width/2.0, width/2.0, -width/2.0, width/2.0]
     im = ax.imshow(np.full((nres, nres), vmin), extent=extent, origin='lower', 
-                   norm=mpl.colors.LogNorm(), vmin=vmin, vmax=vmax)
+                   norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
 
     # initialize time if needed
     if plot_time:
