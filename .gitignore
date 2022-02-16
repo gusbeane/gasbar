@@ -15,6 +15,7 @@ runs
 initial_conditions
 hose_runs
 *.hdf5
+*.o
 
 to_try.txt
 
@@ -30,7 +31,22 @@ plots/phase_space/data*
 plots/in_bar/data*
 plots/bar_prop/data*
 plots/bar_orbits/data*
+plots/freq/data*
+plots/agama_pot/data*
 .ipynb_checkpoints
+
+plots/*/data*
+
+plots/torques/src
+
+plots/phase_space/compute_phase_space
+plots/torques/ComputeBarTorques
+plots/fourier_component/ComputeFourier
+
+notebooks/data
+prof.dat
+
+core*
 
 *.swp
 
