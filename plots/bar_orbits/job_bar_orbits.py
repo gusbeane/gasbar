@@ -2,7 +2,7 @@
 ##SBATCH -p hernquist,conroy,shared,itc_cluster
 #SBATCH -p hernquist,conroy
 ##SBATCH --constraint=intel
-#SBATCH -J orbits 
+#SBATCH -J barorb 
 #SBATCH -n 16
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out

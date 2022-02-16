@@ -386,28 +386,45 @@ def preprocess_center(name):
         center = np.array([200, 200, 200])
         firstkey=0
         indices = np.arange(nsnap)
-    
+
     return center, firstkey, indices
 
 def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, bar_angle_out, indices):
     fin = phase_space_path + name + '/phase_space_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5in = h5.File(fin, mode='r')
-        
+    
+    indices = np.array(h5in['Time'])
+    indices = np.arange(len(indices))
+
     fout = prefix + 'bar_orbit_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5out = h5.File(fout, mode='w')
 
     tlist = np.array(h5in['Time'])
-    pos = np.array(h5in['Coordinates']) - center
-    vel = np.array(h5in['Velocities'])
+
+    # load disk particles
+    pos = np.array(h5in['PartType2/Coordinates']).swapaxes(0, 1)
+    vel = np.array(h5in['PartType2/Velocities']).swapaxes(0, 1)
+    ids = np.array(h5in['PartType2/ParticleIDs'])
+
+    # load bulge particles
+    pos = np.concatenate((pos, np.array(h5in['PartType3/Coordinates']).swapaxes(0, 1) ))
+    vel = np.concatenate((vel, np.array(h5in['PartType3/Velocities']).swapaxes(0, 1) ))
+    ids = np.concatenate((ids, np.array(h5in['PartType3/ParticleIDs'])))
+
+    # load star particles (if they exist)
+    if 'PartType4' in h5in.keys():
+        pos = np.concatenate((pos, np.array(h5in['PartType4/Coordinates']).swapaxes(0, 1) ))
+        vel = np.concatenate((vel, np.array(h5in['PartType4/Velocities']).swapaxes(0, 1) ))
+        ids = np.concatenate((ids, np.array(h5in['PartType4/ParticleIDs'])))
+    # vel = np.array(h5in['Velocities'])
+
+    pos -= center
         
     w = np.concatenate((pos, vel), axis=-1)
     w = np.swapaxes(w, 0, 1)
 
     Rwlist = rotate_wlist(w, bar_angle_out, indices)
     ans = loop_trapping_metrics(Rwlist, tlist, indices)
-
-    ids = np.array(h5in['ParticleIDs'])
-    # tot_ids = np.concatenate((tot_ids, ids))
 
     for j in range(len(ans)):
         h5out.create_dataset('bar_metrics/'+str(ids[j]), data=ans[j])
@@ -420,7 +437,7 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, bar_angle_out,
     h5out.create_dataset('bar_angle', data=bar_angle)
     return None
 
-def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data_tmp/'):
+def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data/'):
     prefix = 'data/bar_orbit_' + name +'/'
     if not os.path.isdir(prefix):
         os.mkdir(prefix)
@@ -433,6 +450,7 @@ def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plo
     bar_angle_out = main_bar_angle(fourier, firstkey=firstkey)
 
     nchunk = len(glob.glob(phase_space_path+name+'/phase_space_'+name+'.*.hdf5'))
+    print(nchunk)
     # tot_ids = []
     _ = Parallel(n_jobs=nproc) (delayed(_run_chunk)(name, i, prefix, phase_space_path, center, bar_angle_out, indices) for i in tqdm(range(nchunk)))
         
@@ -446,7 +464,8 @@ if __name__ == '__main__':
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
     pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3')]
+                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-GFM')]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
