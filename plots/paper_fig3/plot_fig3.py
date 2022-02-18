@@ -75,6 +75,8 @@ def rotate_pos(pos, ang):
     return pos
 
 def compute_heatmap(sn, center, nres, rng, angle=0.0):
+    center = sn.part1.pos.value[np.argmin(sn.part1.pot)]
+
     pos = sn.part1.pos.value - center
     mass = sn.MassTable[1]
 
@@ -148,13 +150,13 @@ def run():
     rng = [[-7.5, 7.5], [-7.5, 7.5]]
     extent = [rng[0][0], rng[0][1], rng[1][0], rng[1][1]]
     
-    vmin = -0.005
-    vmax = 0.005
+    vmin = -0.002
+    vmax = 0.002
 
     fig, ax = plt.subplots(1, 3, figsize=(8, 2.5))
 
     # First panel, wake of Nbody.
-    sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1])
+    sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
     heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_Nbody['A2_angle'][Nbody_idx]/2.0)
     # heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_Nbody['A2_angle'][Nbody_idx])
     Rbar = bar_prop_Nbody['Rbar'][Nbody_idx]
@@ -165,6 +167,9 @@ def run():
     dphi = fourier_Nbody['A2_h_angle'][Nbody_idx] - fourier_Nbody['A2_angle'][Nbody_idx]
     dphi /= 2.0
     ax[0].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
+
+    ax[0].axes.xaxis.set_visible(False)
+    ax[0].axes.yaxis.set_visible(False)
 
     ax[0].set_aspect('auto')
 
@@ -184,7 +189,7 @@ def run():
     ax[1].set(xlim=(0, 5), ylim=(-35, 70), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
 
     # Third panel, wake of SMUGGLE.
-    sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1])
+    sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1], fields=None)
     heatmap = compute_heatmap(sn, np.array([200., 200., 200.]), nres, rng, angle=-fourier_SMUGGLE['A2_angle'][SMUGGLE_idx]/2.0)
     # heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_SMUGGLE['A2_angle'][SMUGGLE_idx])
     Rbar = bar_prop_SMUGGLE['Rbar'][SMUGGLE_idx]
@@ -198,6 +203,8 @@ def run():
 
     ax[2].set_aspect('auto')
 
+    ax[2].axes.xaxis.set_visible(False)
+    ax[2].axes.yaxis.set_visible(False)
 
     fig.tight_layout()
 
