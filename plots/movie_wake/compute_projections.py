@@ -9,7 +9,6 @@ import arepo
 from tqdm import tqdm
 from numba import njit
 from scipy.interpolate import interp1d
-from scipy.ndimage import gaussian_filter
 
 @njit
 def compute_surface_density(R, mass, Rbins):
@@ -41,11 +40,14 @@ def make_projection_snap(path, snapnum, parttype=[1],
                          center=np.array([200, 200, 200]), width=30., nres=256):
 
     sn = arepo.Snapshot(path+'/output', snapnum, parttype=parttype, 
-                        combineFiles=True, fields=['Coordinates', 'Masses'])
+                        combineFiles=True, fields=['Coordinates', 'Masses', 'Potential'])
 
     time = sn.Time.value
 
-    range_xy = [[center[0] - width/2.0, center[0] + width/2.0], [center[1] - width/2.0, center[1] + width/2.0]]
+    # center is at location of potential minimum of the halo
+    center = sn.part1.pos.value[np.argmin(sn.part1.pot)]
+
+    range_xy = [[-width/2.0, width/2.0], [-width/2.0, width/2.0]]
 
     surf = (width/nres)**(2.0)
 
@@ -82,7 +84,7 @@ def make_projection_snap(path, snapnum, parttype=[1],
         surf_grid = surf_interp(Rgrid)
 
         heatmap_xy -= surf_grid
-        heatmap_xy = gaussian_filter(heatmap_xy, sigma=8)
+        # heatmap_xy /= surf_grid
 
         heatmap_xy_out.append(heatmap_xy)
 

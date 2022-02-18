@@ -31,11 +31,13 @@ def compute_fourier_component(path, snapnum, Rmax, nbins=60, logspace=False, cen
     # try loading snapshot
     try:
         sn = arepo.Snapshot(path+'/output/', snapnum, combineFiles=True, 
-                            parttype=[1, 2, 3, 4], fields=['Coordinates', 'Masses'])
+                            parttype=[1, 2, 3, 4], fields=['Coordinates', 'Masses', 'Potential'])
     except:
         print("unable to load path:"+path, " snapnum: ", snapnum)
         return None
     
+    center = sn.part1.pos.value[np.argmin(sn.part1.pot)]
+
     firstpart = True
     for i, npart in enumerate(sn.NumPart_Total):
         if i not in [2, 3]:
@@ -70,6 +72,7 @@ def compute_fourier_component(path, snapnum, Rmax, nbins=60, logspace=False, cen
 
     # do for disk
     A0, _ = fourier_component(pos, mass, 0, Rmax)
+    A1r, A1i = fourier_component(pos, mass, 1, Rmax)
     A2r, A2i = fourier_component(pos, mass, 2, Rmax)
 
     # now do for halo
@@ -79,16 +82,21 @@ def compute_fourier_component(path, snapnum, Rmax, nbins=60, logspace=False, cen
     mass = np.full(sn.NumPart_Total[1], sn.MassTable[1].value)
 
     A0_h, _ = fourier_component(pos, mass, 0, Rmax)
+    A1r_h, A1i_h = fourier_component(pos, mass, 1, Rmax)
     A2r_h, A2i_h = fourier_component(pos, mass, 2, Rmax)
 
     time = sn.Time.value
 
     out = {}
     out['A0'] = A0
+    out['A1r'] = A1r
+    out['A1i'] = A1i
     out['A2r'] = A2r
     out['A2i'] = A2i
 
     out['A0_h'] = A0_h
+    out['A1r_h'] = A1r_h
+    out['A1i_h'] = A1i_h
     out['A2r_h'] = A2r_h
     out['A2i_h'] = A2i_h
 
@@ -101,10 +109,14 @@ def concat_files(outs, indices, fout):
     time_list = []
 
     A0_list = []
+    A1r_list = []
+    A1i_list = []
     A2r_list = []
     A2i_list = []
     
     A0_h_list = []
+    A1r_h_list = []
+    A1i_h_list = []
     A2r_h_list = []
     A2i_h_list = []
 
@@ -112,20 +124,28 @@ def concat_files(outs, indices, fout):
         time_list.append(t['time'])
 
         A0_list.append(t['A0'])
+        A1r_list.append(t['A1r'])
+        A1i_list.append(t['A1i'])
         A2r_list.append(t['A2r'])
         A2i_list.append(t['A2i'])
 
         A0_h_list.append(t['A0_h'])
+        A1r_h_list.append(t['A1r_h'])
+        A1i_h_list.append(t['A1i_h'])
         A2r_h_list.append(t['A2r_h'])
         A2i_h_list.append(t['A2i_h'])
         
     h5out.create_dataset('time', data=time_list)
 
     h5out.create_dataset('A0', data=A0_list)
+    h5out.create_dataset('A1r', data=A1r_list)
+    h5out.create_dataset('A1i', data=A1i_list)
     h5out.create_dataset('A2r', data=A2r_list)
     h5out.create_dataset('A2i', data=A2i_list)
 
     h5out.create_dataset('A0_h', data=A0_h_list)
+    h5out.create_dataset('A1r_h', data=A1r_h_list)
+    h5out.create_dataset('A1i_h', data=A1i_h_list)
     h5out.create_dataset('A2r_h', data=A2r_h_list)
     h5out.create_dataset('A2i_h', data=A2i_h_list)
 

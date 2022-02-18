@@ -65,9 +65,9 @@ phgvS2Rc35_rf = 'phantom-vacuum-Sg20-Rc3.5-RadFeed'
 phgS1 = 'phantom-Sg10-Rc4.0'
 phgvS1Ngbft = 'phantom-vacuum-Sg10-Rc4.0-DesNumNgbEnrichment512-ftrap'
 
-pair_list = [(Nbody, 'lvl4')]#, (Nbody, 'lvl3'), (Nbody, 'lvl2'),
+pair_list = [(Nbody, 'lvl3'),#, (Nbody, 'lvl4')]#, (Nbody, 'lvl2'),
              #(Nbody, 'lvl3-GMCs'),
-             #(phgvS2Rc35, 'lvl3'),#, (phgvS2Rc35, 'lvl4-GFM')]
+             (phgvS2Rc35, 'lvl3')]#, (phgvS2Rc35, 'lvl4')]
              #(phgvS2Rc35, 'lvl3-rstHalo'),
              #(phgvS2Rc35, 'lvl3-GFM')]
 
