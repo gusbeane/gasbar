@@ -96,6 +96,11 @@ def read_torque(name, lvl):
 
     return tlist, tz_halo, tz_not_bar, tz_gas
 
+def moving_average(a, n=3) :
+    ret = np.cumsum(a, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    return ret[n - 1:] / n
+
 def run():
     bar_prop_Nbody = read_bar_prop(Nbody, lvl)
     bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
@@ -111,6 +116,23 @@ def run():
     ax[0].set(xlim=(0, 5))
 
     ax[0].legend(frameon=False)
+
+    #print out percent increase in SMUGGLE ps
+    t = bar_prop_SMUGGLE['tlist']
+    ps = bar_prop_SMUGGLE['pattern_speed']
+    t = moving_average(t, n=10)
+    ps = moving_average(ps, n=10)
+
+    key = np.logical_and(t > 1, t < 5)
+    print('SMUGGLE', (np.max(ps[key]) - np.min(ps[key]))/np.min(ps[key]))
+
+    t = bar_prop_Nbody['tlist'] - t300
+    ps = bar_prop_Nbody['pattern_speed']
+    t = moving_average(t, n=10)
+    ps = moving_average(ps, n=10)
+
+    key = np.logical_and(t > 1, t < 5)
+    print('Nbody', (np.min(ps[key]) - np.max(ps[key]))/np.max(ps[key]))
 
     # Second panel, length of bar and mass of bar.
     ax[1].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0])
@@ -143,6 +165,56 @@ def run():
     fig.tight_layout()
 
     fig.savefig('fig2.pdf')
+
+    # print average torque
+    for t, tz, tzg in zip([tlist, tlist_g], [tz_halo, tz_halo_g], [None, tz_gas_g]):
+        key = np.logical_and(t > 1, t < 5)
+        print(np.mean(tz[key]))
+        if tzg is not None:
+            print(np.mean(tzg[key]))
+
+    # now do talk plot
+
+    fig, ax = plt.subplots(1, 1, figsize=(3.5, 3.5))
+    ax.plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['pattern_speed'], c=tb_c[0], label='N-body')
+    ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
+    ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\text{Gyr}\,]$')
+    ax.legend(frameon=False)
+
+    fig.tight_layout()
+    fig.savefig('talk_fig2aa.pdf')
+
+    ax.plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['pattern_speed'], c=tb_c[1], label='SMUGGLE')
+    ax.legend(frameon=False)
+
+    fig.tight_layout()
+    fig.savefig('talk_fig2ab.pdf')
+
+
+    fig, ax = plt.subplots(1, 1, figsize=(3.5, 3.5))
+    ax.plot(tlist-tlist[300], -tz_halo, c=tb_c[0])
+    # ax.plot(tlist_g, -tz_halo_g, c=tb_c[1])
+    # ax.plot(tlist_g, -tz_gas_g, c=tb_c[1], ls='dashed')
+
+    ax.axhline(0, c='k')
+
+    ax.set(xlim=(0, 5), ylim=(-100, 100), ylabel=r'$\tau_{\text{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
+    ax.set_xlabel(r'$t\,[\,\text{Gyr}\,]$')
+
+    
+
+    fig.tight_layout()
+    fig.savefig('talk_fig2c.pdf')
+
+    custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
+                    mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
+    ax.legend(custom_lines, ['halo', 'gas'], frameon=False)
+
+    ax.plot(tlist_g, -tz_halo_g, c=tb_c[1])
+    ax.plot(tlist_g, -tz_gas_g, c=tb_c[1], ls='dashed')
+
+    fig.tight_layout()
+    fig.savefig('talk_fig2cb.pdf')
 
 if __name__ == '__main__':
     run()
