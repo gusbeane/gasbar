@@ -14,11 +14,9 @@ basepath = '../../runs/'
 Nbody = 'Nbody'
 
 phgvS1 = 'phantom-vacuum-Sg10-Rc4.0'
-phgvS2 = 'phantom-vacuum-Sg20-Rc4.0'
+phgvS2 = 'phantom-vacuum-Sg20-Rc3.5'
 
-pair_list = [(Nbody, 'lvl3'),
-             (phgvS1, 'lvl3'),
-             (phgvS2, 'lvl3')]
+pair_list = [(phgvS2, 'lvl3')]
 
 name_list = [           p[0] + '-' + p[1] for p in pair_list]
 path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
@@ -37,4 +35,4 @@ for name, path in zip(name_list, path_list):
         firstkey = 150
 
     construct_update_projection_hdf5(name, path, nproc=nproc, center=center, 
-                                     nres=512, corot=True, fourier_path=fourier_path, firstkey=firstkey)
+                                     nres=256, corot=True, fourier_path=fourier_path, firstkey=firstkey)
