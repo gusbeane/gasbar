@@ -5,6 +5,7 @@ import h5py as h5
 from tqdm import tqdm
 
 from matplotlib.animation import FuncAnimation
+from scipy.ndimage import gaussian_filter
 
 time_conv = 977.793 # converts time units to Myr
 
@@ -28,6 +29,8 @@ class animate_maker(object):
 
         heatmap[heatmap < self.vmin] = self.vmin
 
+        heatmap = gaussian_filter(heatmap, sigma=6)
+
         self.im.set_data(heatmap.T)
         if self.txt is None:
             return (self.im,)
@@ -37,7 +40,7 @@ class animate_maker(object):
             return (self.im, self.txt)
 
 
-def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmin=1E-3, vmax=10.**(0.5), fps=16):
+def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmin = -0.005, vmax = 0.005, fps=16):
     assert projection in ['xy', 'xz', 'yz']
 
     if isinstance(parttype, int):
@@ -57,11 +60,11 @@ def make_movie(projection_file, parttype, projection, fout, plot_time=False, vmi
     # initialize im
     extent = [-width/2.0, width/2.0, -width/2.0, width/2.0]
     im = ax.imshow(np.full((nres, nres), vmin), extent=extent, origin='lower', 
-                   norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+                   vmin=vmin, vmax=vmax, cmap='bwr')
 
     # initialize time if needed
     if plot_time:
-        txt = ax.text(0.6, 0.85, ' ', transform=ax.transAxes, fontsize=7, c='w')
+        txt = ax.text(0.6, 0.85, ' ', transform=ax.transAxes, fontsize=7, c='k')
     else:
         txt = None
 

@@ -6,7 +6,7 @@ base = sys.argv[1]
 lvl  = sys.argv[2]
 
 width = 30.0
-nres = 512
+nres = 256
 
 star_vmin = 1E-3
 star_vmax = 1E0
