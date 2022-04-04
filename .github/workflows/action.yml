@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MANUSCRIPT_PATH: paper/ms # exclude the '.tex' / '.pdf' extension!
-      LATEX: pdflatex -shell-escape
+      LATEX: xelatex -shell-escape
       BIBTEX: bibtex
     steps: 
     - uses: actions/checkout@v1
