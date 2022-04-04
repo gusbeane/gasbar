@@ -1,0 +1,39 @@
+Oscillating dynamical friction on galactic bars by trapped dark matter - https://arxiv.org/abs/2109.10910
+
+Barred galaxies in the EAGLE cosmological hydrodynamical simulation - https://arxiv.org/abs/1609.05909
+
+Revisiting the tension between fast bars and the ΛCDM paradigm - https://arxiv.org/abs/2011.13942
+
+Petersen papers:
+Using Commensurabilities and Orbit Structure to Understand Barred Galaxy Evolution - https://arxiv.org/abs/1902.05081
+Using Torque to Understand Barred Galaxy Models - https://arxiv.org/abs/1903.02566
+Using Harmonic Decomposition to Understand Barred Galaxy Evolution - https://arxiv.org/abs/1903.08203
+
+Impact of bar resonances in the velocity-space distribution of the solar neighbourhood stars in a self-consistent N-body Galactic disc simulation - https://arxiv.org/abs/2112.00765
+
+Stellar population gradients in galaxy discs from the CALIFA survey. The influence of bars - https://ui.adsabs.harvard.edu/abs/2014A&A...570A...6S/abstract
+
+An Analytic Model of Angular Momentum Transport by Gravitational Torques: From Galaxies to Massive Black Holes - https://arxiv.org/abs/1007.2647
+
+Spectral stellar dynamics - https://ui.adsabs.harvard.edu/abs/1982ApJ...252..308B/abstract
+
+A Unified Framework for the Orbital Structure of Bars and Triaxial Ellipsoids - https://ui.adsabs.harvard.edu/abs/2016ApJ...818..141V/abstract
+
+Evolution of barred galaxies by dynamical friction. - https://ui.adsabs.harvard.edu/abs/1985MNRAS.213..451W/abstract
+
+Bar-induced evolution of dark matter cusps - https://ui.adsabs.harvard.edu/abs/2005MNRAS.363..991H/abstract
+
+The bar–halo interaction – I. From fundamental dynamics to revised N-body requirements - https://ui.adsabs.harvard.edu/abs/2007MNRAS.375..425W/abstract
+
+Dissipation in Barred Galaxies: The Growth of Bulges and Central Mass Concentrations - https://ui.adsabs.harvard.edu/abs/1990ApJ...363..391P/abstract
+
+On the generating mechanism of spiral structure - https://ui.adsabs.harvard.edu/abs/1972MNRAS.157....1L/abstract
+
+Bar-Halo Interaction and Bar Growth - https://ui.adsabs.harvard.edu/abs/2002ApJ...569L..83A/abstract
+
+Trapped orbits and solar-neighbourhood kinematics - https://arxiv.org/abs/1912.07023
+
+Dark Matter Trapping by Stellar Bars: The Shadow Bar - https://arxiv.org/abs/1602.04826
+
+Effect of orbital trapping by bar resonances in the local U-V velocity field - https://arxiv.org/abs/2107.00188
+
