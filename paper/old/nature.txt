@@ -1,0 +1,32 @@
+Title: Stellar Bars in Spiral Galaxies do not Slow Down
+
+Abstract: Elongated bar-like features are ubiquitous, occuring at the centres of approximately two-thirds of spiral disk galaxies.
+
+Due to gravitational interactions between the bar and the other components of galaxies, it is expected that angular momentum and matter will redistribute between galactic components over long (Gyr) timescales in galaxies hosting a bar. Previous work has overwhelmingly provided the expectation that due to these interactions the bar pattern will slow its rotation over time.
+
+We have performed a simulation of an isolated galactic disk that hosts a strong bar and also includes, for the first time, a state-of-the-art model of the interstellar medium. Here we show that in this simulation the bar pattern does not slow down over time, and instead remains at a constant rate of rotation. We propose a physical mechanism for this phenomenon, consistent with our simulation.
+
+This result challenges our expectations for how spiral galaxies redistribute angular momentum and matter over Gyr timescales, which is especially relevant for our understanding of how the Milky Way arrived at its present day state.
+
+
+
+Text:
+Stellar bars are ubiquitous amongst spiral galaxies, and their long-term, secular evolution is crucial for understanding the composition of present-day galaxies. There has been extensive previous work performing N-body numerical simulations of disk galaxies (i.e. simulations without a gas component). The dynamical evolution of such a system is well understood, dating back to the work of Lynden-Bell and Kalnajs. Most stars and halo particles will experience no average net torque from a bar pattern, except for a small number of particles on orbits resonant with the bar pattern. In particular, stars on orbits with frequencies Omega_r and Omega_phi which obey the equation:
+
+lR Omega_R + lphi Omega_phi = m Omega_p
+
+where l1 and l2 are integers and Omega_p, m are the pattern speed and multiplicity of a non-axisymmetric perturbation, respectively (m=2 for a bar pattern).
+
+The bar pattern speed is a critical parameter because it sets the locations in phase-space of the different resonances. The conclusion of nearly all previous N-body studies has been that the bar pattern speed will decline with time due to these resonant interactions. Usually the halo exerts a negative torque on the bar, causing it to slow down, although depending on the details of the setup the stellar disk can also play a signficant role in slowing down the bar.
+
+We have performed a simulation of a barred galaxy which includes a gaseous disk. We used the SMUGGLE model, which includes the heating and cooling of gas, star formation, and feedback from stellar winds and supernovae. We found the bar evolution in our simulation which included the gas phase to be substantially different than that expected from N-body simulations. In particular, the bar's pattern speed did not slow down, and the bar did not lengthen over the course of 8 Gyr.
+
+We separated the disk into a bar component and an untrapped disk component using a method previously developed on N-body simulations. We were able to compute the torque of the bar on the halo (the negative of which is the torque of the halo on the bar). We found that after 1 Gyr of evolution the average torque of the bar on the halo went from a consistent positive value with some scatter to nearly zero.
+
+The physical interpertation of this is clear. The bar is unable to slow down due to the infall of gas. As a result, the location of resonances in phase space does not change. Halo particles which resonantly interact with the bar move out of the resonance due to the resonant interaction itself, thus depriving the bar of resonant particles with which to interact.
+
+This interpretation is supported by Fig 3. On the left panel we show the torque exerted by the bar on the dark matter halo for both the N-body run and the SMUGGLE run. As we can see, this torque remains positive at nearly all times in the N-body case. However, after 1 Gyr into the SMUGGLE run, the bar's torque on the halo drops to zero and remains there for the rest of the simulation. The depopulation of resonances which coincides with this drop in the torque is shown directly in the right panel. [Some more words]
+
+If the bar does slow down, this allows the bar to lengthen and, in particular, to increase in strength. However, the magnitude of gas infall (and thus the torque of the gas on the bar) will increase in response to the increase in bar strength. This can be seen in Fig 4, which shows that periods when the bar amplitude measured at the edge of the bar is higher/lower occur at the same time as when the gas torques are high/low. [Maybe also add in the inflow rate?]
+
+In summary, our proposed mechanism rests on two things. First, the infalling gas speeds up the bar. However, the bar is not allowed to arbitrarily speed up, since in doing so it will encounter new halo material resonant with the bar. The bar is also not allowed to arbitrarily slow down, since doing so will increase the bar's amplitude and thus drive more gas to the center of the galaxy. These two mechanisms cause the bar to remain fixed at a constant pattern speed.
