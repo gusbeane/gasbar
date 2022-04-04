@@ -92,7 +92,7 @@ void mpi_printf(const char *fmt, ...)
 void compute_Nchunk(){
     // TODO: compute these according to memory requirements
     Nchunk_id = 1024;
-    Nchunk_snap = 256
+    Nchunk_snap = 256;
     return;
 }
 
@@ -106,7 +106,7 @@ void compute_Nsnap(char* output_dir){
         sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, i, i);
     }
     Nsnap = i;
-    // Nsnap = 8;
+    // Nsnap = 100;
 
 }
 
@@ -945,6 +945,8 @@ void construct_id_snap_chunks(char *output_dir)
     {
         // search for the number of snapshots
         compute_Nsnap(output_dir);
+        Nchunk_snap = Nsnap;
+
 
         sprintf(fname, "%s/snapdir_%03d/snapshot_%03d.0.hdf5", output_dir, Nsnap-1, Nsnap-1);
         file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
@@ -989,6 +991,7 @@ void construct_id_snap_chunks(char *output_dir)
 
     // Now broadcast from the 0th rank to all the others
     MPI_Bcast(&Nsnap, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&Nchunk_snap, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(NumPart_Total_LastSnap, NTYPES, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     // non-0 rank processes need to allocate

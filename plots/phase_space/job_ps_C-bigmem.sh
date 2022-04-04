@@ -1,7 +1,7 @@
 #!/bin/sh
-#SBATCH -p hernquist 
+#SBATCH -p bigmem
 #SBATCH -J phspce 
-#SBATCH -n 6
+#SBATCH -n 8
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err
@@ -10,7 +10,7 @@
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
-#SBATCH --mem=240G
+#SBATCH --mem=490G
 ##SBATCH -t 4-00:00           # Runtime in D-HH:MM
 #SBATCH -t 7-00:00           # Runtime in D-HH:MM
 
