@@ -14,6 +14,8 @@
 \usepackage{hyperref}
 % \usepackage{tgbonum}
 
+\usepackage{amsmath}
+
 \usepackage{fontspec}
 \setmainfont{texgyrepagella}[
   Extension = .otf,
@@ -24,6 +26,9 @@
 ]
 
 \usepackage[misc]{ifsym}
+
+\newcommand{\RCR}{\ensuremath{R_{\textrm{CR}}}}
+\newcommand{\Rot}{\ensuremath{\mathcal{R}}}
 
 \title{Stellar Bars in Isolated Gas-Rich Galaxies Do Not Slow Down}
 
@@ -370,7 +375,7 @@ balance. We modified the radial profile of this code in order to allow us to
 generate a disk with a constant surface density within some cut-off radius,
 and then exponentially declining beyond that radius with the scale-length of
 the stellar disk. We used an initial surface density of
-$20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\text{kpc}$. We
+$20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\textrm{kpc}$. We
 varied the surface density in TEST.
 
 After generating the gaseous disk in this way, we stitched the gas disk
@@ -389,9 +394,33 @@ $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
 configuration and initial transients appear not to affect the results after
 this point. The constant surface density of the initial gas disk is important
 for ensuring the gas disk is dense enough in order for comparisons to real
-galaxies to be appropriate. We show the evolution of the surface density
-profile in Extended Data Fig.~\ref{fig:surf} compared to observational
-estimates (CITE).
+galaxies to be appropriate. We plot the circular velocity curve in Extended
+Data Fig.~\ref{fig:vcirc} compared to observational
+estimates.\cite{2019ApJ...871..120E} Our disk is slightly more massive than
+the Milky Way disk, and in the SMUGGLE run the addition of the gas phase
+results in a slightly higher circular velocity. We also show the evolution of
+the surface density profile in Extended Data Fig.~\ref{fig:surf} compared to
+observational estimates (CITE).
+
+We used a mass resolution of $7.5\times10^3\,M_{\odot}$ for the baryonic
+components (initial stellar disk, stellar bulge, and gas) and a mass
+resolution of $3.75\times10^4\,M_{\odot}$ for the dark matter halo. This mass
+resolution is closest to ``level 3'' in the AURIGA
+simulations.\cite{2017MNRAS.467..179G} This corresponds to approximately
+$6.4\times10^6$ particles in the stellar disk, $1.1\times10^6$ in the bulge,
+$1.2\times10^6$ in the gas disk, and $25.3\times10^6$ in the dark matter halo.
+We used a softening length of $0.02\,\textrm{kpc}$ for all components.
+
+\begin{figure}[h]%
+\centering
+\includegraphics[width=0.45\textwidth]{fig/fig-vcirc.pdf}
+\caption{The circular velocity curve for the N-body run (blue) and the SMUGGLE
+run (orange) compared to observational estimates.\cite{2019ApJ...871..120E} We
+see that the circular velocity curve for both runs is marginally larger than
+the Milky Way's, but still comparable. The SMUGGLE circular velocity curve is
+larger than the N-body curve due to the additional mass in the gas phase.}
+\label{fig:surf}
+\end{figure}
 
 \begin{figure}[h]%
 \centering
