@@ -26,6 +26,7 @@
 ]
 
 \usepackage[misc]{ifsym}
+\usepackage{xcolor}
 
 \newcommand{\RCR}{\ensuremath{R_{\textrm{CR}}}}
 \newcommand{\Rot}{\ensuremath{\mathcal{R}}}
@@ -353,6 +354,16 @@ and supernovae is modeled. Photoionization and radiation pressure are modeled
 using an approximate treatment. A more detailed description of this model can
 be found in the flagship SMUGGLE paper.\cite{2019MNRAS.489.4233M}
 
+We used the fiducial model parameters, except that we increased the number of
+effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from
+$64$ to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
+inefficient photoionization feedback since the photoionizing budget had not
+been exhausted after deposition into $64$ neighboring cells. We also used an
+updated version of SMUGGLE using a new mechanical feedback routine similar to
+the one described in ref.\cite{2018MNRAS.480..800H} This updated routine is a
+tensor renormalization which ensures linear and angular momentum conservation
+to machine precision.
+
 \vspace{12pt}
 
 \noindent
@@ -375,8 +386,7 @@ balance. We modified the radial profile of this code in order to allow us to
 generate a disk with a constant surface density within some cut-off radius,
 and then exponentially declining beyond that radius with the scale-length of
 the stellar disk. We used an initial surface density of
-$20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\textrm{kpc}$. We
-varied the surface density in TEST.
+$20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\textrm{kpc}$.
 
 After generating the gaseous disk in this way, we stitched the gas disk
 together with the GALAKOS N-body disk (and bulge and dark matter halo) after
