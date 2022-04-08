@@ -438,7 +438,117 @@ larger than the N-body curve due to the additional mass in the gas phase.}
 \caption{The time evolution of the gas surface density (\textit{upper}) and the star formation rate (SFR) surface density (\textit{lower}).  } \label{fig:surf}
 \end{figure}
 
+\vspace{12pt}
 
+\noindent
+{\bf Bar analysis}
+\\
+\noindent
+The analysis of various bar properties is performed as follows. First, the
+pattern speed is measured from the angle of the second Fourier component. We measured the second Fourier component by computing,
+\begin{equation}
+\begin{split}
+A_2 &= \sum_i m_i e^{i 2 \phi_i} \\
+A_0 &= \sum_i m_i \textrm{,}
+\end{split}
+\end{equation}
+where $m_i$ and $\phi_i$ are the mass and azimuthal angle of each particle, respectively. We
+computed $A_2$ and $A_0$ in cylindrical bins of width $0.5\,\textrm{kpc}$ from radii of
+$0$ to $30\,\textrm{kpc}$. We defined the angle of the bar $\phi_b$ to be
+twice the angle of complex number $A_2$ as measured in the bin extending from
+a radius of $2.5$ to $3\,\textrm{kpc}$. After correcting for the periodicity
+of $\phi_b$, we measured the pattern speed as the two-sided finite gradient of
+$\phi_b$ as a function of time.
+
+The time evolution of the bar strength, defined as the maximum of
+$\left|A_2/A_0\right|$ as a function of radius, is shown in Extended Data
+Fig.~\ref{fig:strength}. The quantity $\left|A_2/A_0\right|$ varies from $0$
+to $1$, with larger values indicating a stronger bar pattern. We see that in
+the N-body case, $\left|A_2/A_0\right|$ increases over time as the bar pattern
+slows. This is consistent with previous N-body simulations which showed a
+clear correlation between the bar pattern speed and the bar
+strength.\cite{2003MNRAS.341.1179A} In the SMUGGLE case, we see that the bar
+strength has an initial drop but then remains at a roughly constant but
+slightly decreasing strength. This is consistent with the pattern speed in the
+SMUGGLE case being roughly constant or slightly increasing.
+
+\begin{figure}[h]%
+\centering
+\includegraphics[width=0.45\textwidth]{fig/fig-A2.pdf}
+\caption{The time evolution of the bar strength, measured as the second
+Fourier component divided by the zeroth Fourier component (a formula is given
+in the Methods section). We see that in the N-body case (blue) the bar
+strength increases with time, consistent with previous results showing that
+the bar strength increases as bars slow down. In the SMUGGLE case (orange), we
+see that the bar strength remains roughly constant, possibly slightly
+decreasing with time. This is also consistent with the expected relation
+between pattern speed and strength since the bar in this case is not slowing
+down.}
+\label{fig:strength}
+\end{figure}
+
+Computing the length of the bar and the torque on the bar by different
+components requires us to decompose the disk into a component which is trapped
+by the bar and a component which is untrapped. In order to do this, we follow
+closely the technique developed in ref.\cite{2016MNRAS.463.1952P} We analyzed
+the orbit of each star particle (meaning initial disk, bulge, and newly formed
+stars) by extracting the $x$-$y$ positions of the apoapse of each in a frame
+corotating with the bar (apoapses are defined as local maxima in $r$). For
+each apoapse, we searched for the $19$ closest apoapses in time and applied a
+$k$-means clustering algorithm on this set of $20$ points with $k=2$. We then
+computed for each of the two clusters the average angle from the bar
+$\left<\Delta \phi\right>_{0,1}$, the standard deviation in $R$ of the points
+${\sigma_R}_{0,1}$, and the average radius of the cluster
+$\left<R\right>_{0,1}$. At each apoapse, a particle was considered to be in
+the bar if it met the following criteria:
+\begin{equation}
+\textrm{max}\left(\left<\Delta \phi\right>_{0,1}\right) < \pi / 8
+\end{equation}
+\begin{equation}
+\frac{{\sigma_R}_0 + {\sigma_R}_1}{\left<R\right>_0 + \left<R\right>_1} < 0.22
+\end{equation}
+These criterion are slightly different and simplified from the ones used in
+ref.\cite{2016MNRAS.463.1952P}, but we found to empirically work well at
+decomposing the disk into a bar and disk component. In Extended Data
+Fig.~\ref{fig:decomp}, we show an example of this decomposition. The
+\textit{left} panel shows a surface density projection of the stellar disk and
+bulge (including newly formed stars) from the SMUGGLE model after
+$1\,\text{Gyr}$ of evolution in a frame such that the bar is aligned with the
+$x$-axis. The \textit{middle} panel shows a projection of the subset of stars
+that are identified as being trapped in the bar and the \textit{right} panel
+shows a projection of the stars that are not identified as being trapped. The
+fact that the \textit{right} panel is roughly axisymmetric indicates the bar
+decomposition is performing adequately.
+
+\begin{figure*}[h]%
+\centering
+\includegraphics[width=0.95\textwidth]{fig/fig-bar_decomp.pdf}
+\caption{Demonstration of our bar decomposition procedure based on
+ref.\cite{2016MNRAS.463.1952P} The \textit{left panel} shows a surface density
+projection through the stellar component of the N-body simulation (disk and
+bulge). The \textit{middle panel} shows the component of the disk identified
+as being trapped in the bar while the \textit{right panel} shows the component
+of the disk identified as not being trapped in the bar. The fact that the
+untrapped stars form a roughly axisymmetric structure indicates our bar
+decomposition is sufficiently accurate. {\color{red} I will remake this figure
+- I ended up losing the files which stored the bar membership, so I just
+pulled these screenshots from an earlier presentation.}}
+\label{fig:decomp}
+\end{figure*}
+
+After the disk has been decomposed into a trapped and untrapped component, we
+measured the bar length as being the radius $R_b$ which encapsulates $99\%$ of
+the stars identified as being trapped in the bar, allowing for some outliers.
+For the computation of the torque, we used the tree algorithm in
+\texttt{MakeNewDisk} customized to be accessible from \texttt{Python} using
+\texttt{Cython}. This algorithm is based on the \texttt{TREESPH} code. We
+constructed a tree using only the star particles identified as being trapped
+in the bar. We then queried the tree at the locations of all resolution
+elements in the other components and computed the torque of the bar on such
+components. The torque on the bar by the other components is simply the
+negative of the torque on the other components by the bar. A similar method
+was applied in measuring the torque for the disk when the pattern speed is
+kept constant, as is done in Fig.~\ref{fig:equil}.
 
 \vspace{12pt}
 
