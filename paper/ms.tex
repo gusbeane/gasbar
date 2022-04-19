@@ -86,29 +86,65 @@ $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+It has long been known that non-axisymmetric features in a stellar disk act to
+redistribute mass and angular momentum.\cite{1972MNRAS.157....1L} The
+interaction between a bar and a spheroid (either a dark matter halo or stellar
+bulge) has received considerable interest.\cite{1984MNRAS.209..729T,
+1985MNRAS.213..451W} A reasonable stellar disk in isolation seems to always
+generate a bar instability,\cite{1971ApJ...168..343H} but the presence of a
+static dark matter halo acts to stabilize the disk against the bar
+instability.\cite{1973ApJ...186..467O, 1976AJ.....81...30H} Later, a number of
+numerical simulations have confirmed that a live dark matter halo generically
+exerts a negative torque on the bar, causing its pattern speed to decrease and
+its length and strength to increase\cite{1992ApJ...400...80H,
+2000ApJ...543..704D, 2002MNRAS.330...35A, 2002ApJ...569L..83A,
+2003MNRAS.341.1179A, 2003MNRAS.346..251O, 2005MNRAS.363..991H,
+2006ApJ...637..214M, 2007MNRAS.375..460W, 2009ApJ...697..293D}. Intuitively,
+the bar excites a wake of resonant material in the dark matter halo in a
+manner similar to dynamical friction. This wake lags and thus exerts a
+negative torque on the bar.
+
+The pre-eminent expectation that the dark matter halo acts to slow the bar
+down conflicts with observational estimates of bar pattern speeds. Bar
+rotation rates are typically classified by the dimensionless ratio
+\begin{equation}
+\Rot = \RCR/R_b\textrm{,}
+\end{equation}
+where \RCR{} is the radius of corotation and $R_b$ is the length of the
+bar.\footnote{The radius of corotation \RCR{} is defined for circular orbits as
+the radius at which the orbital frequency is equal to the pattern speed,
+$\Omega_p$, of a given non-axisymmetric feature. In a galaxy with a constant
+circular velocity $V_c$, it is given by $\RCR = V_c / \Omega_p$.} Galaxies
+with $\Rot < 1.4$ are considered ``fast rotators'' while galaxies with $\Rot >
+1.4$ are considered ``slow rotators.''\cite{2000ApJ...543..704D} Galaxies with
+$\Rot < 1$ are not thought to be stable.\cite{1980AA....81..198C}
+Observational estimates of the pattern speeds of bars indicate that nearly all
+galaxies have $1 < \Rot < 1.4$.\cite{2011MSAIS..18...23C, 2015AA...576A.102A,
+2019MNRAS.482.1733G} 
+
+The role of gas on the evolution of the bar is less well-understood. Since the
+gas phase typically only contributes about $10-20\%$ of the mass of a galaxy
+at the present day, one might naively expect it to have a subdominant effect
+on the bar. However, because gas is collisional, it can participate in
+non-resonant angular momentum exchange with the bar. Thus, numerical work has
+shown that the gas phase has an outsized influence on the
+bar.\cite{2010ApJ...719.1470V, 2013MNRAS.429.1949A}
 
 We have performed a simulation of a disk galaxy using the finite-volume
-gravity-hydrodynamics code AREPO \cite{2010MNRAS.401..791S}. In AREPO, the
+gravito-hydrodynamics code AREPO.\cite{2010MNRAS.401..791S} In AREPO, the
 fluid is discretized as a moving Voronoi mesh. We use the additional physics
 in the galaxy formation module Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE)
 \cite{2019MNRAS.489.4233M}. SMUGGLE is a comprehensive and self-consistent
 galaxy formation model with a wide range of physical processes, including
 radiative heating/cooling, star formation, and stellar feedback. More detailed
-information on SMUGGLE is given in the Methods section.
-
-Our disk galaxy is a modified version of the GALAKOS
-model\cite{2020ApJ...890..117D}, which consists of a radially exponential and
-vertically isothermal stellar disk along with a
-Hernquist\cite{1990ApJ...356..359H} dark matter halo and bulge. After
+information on SMUGGLE is given in the Methods section. Our disk galaxy is a
+modified version of the GALAKOS model\cite{2020ApJ...890..117D}, which
+consists of a stellar disk, stellar bulge, and dark matter halo. After
 $\sim2.5\,\textrm{Gyr}$ of evolution, the GALAKOS disk forms a bar consistent
 with the Milky Way bar in terms of pattern speed and length
 ($\sim40\,\textrm{km}/\textrm{s}/\textrm{kpc}$ and $\sim4.5\,\textrm{kpc}$,
-respectively). We modify this setup by introducing a gas phase after $\sim
-1.5\,\textrm{Gyr}$ of evolution. This initial gas phase includes a hole in the
-center $4\,\textrm{kpc}$ and a constant surface density profile out to
-$9.3\,\textrm{kpc}$. When the gas is added to the simulation, the bar has
-already formed. More details on this configuration are given in the Methods
-section.
+respectively). We modify this setup to include a gas phase, the details of
+which is given in the Methods section.
 
 A surface density projection of our simulatons is shown in
 Fig.~\ref{fig:overview}. The upper three panels show the disk in the N-body
