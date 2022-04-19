@@ -465,7 +465,7 @@ run (orange) compared to observational estimates.\cite{2019ApJ...871..120E} We
 see that the circular velocity curve for both runs is marginally larger than
 the Milky Way's, but still comparable. The SMUGGLE circular velocity curve is
 larger than the N-body curve due to the additional mass in the gas phase.}
-\label{fig:surf}
+\label{fig:vcirc}
 \end{figure}
 
 \begin{figure}[h]%
@@ -503,7 +503,7 @@ A_0 &= \sum_i m_i \textrm{,}
 where $m_i$ and $\phi_i$ are the mass and azimuthal angle of each particle, respectively. We
 computed $A_2$ and $A_0$ in cylindrical bins of width $0.5\,\textrm{kpc}$ from radii of
 $0$ to $30\,\textrm{kpc}$. We defined the angle of the bar $\phi_b$ to be
-twice the angle of complex number $A_2$ as measured in the bin extending from
+twice the angle of the complex number $A_2$ as measured in the bin extending from
 a radius of $2.5$ to $3\,\textrm{kpc}$. After correcting for the periodicity
 of $\phi_b$, we measured the pattern speed as the two-sided finite gradient of
 $\phi_b$ as a function of time.
@@ -588,15 +588,16 @@ After the disk has been decomposed into a trapped and untrapped component, we
 measured the bar length as being the radius $R_b$ which encapsulates $99\%$ of
 the stars identified as being trapped in the bar, allowing for some outliers.
 For the computation of the torque, we used the tree algorithm in
-\texttt{MakeNewDisk} customized to be accessible from \texttt{Python} using
-\texttt{Cython}. This algorithm is based on the \texttt{TREESPH} code. We
-constructed a tree using only the star particles identified as being trapped
-in the bar. We then queried the tree at the locations of all resolution
-elements in the other components and computed the torque of the bar on such
-components. The torque on the bar by the other components is simply the
-negative of the torque on the other components by the bar. A similar method
-was applied in measuring the torque for the disk when the pattern speed is
-kept constant, as is done in Fig.~\ref{fig:equil}.
+\texttt{MakeNewDisk}\cite{2005MNRAS.361..776S} customized to be accessible
+from \texttt{Python} using \texttt{Cython}. This algorithm is based on the
+\texttt{TREESPH} code.\cite{1989ApJS...70..419H} We constructed a tree using
+only the star particles identified as being trapped in the bar using an
+opening angle of $0.35$. We then queried the tree at the locations of all
+resolution elements in the other components and computed the torque of the bar
+on such components. The torque on the bar by the other components is simply
+the negative of the torque on the other components by the bar. A similar
+method was applied in measuring the torque for the disk when the pattern speed
+is kept constant, as is done in Fig.~\ref{fig:equil}.
 
 \vspace{12pt}
 
