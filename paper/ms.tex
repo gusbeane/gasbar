@@ -440,13 +440,22 @@ $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
 configuration and initial transients appear not to affect the results after
 this point. The constant surface density of the initial gas disk is important
 for ensuring the gas disk is dense enough in order for comparisons to real
-galaxies to be appropriate. We plot the circular velocity curve in Extended
-Data Fig.~\ref{fig:vcirc} compared to observational
+galaxies to be appropriate.
+
+We computed the circular velocity curve of our model using the \texttt{AGAMA}
+package.\cite{2019MNRAS.482.1525V} We fit the baryonic component (stellar
+disk, bulge, gas, and newly formed stars) with an axisymmetric cylindrical
+spline with $20$ grid points in both the radial and vertical direction
+spanning $0.2$ to $50\,\textrm{kpc}$ in the radial direction and from $0.02$
+to $10\,\textrm{kpc}$ in the vertical direction. We fit the dark matter halo
+using a spherically symmetric multipole fit with a maximum angular harmonic
+coefficient of $l=2$. We plot the circular velocity curve in Extended Data
+Fig.~\ref{fig:vcirc} compared to observational
 estimates.\cite{2019ApJ...871..120E} Our disk is slightly more massive than
 the Milky Way disk, and in the SMUGGLE run the addition of the gas phase
 results in a slightly higher circular velocity. We also show the evolution of
 the surface density profile in Extended Data Fig.~\ref{fig:surf} compared to
-observational estimates (CITE).
+observational estimates.\cite{2012ARAA..50..531K}
 
 We used a mass resolution of $7.5\times10^3\,M_{\odot}$ for the baryonic
 components (initial stellar disk, stellar bulge, and gas) and a mass
