@@ -250,6 +250,30 @@ therefore shown evidence for an equilibrium mechanism which keeps the pattern
 speed of the bar constant, resulting from the complex interplay between the
 dark matter halo and the gas phase.
 
+We performed two additional tests to explore how our findings depend on the
+assumed model of the interstellar medium and the amount of gas present in the
+system. First, we performed a simulation of the same disk but with a simpler
+model of the interstellar medium\cite{2003MNRAS.339..289S}, closer to standard
+methods used in cosmological simulations of galaxy formation. We find that the
+pattern speed evolution is nearly the same in this case, and so conclude that
+our result is not sensitive to the details of the model for the interstellar
+medium. The details of this experiment is given in the Methods section.
+
+Second, we performed a set of simulations in which we decreased the initial
+gas mass of the disk. We essentially find that there is a certain critical gas
+fraction (maybe gas surface density?) above which our proposed mechanism
+operates. If the gas available is below this threshold, then the pattern speed
+will decrease in a similar fashion to standard N-body simulations.
+Importantly, arbitrarily increasing the gas fraction does not cause the
+pattern speed to continuously increase. This is consistent with our proposed
+equilibrium mechanism and with previous studies of barred galaxies which
+varied the gas fraction.\cite{2010ApJ...719.1470V} The exact critical gas
+fraction above which our mechanism operates is likely dependent on the
+properties of the bar, disk, and dark matter halo -- further work is needed to
+characterize how this gas fraction varies with such properties. Details on
+this test in which we varied the gas mass of the disk is given in the Methods
+section.
+
 The implications of this finding are numerous. First, we naturally explain why
 nearly all observed galaxies are fast rotators without requiring the inner
 regions of dark matter halos to be underdense\cite{1998ApJ...493L...5D,
@@ -278,9 +302,13 @@ matter halo, or perhaps even the gaseous circumgalactic medium. Naturally,
 extending our present work to account for such effects is a crucial next step
 in understanding the formation and evolution of galactic bars.
 
-
-
-
+We found that below a certain gas fraction, bars should still be able to slow
+down. Therefore, we expect barred spiral galaxies which are exceptionally
+gas-poor to be rotating very slowly. We therefore predict that observations
+which target such galaxies (e.g., lenticular barred
+galaxies\cite{2009ARAA..47..159B}) would find slowly rotating bars. In
+general, we predict that all gas-rich spiral galaxies should rotate quickly
+while gas-poor spiral galaxies should rotate slowly.
 
 \begin{figure*}[h]%
 \centering
@@ -418,7 +446,16 @@ to machine precision.
 \\
 \noindent
 
-In addition to the SMUGGLE model, we considered a simpler model of the interstellar medium based upon 
+In addition to the SMUGGLE model, we considered a simpler model of the
+interstellar medium based upon ref.\cite{2003MNRAS.339..289S} In this model,
+the multiphase nature of the interstellar medium is modeled in a subgrid
+manner by allowing each resolution element to have a ``cold'' and ``hot''
+component, with the equation of state of the gas suitably modified. Gas is
+allowed to interchange between the ``cold'' and ``hot'' components through
+processes such as cooling and stellar feedback. Cold gas is allowed to undergo
+star formation. The pattern speed evolution of this setup is given in Extended
+Data Fig.~X, which shows that the pattern speed evolves in a similar manner to
+the SMUGGLE case shown in Fig.~\ref{fig:prop}.
 
 \vspace{12pt}
 
@@ -517,6 +554,14 @@ just placing approx horizontal lines for now. The profiles are roughly flat
 anyways.}}
 \label{fig:surf}
 \end{figure}
+
+\vspace{12pt}
+
+\noindent
+{\bf Varying Gas Fraction}
+\\
+\noindent
+To be written.
 
 \vspace{12pt}
 
@@ -631,14 +676,6 @@ on such components. The torque on the bar by the other components is simply
 the negative of the torque on the other components by the bar. A similar
 method was applied in measuring the torque for the disk when the pattern speed
 is kept constant, as is done in Fig.~\ref{fig:equil}.
-
-\vspace{12pt}
-
-\noindent
-{\bf Title}
-\\
-\noindent
-Next section.
 
 % \bibliography{ref2}
 
