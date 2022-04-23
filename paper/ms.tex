@@ -57,27 +57,26 @@ $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 \vspace{-3.5mm}
 \begin{abstract}
   
-  Elongated bar-like features are ubiquitous, occuring at the centres of
+  Elongated bar-like features are ubiquitous, occurring at the centers of
   approximately two-thirds of spiral disk galaxies \cite{2000AJ....119..536E,
   2007ApJ...657..790M}. Due to gravitational interactions between the bar and
   the other components of galaxies, it is expected that angular momentum and
   matter will redistribute between galactic components over long (Gyr)
   timescales in galaxies hosting a bar \cite{1972MNRAS.157....1L,
   1984MNRAS.209..729T, 1985MNRAS.213..451W}. Previous work has overwhelmingly
-  provided the expectation that, due to these interactions, the bar pattern
+  provided the expectation that, due to the interaction between the bar and the halo, the bar pattern
   will slow its rotation over time \cite{1992ApJ...400...80H,
   2000ApJ...543..704D, 2002MNRAS.330...35A, 2002ApJ...569L..83A,
   2003MNRAS.341.1179A, 2003MNRAS.346..251O, 2005MNRAS.363..991H,
   2006ApJ...637..214M, 2007MNRAS.375..460W, 2009ApJ...697..293D}. We have
   performed a simulation of an isolated galactic disk hosting a strong bar
-  which includes a state-of-the-art model of the interstellar medium. Here we
+  which includes a state-of-the-art model of the interstellar medium and a live dark matter halo. Here we
   show that in this simulation the bar pattern does not slow down over time,
   and instead remains at a stable, constant rate of rotation. This behavior
   has been observed in previous simulations but its explanation has remained
-  elusive.\cite{1993AA...268...65F, 2010ApJ...719.1470V}. We propose an
-  equilibrium mechanism which is consistent with our simulations. This result
-  challenges our expectations for how barred galaxies redistribute angular
-  momentum and matter over Gyr timescales, which is especially relevant for
+  elusive.\cite{1993AA...268...65F, 2010ApJ...719.1470V}. We propose that the gas phase of the disk and the dark matter halo act in concert to stabilize the bar pattern and prevent it from slowing down or speeding up. This result
+  naturally explains why nearly all observed bars rotate quickly\cite{2011MSAIS..18...23C, 2015AA...576A.102A,
+2019MNRAS.482.1733G} and is especially relevant for
   our understanding of how the Milky Way arrived at its present day state.
   
 \end{abstract}
@@ -90,10 +89,9 @@ It has long been known that non-axisymmetric features in a stellar disk act to
 redistribute mass and angular momentum.\cite{1972MNRAS.157....1L} The
 interaction between a bar and a spheroid (either a dark matter halo or stellar
 bulge) has received considerable interest.\cite{1984MNRAS.209..729T,
-1985MNRAS.213..451W} A reasonable stellar disk in isolation seems to always
-generate a bar instability,\cite{1971ApJ...168..343H} but the presence of a
-static dark matter halo acts to stabilize the disk against the bar
-instability.\cite{1973ApJ...186..467O, 1976AJ.....81...30H} Later, a number of
+1985MNRAS.213..451W} A stellar disk in isolation seems to always
+generate a bar instability,\cite{1971ApJ...168..343H} but the presence of a strong spherical potential (e.g., from a stellar bulge or dark matter halo) acts to stabilize the disk against the bar
+instability.\cite{1973ApJ...186..467O, 1976AJ.....81...30H} A number of
 numerical simulations have confirmed that a live dark matter halo generically
 exerts a negative torque on the bar, causing its pattern speed to decrease and
 its length and strength to increase\cite{1992ApJ...400...80H,
@@ -104,7 +102,7 @@ the bar excites a wake of resonant material in the dark matter halo in a
 manner similar to dynamical friction. This wake lags and thus exerts a
 negative torque on the bar.
 
-The pre-eminent expectation that the dark matter halo acts to slow the bar
+The preeminent expectation that the dark matter halo acts to slow the bar
 down conflicts with observational estimates of bar pattern speeds. Bar
 rotation rates are typically classified by the dimensionless ratio
 \begin{equation}
@@ -146,7 +144,7 @@ with the Milky Way bar in terms of pattern speed and length
 respectively). We modify this setup to include a gas phase, the details of
 which is given in the Methods section.
 
-A surface density projection of our simulatons is shown in
+A surface density projection of our simulations is shown in
 Fig.~\ref{fig:overview}. The upper three panels show the disk in the N-body
 run while the lower three panels show the disk in the SMUGGLE run. Each column
 shows the disk $\sim1\,\textrm{Gyr}$ apart in time. There is a large qualitative
@@ -202,7 +200,7 @@ source of positive torque on the bar, speeding the bar up. This stops the
 resonance location from changing such that the halo cannot form a new wake,
 arresting the process by which the halo can slow the bar down.
 
-We can test this interpration by measuring the angle offset between the halo
+We can test this interpretation by measuring the angle offset between the halo
 wake and the bar. If the wake and the bar are aligned (i.e., there is no angle
 offset), then the wake cannot exert a negative torque on the bar. This angle
 is plotted in the middle panel of Fig.~\ref{fig:wake}, which shows that the
@@ -236,16 +234,16 @@ from the gas phase. Only gas within corotation will flow inwards, while gas
 outside corotation will flow outwards.\cite{2011MNRAS.415.1027H} Since the
 corotation radius is larger for more slowly rotating bars, it follows that
 more slowly rotating bars should be more efficient at driving gas inflows and
-thus experience a larger positive torque from the gas phase. We performed an
-experiment to test this hypothesis by forcing the stellar disk in the SMUGGLE
-run to rotate at a constant angular rate and measuring the torque on the bar
-by the gas phase at different rotation rates. The result of this experiment is
-shown in Fig.~\ref{fig:equil}, which shows that a more slowly rotating bar
-experiences a larger positive torque from the gas.
+thus experience a larger positive torque from the gas phase.
 
-We have therefore shown evidence for an equilibrium mechanism at play which
-keeps the pattern speed of the bar constant, resulting from the complex
-interplay between the dark matter halo and the gas phase.
+We performed an experiment to test this hypothesis by forcing the stellar disk
+in the SMUGGLE run to rotate at a constant angular rate and measuring the
+torque on the bar by the gas phase at different rotation rates. The result of
+this experiment is shown in Fig.~\ref{fig:equil}, which shows that a more
+slowly rotating bar experiences a larger positive torque from the gas. We have
+therefore shown evidence for an equilibrium mechanism which keeps the pattern
+speed of the bar constant, resulting from the complex interplay between the
+dark matter halo and the gas phase.
 
 The implications of this finding are numerous. First, we naturally explain why
 nearly all observed galaxies are fast rotators without requiring the inner
@@ -263,7 +261,7 @@ the pattern speed of the bar to change with time (though our work does not
 alter expectations for radial mixing induced by spiral arms\cite{2002MNRAS.336..785S}).
 
 Barred galaxies in cosmological simulations of galaxy formation continue to be
-in conflict with observations.\cite{2017MNRAS.469.1054A, 2019MNRAS.483.2721P,
+in conflict with observations by producing bars which rotate too slowly.\cite{2017MNRAS.469.1054A, 2019MNRAS.483.2721P,
 2021AA...650L..16F} However, the pattern speeds of bars in both cosmological
 simulations and the real universe can be affected by environmental processes
 not included in our simulation -- e.g., satellite
@@ -302,8 +300,7 @@ decreasing, and therefore the bar length remains constant. The \textit{lower
 panel} shows the torque on the bar by different components. The solid lines
 show the torque exerted by the halo in both the N-body and SMUGGLE cases. The
 dashed line shows the torque exerted by the gas phase in the SMUGGLE run
-(there is no gas in the N-body run). The first $1.5\,\textrm{Gyr}$ of
-evolution of the N-body model is not shown. Details on how these properties
+(there is no gas in the N-body run). Details on how these properties
 are calculated is given in the Methods section.}\label{fig:prop}
 \end{figure}
 
@@ -385,23 +382,33 @@ multi-phase interstellar medium is implemented, covering temperature ranges
 between $10$ and $10^8\,\textrm{K}$.
 
 Star formation occurs in cells above a density threshold
-($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) according to SH03 with a
-star-formation efficiency of $\epsilon = 0.01$. Star formation converts gas
-cells into star particles which represent single stellar populations. For each
-star particle, the deposition of energy, momentum, and mass from stellar winds
-and supernovae is modeled. Photoionization and radiation pressure are modeled
-using an approximate treatment. A more detailed description of this model can
-be found in the flagship SMUGGLE paper.\cite{2019MNRAS.489.4233M}
+($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) according to
+ref.\cite{2003MNRAS.339..289S} with a star-formation efficiency of $\epsilon =
+0.01$. Star formation converts gas cells into star particles which represent
+single stellar populations. For each star particle, the deposition of energy,
+momentum, and mass from stellar winds and supernovae is modeled.
+Photo-ionization and radiation pressure are modeled using an approximate
+treatment. A more detailed description of this model can be found in the
+flagship SMUGGLE paper.\cite{2019MNRAS.489.4233M}
 
 We used the fiducial model parameters, except that we increased the number of
 effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from
 $64$ to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
-inefficient photoionization feedback since the photoionizing budget had not
+inefficient photo-ionization feedback since the photo-ionizing budget had not
 been exhausted after deposition into $64$ neighboring cells. We also used an
 updated version of SMUGGLE using a new mechanical feedback routine similar to
 the one described in ref.\cite{2018MNRAS.480..800H} This updated routine is a
 tensor renormalization which ensures linear and angular momentum conservation
 to machine precision.
+
+\vspace{12pt}
+
+\noindent
+{\bf Wind Model}
+\\
+\noindent
+
+In addition to the SMUGGLE model, we considered a simpler model of the interstellar medium based upon 
 
 \vspace{12pt}
 
@@ -432,11 +439,14 @@ together with the GALAKOS N-body disk (and bulge and dark matter halo) after
 the GALAKOS disk has been allowed to evolve for $1.5\,\textrm{Gyr}$. The
 purpose of allowing the GALAKOS disk to evolve first for a short period of
 time is to allow for the bar to form unimpacted by the presence of the gas
-(which would normally disrupt the formation of the bar). We made one
-additional modification when stitching the gas disk together with the N-body
-disk - we created a vacuum within the central $4\,\textrm{kpc}$. This vacuum
-guards against an initial dramatic infall of gas within the bar region, which
-we found to destroy the bar.
+(which would normally disrupt the formation of the bar). Throughout this work,
+we consider $t=0$ for the N-body run to be the time at which we added the gas
+phase for the SMUGGLE run (i.e. we ignore the first $1.5\,\textrm{Gyr}$ of
+evolution of the N-body disk when the bar is forming). We made one additional
+modification when stitching the gas disk together with the N-body disk - we
+created a vacuum within the central $4\,\textrm{kpc}$. This vacuum guards
+against an initial dramatic infall of gas within the bar region, which we
+found to destroy the bar.
 
 Our setup is initially out of equilibrium, but we found that after
 $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
@@ -505,7 +515,8 @@ anyways.}}
 \\
 \noindent
 The analysis of various bar properties is performed as follows. First, the
-pattern speed is measured from the angle of the second Fourier component. We measured the second Fourier component by computing,
+pattern speed is measured from the angle of the second Fourier component. We
+measured the second Fourier component by computing,
 \begin{equation}
 \begin{split}
 A_2 &= \sum_i m_i e^{i 2 \phi_i} \\
