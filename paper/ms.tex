@@ -57,31 +57,32 @@ $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 \vspace{-3.5mm}
 \begin{abstract}
   
-  Elongated bar-like features are ubiquitous, occurring at the centers of
-  approximately two-thirds of spiral disk galaxies \cite{2000AJ....119..536E,
-  2007ApJ...657..790M}. Due to gravitational interactions between the bar and
+  Elongated bar-like features are ubiquitous in galaxies, occurring at the centers of
+  approximately two-thirds of spiral disks \cite{2000AJ....119..536E,
+  2007ApJ...657..790M}.  Due to gravitational interactions between the bar and
   the other components of galaxies, it is expected that angular momentum and
-  matter will redistribute between galactic components over long (Gyr)
-  timescales in galaxies hosting a bar \cite{1972MNRAS.157....1L,
-  1984MNRAS.209..729T, 1985MNRAS.213..451W}. Previous work has overwhelmingly
-  provided the expectation that, due to the interaction between the bar and
-  the dark matter halo, the bar pattern will slow its rotation over time
+  matter will redistribute over long (Gyr)
+  timescales in barred galaxies \cite{1972MNRAS.157....1L,
+  1984MNRAS.209..729T, 1985MNRAS.213..451W}. Previous work ignoring the gas phase of galaxies has conclusively 
+  demonstrated that bars should slow their rotation over time 
+  due to their interaction with dark matter halos
   \cite{1992ApJ...400...80H, 2000ApJ...543..704D, 2002MNRAS.330...35A,
   2002ApJ...569L..83A, 2003MNRAS.341.1179A, 2003MNRAS.346..251O,
   2005MNRAS.363..991H, 2006ApJ...637..214M, 2007MNRAS.375..460W,
-  2009ApJ...697..293D}. We have performed a simulation of a Milky Way-like
+  2009ApJ...697..293D}.  We have performed a simulation of a Milky Way-like
   galactic disk hosting a strong bar which includes a state-of-the-art model
   of the interstellar medium and a live dark matter halo. In this simulation
   the bar pattern does not slow down over time, and instead remains at a
   stable, constant rate of rotation. This behavior has been observed in
-  previous simulations but its explanation has remained
-  elusive.\cite{1993AA...268...65F, 2010ApJ...719.1470V}. We propose that the
+  previous simulations using more simplified models for the 
+  interstellar gas but its explanation has remained
+  elusive\cite{1993AA...268...65F, 2010ApJ...719.1470V}. We propose that the
   gas phase of the disk and the dark matter halo act in concert to stabilize
-  the bar pattern and prevent it from slowing down or speeding up. This result
+  the bar pattern speed and prevent a bar from slowing down or speeding up. This result
   naturally explains why nearly all observed bars rotate
-  quickly\cite{2011MSAIS..18...23C, 2015AA...576A.102A, 2019MNRAS.482.1733G}
+  rapidly\cite{2011MSAIS..18...23C, 2015AA...576A.102A, 2019MNRAS.482.1733G}
   and is especially relevant for our understanding of how the Milky Way
-  arrived at its present day state.
+  arrived at its present state.
   
 \end{abstract}
 
@@ -93,22 +94,21 @@ It has long been known that non-axisymmetric features in a stellar disk act to
 redistribute mass and angular momentum.\cite{1972MNRAS.157....1L} The
 interaction between a bar and a spheroid (either a dark matter halo or stellar
 bulge) has received considerable interest.\cite{1984MNRAS.209..729T,
-1985MNRAS.213..451W} A stellar disk in isolation seems to always generate a
-bar instability,\cite{1971ApJ...168..343H} but the presence of a strong
+1985MNRAS.213..451W} Stellar disks in isolation are prone to developing bars, \cite{1971ApJ...168..343H} but the presence of a strong
 spherical potential (e.g., from a stellar bulge or dark matter halo) acts to
-stabilize the disk against the bar instability.\cite{1973ApJ...186..467O,
-1976AJ.....81...30H} A number of numerical simulations have confirmed that a
-live dark matter halo generically exerts a negative torque on the bar, causing
+stabilize the disk against bar formation.\cite{1973ApJ...186..467O,
+1976AJ.....81...30H} Many numerical simulations have confirmed that a
+live dark matter halo generically exerts a negative torque on a bar, causing
 its pattern speed to decrease and its length and strength to
 increase\cite{1992ApJ...400...80H, 2000ApJ...543..704D, 2002MNRAS.330...35A,
 2002ApJ...569L..83A, 2003MNRAS.341.1179A, 2003MNRAS.346..251O,
 2005MNRAS.363..991H, 2006ApJ...637..214M, 2007MNRAS.375..460W,
 2009ApJ...697..293D}. Intuitively, the bar excites a wake of resonant material
-in the dark matter halo in a manner similar to dynamical friction. This wake
-lags and thus exerts a negative torque on the bar.
+in a dark matter halo in a manner akin to dynamical friction. This wake
+lags a bar and thus exerts a negative torque on it.
 
-The preeminent expectation that the dark matter halo acts to slow the bar down
-conflicts with observational estimates of bar pattern speeds. Bar rotation
+The expectation that a dark matter halo acts to slow down a bar is in
+conflict with observational estimates of bar pattern speeds. Bar rotation
 rates are typically classified by the dimensionless ratio
 \begin{equation}
 \Rot = \RCR/R_b\textrm{,}
@@ -130,8 +130,8 @@ gas phase typically only contributes about $10-20\%$ of the mass of a galaxy
 at the present day, one might naively expect it to have a subdominant effect
 on the bar. However, because gas is collisional, it can participate in
 non-resonant angular momentum exchange with the bar.\cite{2011MNRAS.415.1027H}
-Thus, numerical work has shown that the gas phase has an outsized influence on
-the bar.\cite{2010ApJ...719.1470V, 2013MNRAS.429.1949A}
+Thus, numerical work has shown that the gas phase can have a stronger influence on
+a bar than its contribution to the mass of a galaxy would suggest.\cite{2010ApJ...719.1470V, 2013MNRAS.429.1949A}
 
 We have performed a simulation of a disk galaxy using the finite-volume
 gravito-hydrodynamics code AREPO.\cite{2010MNRAS.401..791S} In AREPO, the
@@ -147,7 +147,7 @@ $\sim2.5\,\textrm{Gyr}$ of evolution, the GALAKOS disk forms a bar consistent
 with the Milky Way bar in terms of pattern speed and length
 ($\sim40\,\textrm{km}/\textrm{s}/\textrm{kpc}$ and $\sim4.5\,\textrm{kpc}$,
 respectively). We modify this setup to include a gas phase, the details of
-which is given in the Methods section.
+which are provided in the Methods section.
 
 A surface density projection of our simulations is shown in
 Fig.~\ref{fig:overview}. The upper three panels show the disk in the N-body
@@ -155,13 +155,13 @@ run while the lower three panels show the disk in the SMUGGLE run. Each column
 shows the disk $\sim1\,\textrm{Gyr}$ apart in time. There is a large qualitative
 difference in the evolution of the bar pattern between the two runs. We see
 that in the N-body case, the bar lengthens in time and grows in strength. In
-the SMUGGLE case, the bar pattern retains a similar length and strength
+the SMUGGLE case, the bar retains a similar length and strength
 between panels.
 
 We show the time evolution of different bar properties in Fig.~\ref{fig:prop}.
 In the upper panel, we show the pattern speed over time in the N-body (blue)
 and SMUGGLE (orange) runs. The pattern speed in the N-body case slows down
-while the pattern speed in the SMUGGLE case remains constant. The slowing down
+while the pattern speed in the SMUGGLE case remains roughly constant. The slowing down
 of the pattern speed in the N-body case is consistent with a long line of
 numerical research on bars in N-body simulations.\cite{1992ApJ...400...80H,
 2000ApJ...543..704D, 2002MNRAS.330...35A, 2002ApJ...569L..83A,
@@ -172,7 +172,7 @@ evolution, we find that the pattern speed increases by only $\sim10\%$ over
 the next $4\,\textrm{Gyr}$, compared to a $\sim43\%$ decrease in the pattern
 speed for the N-body run over the same interval. As we saw qualitatively in
 Fig.~\ref{fig:overview}, the length of the bar in the N-body case grows over
-time while it remains constant in the SMUGGLE case. This is also consistent
+time while it remains roughly constant in the SMUGGLE case. This is also consistent
 with previous numerical work, which found that bars tend to grow as they slow
 down and the radius of corotation increases.\cite{2000ApJ...543..704D,
 2003MNRAS.341.1179A}
@@ -200,9 +200,10 @@ could shred the bar, reducing its moment of inertia without changing its
 pattern speed. However, the bar seems to empirically respond to a negative
 torque induced by a halo wake by slowing down.} As the bar slows down, the
 location of the resonances in phase space changes, allowing halo material
-newly resonant with the bar to form a new wake. However, the gas is a reliable
+newly resonant with the bar to participate in forming the  wake. However, 
+the gas is a reliable
 source of positive torque on the bar, speeding the bar up. This stops the
-resonance location from changing such that the halo cannot form a new wake,
+resonance location from changing such that the halo cannot reinforce a wake,
 arresting the process by which the halo can slow the bar down.
 
 We can test this interpretation by measuring the angle offset between the halo
@@ -214,8 +215,9 @@ factor of two. The left and right panels of Fig.~\ref{fig:wake} show the halo
 wake with respect to the location of the bar in the N-body (left) and SMUGGLE
 (right) cases.
 
-The presence of the gas can arrest the process by which the dark matter halo
-wake forms. However, this does not explain why the pattern speed in the
+The presence of the gas can arrest the process by which additional material in
+the dark matter halo can contribute to a
+wake. However, this does not explain why the pattern speed in the
 SMUGGLE case is nearly constant over several Gyr. Naively, it would be a
 coincidence that the bar pattern speed remains constant in the SMUGGLE case,
 resulting from a chance cancellation of the halo and gas torques. However, a
@@ -257,7 +259,7 @@ model of the interstellar medium\cite{2003MNRAS.339..289S}, closer to standard
 methods used in cosmological simulations of galaxy formation. We find that the
 pattern speed evolution is nearly the same in this case, and so conclude that
 our result is not sensitive to the details of the model for the interstellar
-medium. The details of this experiment is given in the Methods section.
+medium. The details of this experiment are given in the Methods section.
 
 Second, we performed a set of simulations in which we decreased the initial
 gas mass of the disk. We essentially find that there is a certain critical gas
@@ -271,13 +273,13 @@ varied the gas fraction.\cite{2010ApJ...719.1470V} The exact critical gas
 fraction above which our mechanism operates is likely dependent on the
 properties of the bar, disk, and dark matter halo -- further work is needed to
 characterize how this gas fraction varies with such properties. Details on
-this test in which we varied the gas mass of the disk is given in the Methods
+this test in which we varied the gas mass of the disk are given in the Methods
 section.
 
-The implications of this finding are numerous. First, we naturally explain why
+The implications of our findings are numerous. First, we naturally explain why
 nearly all observed galaxies are fast rotators without requiring the inner
 regions of dark matter halos to be underdense\cite{1998ApJ...493L...5D,
-2000ApJ...543..704D} or introducing new physics.\cite{2021MNRAS.503.2833R,
+2000ApJ...543..704D} or requiring new physics.\cite{2021MNRAS.503.2833R,
 2021MNRAS.508..926R} Second, we show that the role of gas is of paramount
 importance in studies which attempt to uncover the nature of dark matter from
 its effect of slowing down the bar.\cite{2021MNRAS.500.4710C,
