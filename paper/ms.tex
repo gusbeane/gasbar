@@ -13,6 +13,7 @@
 \usepackage{rotating,xcolor}
 \usepackage{hyperref}
 % \usepackage{tgbonum}
+\usepackage[symbol]{footmisc}
 
 \usepackage{amsmath}
 
@@ -40,7 +41,7 @@
 
 \maketitle
 
-\let\thefootnote\relax\footnote{
+{\let\thefootnote\relax\footnote{
 
 \begin{affiliations}
 \item Center for Astrophysics $|$ Harvard \& Smithsonian,  Cambridge, MA, USA
@@ -52,7 +53,9 @@
 $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 
 \end{affiliations}
-}
+}}
+
+% \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
 \vspace{-3.5mm}
 \begin{abstract}
@@ -402,7 +405,6 @@ velocity.}\label{fig:equil}
 \setcounter{page}{1}
 \setcounter{figure}{0}
 \setcounter{table}{0}
-\captionsetup[figure]{labelformat=empty}
 \renewcommand{\figurename}{Extended Data Figure}
 \renewcommand{\thetable}{Extended Data \arabic{table}}
 
@@ -494,7 +496,7 @@ we consider $t=0$ for the N-body run to be the time at which we added the gas
 phase for the SMUGGLE run (i.e. we ignore the first $1.5\,\textrm{Gyr}$ of
 evolution of the N-body disk when the bar is forming). We made one additional
 modification when stitching the gas disk together with the N-body disk - we
-created a vacuum within the central $4\,\textrm{kpc}$. This vacuum guards
+created a hole within the central $4\,\textrm{kpc}$. This hole guards
 against an initial dramatic infall of gas within the bar region, which we
 found to destroy the bar.
 
