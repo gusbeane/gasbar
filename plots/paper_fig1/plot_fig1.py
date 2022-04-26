@@ -4,7 +4,12 @@ import arepo
 import h5py as h5
 import matplotlib as mpl
 
+from matplotlib import rc
 mpl.use('Agg')
+
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('text', usetex=True)
+mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
@@ -98,7 +103,7 @@ def run():
 
 
     Nbody_idx = [500, 700, 900]
-    SMUGGLE_idx = [100, 300, 500]
+    SMUGGLE_idx = [200, 400, 600]
 
     name_list = [Nbody, phS2R35]
 
@@ -120,8 +125,15 @@ def run():
         ax[1][i].imshow(heatmap_S.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
     
     for x in ax.ravel():
-        x.axes.xaxis.set_visible(False)
-        x.axes.yaxis.set_visible(False)
+        x.axes.xaxis.set_ticks([])
+        x.axes.yaxis.set_ticks([])
+    
+    ax[0][0].set_title(r'$t=1\,\textrm{Gyr}$')
+    ax[0][1].set_title(r'$t=2\,\textrm{Gyr}$')
+    ax[0][2].set_title(r'$t=3\,\textrm{Gyr}$')
+
+    ax[0][0].set_ylabel('N-body')
+    ax[1][0].set_ylabel('SMUGGLE')
 
     fig.tight_layout()
 
