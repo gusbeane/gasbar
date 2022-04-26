@@ -40,6 +40,7 @@ def read_snap(idx, name, lvl, parttype=[2, 3, 4], fields=['Coordinates', 'Masses
 def compute_surface_density(R, mass, Rbins):
     key = np.where(R < Rbins[-1])[0]
     R = R[key]
+    mass = mass[key]
     
     surf_dens = np.zeros(len(Rbins)-1)
     ave_R = np.zeros(len(Rbins)-1)
@@ -117,6 +118,8 @@ def run():
         Rbins = np.logspace(-2, np.log10(20), 25)
 
         mass = sn.part0.mass.value
+        if i==0:
+            r = np.linalg.norm(pos, axis=1)
 
         aveR, surf = compute_surface_density(R, mass, Rbins)
 
@@ -134,11 +137,15 @@ def run():
         key = np.where(sfr > 0)[0]
         Rbins = np.logspace(-2, np.log10(20), 15)
         aveR, surf = compute_surface_density(R[key], sfr[key], Rbins)
+
+        surf[np.logical_or(np.isnan(surf), surf==0.0)] = 1E-9
         print(surf)
 
         ax[1].plot(aveR, (1E9 / 1E6) * surf, label=label_1, c=tb_c[i]) # convert to Msun/Gyr/pc^2
 
-    
+    ax[0].axhline(10, c='k', ls='dashed')
+    ax[1].axhline(10.**(0.5), c='k', ls='dashed')
+
     ax[0].set(yscale='log')
     ax[1].set(yscale='log')
     ax[1].set(xlim=(0, 10))
