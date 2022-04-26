@@ -17,7 +17,7 @@ agama.setUnits(mass=1E10, length=1, velocity=1)
 
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -74,11 +74,12 @@ def compute_vcirc(pot):
     return Rlist, np.sqrt(vcsq)
 
 def run():
-    fig, ax = plt.subplots(1, 1, figsize=(3, 3))
+    cm = 1/2.54
+    fig, ax = plt.subplots(1, 1, figsize=(9*cm, 7*cm))
 
     pot = read_agama_pot(500, Nbody, lvl)
     R, vc = compute_vcirc(pot)
-    ax.plot(R, vc, c=tb_c[0], label='N-body')
+    ax.plot(R, vc, c=tb_c[0], label=r'$N$-body')
 
     pot = read_agama_pot(200, phS2R35, lvl)
     R, vc = compute_vcirc(pot)

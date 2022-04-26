@@ -14,7 +14,7 @@ from scipy.ndimage import gaussian_filter
 
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -153,7 +153,8 @@ def run():
     vmin = -0.002
     vmax = 0.002
 
-    fig, ax = plt.subplots(1, 3, figsize=(8, 2.5))
+    cm = 1/2.54
+    fig, ax = plt.subplots(1, 3, figsize=(18*cm, 6*cm))
 
     # First panel, wake of Nbody.
     sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
@@ -180,13 +181,15 @@ def run():
     tN = fourier_Nbody['time']
     tS = fourier_SMUGGLE['time']
 
-    ax[1].plot(tN - tN[300], 180.*dphiN, c=tb_c[0])
-    ax[1].plot(tS, 180.*dphiS, c=tb_c[1])
+    ax[1].plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label=r'$N$-body')
+    ax[1].plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
     ax[1].axhline(0.0, c='k')
 
-    ax[1].axvline(tS[520])
+    # ax[1].axvline(tS[520])
 
-    ax[1].set(xlim=(0, 5), ylim=(-35, 70), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+    ax[1].set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+
+    ax[1].legend(frameon=False)
 
     # Third panel, wake of SMUGGLE.
     sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1], fields=None)

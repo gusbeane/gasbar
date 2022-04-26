@@ -14,7 +14,7 @@ from scipy.ndimage import gaussian_filter
 
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -106,7 +106,8 @@ def compute_dphi(phi_disk, phi_halo):
     return dphi
 
 def run():
-    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(3, 5))
+    cm = 1/2.54
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9*cm, 12*cm))
     idx_list = [0, 100, 200, 400, 600, 800]
     center = np.array([200., 200., 200.])
 
@@ -123,7 +124,7 @@ def run():
 
         aveR, surf = compute_surface_density(R, mass, Rbins)
 
-        if i < 3:
+        if True:
             label_0 = repr(sn.Time.value)
             label_1 = None
         else:
@@ -157,8 +158,8 @@ def run():
     ax[1].set(ylabel=r'$\Sigma_{\textrm{SFR}}\,[\,M_{\odot} / \textrm{Gyr} / \textrm{pc}^2\,]$')
     ax[1].set(xlabel=r'$R\,[\,\textrm{kpc}\,]$')
 
-    ax[0].legend(frameon=False, title=r'$t\,[\,\text{Gyr}\,]$')
-    ax[1].legend(frameon=False)
+    ax[0].legend(frameon=False, title=r'$t\,[\,\text{Gyr}\,]$', ncol=2)
+    # ax[1].legend(frameon=False)
 
     fig.tight_layout()
     fig.savefig('fig-surf.pdf')

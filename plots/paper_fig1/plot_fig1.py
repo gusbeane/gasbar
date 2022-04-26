@@ -7,7 +7,7 @@ import matplotlib as mpl
 from matplotlib import rc
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -109,7 +109,9 @@ def run():
 
     extent = [rng[0][0], rng[0][1], rng[1][0], rng[1][1]]
 
-    fig, ax = plt.subplots(2, 3, sharex=True, sharey=True)
+    cm = 1/2.54
+
+    fig, ax = plt.subplots(2, 3, sharex=True, sharey=True, figsize=(18*cm, 12*cm))
 
     for i in range(len(Nbody_idx)):
         # plot Nbody
@@ -132,7 +134,7 @@ def run():
     ax[0][1].set_title(r'$t=2\,\textrm{Gyr}$')
     ax[0][2].set_title(r'$t=3\,\textrm{Gyr}$')
 
-    ax[0][0].set_ylabel('N-body')
+    ax[0][0].set_ylabel(r'$N$-body')
     ax[1][0].set_ylabel('SMUGGLE')
 
     fig.tight_layout()

@@ -10,7 +10,7 @@ from scipy.signal import savgol_filter
 
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -105,12 +105,16 @@ def run():
     bar_prop_Nbody = read_bar_prop(Nbody, lvl)
     bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
 
-    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(3.5, 6))
+    cm = 1/2.54
+    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(8*cm, 12*cm))
 
     # First panel, pattern speed.
     t300 = bar_prop_Nbody['tlist'][300]
-    ax[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['pattern_speed'], c=tb_c[0], label='N-body')
-    ax[0].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['pattern_speed'], c=tb_c[1], label='SMUGGLE')
+    ps_N = savgol_filter(bar_prop_Nbody['pattern_speed'], 81, 3)
+    ps_S = savgol_filter(bar_prop_SMUGGLE['pattern_speed'], 81, 3)
+
+    ax[0].plot(bar_prop_Nbody['tlist'] - t300, ps_N, c=tb_c[0], label=r'$N$-body')
+    ax[0].plot(bar_prop_SMUGGLE['tlist'], ps_S, c=tb_c[1], label='SMUGGLE')
 
     ax[0].set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax[0].set(xlim=(0, 5))
@@ -159,7 +163,7 @@ def run():
 
     custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
                     mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
-    ax[2].legend(custom_lines, ['halo', 'gas'], frameon=False)
+    ax[2].legend(custom_lines, ['by halo', 'by gas'], frameon=False)
 
 
     fig.tight_layout()
@@ -208,7 +212,7 @@ def run():
 
     custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
                     mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
-    ax.legend(custom_lines, ['halo', 'gas'], frameon=False)
+    ax.legend(custom_lines, ['by halo', 'by gas'], frameon=False)
 
     ax.plot(tlist_g, -tz_halo_g, c=tb_c[1])
     ax.plot(tlist_g, -tz_gas_g, c=tb_c[1], ls='dashed')

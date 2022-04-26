@@ -12,7 +12,7 @@ time_conv = 977.79222168
 
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -27,8 +27,6 @@ tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
 # names
 Nbody = 'Nbody'
 phS2R35 = 'phantom-vacuum-Sg20-Rc3.5'
-
-
 
 lvl = 'lvl3'
 
@@ -62,11 +60,12 @@ def moving_average(a, n=3) :
     return ret[n - 1:] / n
 
 def run():
-    fig, ax = plt.subplots(1, 1, figsize=(3, 3))
+    cm = 1/2.54
+    fig, ax = plt.subplots(1, 1, figsize=(9*cm, 7*cm))
     
     fourier = read_fourier(Nbody, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax.plot(t-t[300], A2A0, c=tb_c[0], label='N-body')
+    ax.plot(t-t[300], A2A0, c=tb_c[0], label=r'$N$-body')
 
     fourier = read_fourier(phS2R35, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)

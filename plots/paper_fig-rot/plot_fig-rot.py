@@ -155,8 +155,8 @@ def run():
         RCR = compute_RCR(agama_pot_SMUGGLE[i], bar_prop_SMUGGLE['pattern_speed'][i])
         RCR_SMUGGLE.append(RCR)
 
-
-    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(3.5, 3.5))
+    cm = 1/2.54
+    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(9*cm, 9*cm))
 
     
 
@@ -173,7 +173,7 @@ def run():
     ax.plot(bar_prop_SMUGGLE['tlist'], rot_SMUGGLE, c=tb_c[1], label='SMUGGLE')#, ls='dashed')
 
     ax.legend(frameon=False)
-    ax.set(ylim=(0, 3), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$', xlim=(0, 5))
+    ax.set(ylim=(1.2, 2), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$', xlim=(0, 5))
 
     fig.tight_layout()
     fig.savefig('fig-rot.pdf')

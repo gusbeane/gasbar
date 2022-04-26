@@ -10,7 +10,7 @@ from scipy.signal import savgol_filter
 
 mpl.use('Agg')
 
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
@@ -65,7 +65,8 @@ def read_torque(name, lvl):
     return tlist, tz_halo, tz_not_bar, tz_gas
 
 def run():
-    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(3.5, 3.5))
+    cm = 1/2.54
+    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(9*cm, 7*cm))
 
     # First panel, pattern speed.
     tlist_30, tz_halo_30, _, tz_gas_30 = read_torque(phS2R35, 'lvl3-rot30')
@@ -88,7 +89,7 @@ def run():
 
     # ax.axhline(0, c='k', ls='dashed')
 
-    ax.set(xlim=(29, 41), ylim=(0, 30))
+    ax.set(xlim=(29, 41), ylim=(0, 25))
     ax.set(xticks=rot_list)
     ax.set(xlabel=r'$\Omega_p\,[\,\textrm{km}/\textrm{s}/\textrm{kpc}\,]$')
     ax.set(ylabel=r'$\left< \tau_{\textrm{on bar}} \right>\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
