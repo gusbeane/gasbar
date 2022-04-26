@@ -65,7 +65,7 @@
 %% Redefine \maketitle for Nature style
 \def\@maketitle{%
   \newpage\spacing{1.0}\setlength{\parskip}{3pt}%
-    {\color{yaleblue} \fontsize{40}{10}\selectfont LETTER  \par \color{black}  \rule{\textwidth}{0.4pt}\\[-7pt]\rule{\textwidth}{0.4pt}\\[-7pt]\rule{\textwidth}{0.4pt} \par   }%
+    {\color{yaleblue} \fontsize{40}{10}\selectfont ARTICLE  \par \color{black}  \rule{\textwidth}{0.4pt}\\[-7pt]\rule{\textwidth}{0.4pt}\\[-7pt]\rule{\textwidth}{0.4pt} \par   }%
     {\scalefont{2.7}\noindent\sloppy%
         \begin{flushleft}\bfseries\@title\end{flushleft} \par}%
     {\scalefont{1.0}\noindent\sloppy \@author \par \vspace{0.5cm}}%

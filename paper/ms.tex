@@ -14,6 +14,7 @@
 \usepackage{hyperref}
 % \usepackage{tgbonum}
 \usepackage[symbol]{footmisc}
+\usepackage{placeins}
 
 \usepackage{amsmath}
 
@@ -28,13 +29,17 @@
 
 \usepackage[misc]{ifsym}
 \usepackage{xcolor}
+\usepackage[labelfont=bf]{caption}
+
 
 \newcommand{\RCR}{\ensuremath{R_{\textrm{CR}}}}
 \newcommand{\Rot}{\ensuremath{\mathcal{R}}}
 
 \title{Stellar Bars in Isolated Gas-Rich Spiral Galaxies Do Not Slow Down}
 
-\author{Angus Beane$^{1*}$, Lars Hernquist$^1$, Elena D'Onghia$^{2,3}$, et al.}
+\author{Angus Beane$^{1*}$, Lars Hernquist$^1$, Elena D'Onghia$^{2,3}$,
+Federico Marinacci$^{4}$, Charlie Conroy$^{1}$, Jia Qi$^{5}$, Laura V.
+Sales$^{6}$, Paul Torrey$^{5}$ and Mark Vogelsberger$^{7}$}
 
 
 \begin{document}
@@ -44,11 +49,26 @@
 {\let\thefootnote\relax\footnote{
 
 \begin{affiliations}
-\item Center for Astrophysics $|$ Harvard \& Smithsonian,  Cambridge, MA, USA
+% 1
+\item Center for Astrophysics $|$ Harvard \& Smithsonian,  Cambridge, MA, USA.
 
-\item Department of Physics, University of Wisconsin-Madison, Madison, WI, USA
+% 2
+\item Department of Physics, University of Wisconsin-Madison, Madison, WI, USA.
 
-\item Department of Astronomy, University of Wisconsin-Madison, Madison, WI, USA
+% 3
+\item Department of Astronomy, University of Wisconsin-Madison, Madison, WI, USA.
+
+% 4
+\item Department of Physics \& Astronomy `Augusto Righi', University of Bologna, Bologna, Italy.
+
+% 5
+\item Department of Astronomy, University of Florida, Gainesville, FL, USA.
+
+% 6
+\item Department of Physics \& Astronomy, University of California, Riverside, CA, USA.
+
+% 7
+\item Department of Physics, Massachusetts Institute of Technology, Cambridge, MA, USA.
 
 $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 
@@ -91,6 +111,70 @@ $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 \vspace{1cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure*}[h!]%
+\centering
+\includegraphics[width=0.8\textwidth]{fig/fig1.pdf}
+\caption{Surface density projections in an N-body only simulation (upper
+panels) and a simulation which includes the SMUGGLE model (bottom panels). We
+can see that in the N-body run, the bar grows in length and strength. In the
+SMUGGLE run (which includes a gaseous phase and a model for the multi-phase
+interstellar medium), the bar remains at approximately the same length and
+strength over the course of the simulation. The N-body model is identical to
+the GALAKOS model, discussed in the text.}\label{fig:overview}
+\end{figure*}
+
+\begin{figure}[h!]%
+\centering
+\includegraphics[width=0.45\textwidth]{fig/fig2.pdf}
+\caption{Various bar properties from the N-body and SMUGGLE runs. The
+\textit{upper panel} show the evolution of the pattern speed. As expected, the
+bar in the N-body run slows down due to interactions between the bar and the
+dark matter halo. However, the bar in the SMUGGLE run does not slow down and
+instead remains at a constant pattern speed. The \textit{middle panel} shows
+the evolution of the bar length. In the N-body case, the bar lengthens. This
+occurs because as the pattern speed drops, bar-like orbits at larger radii are
+possible. Stars are captured on these orbits, lengthening the bar. This
+process does not occur in the SMUGGLE cases since the bar pattern speed is not
+decreasing, and therefore the bar length remains constant. The \textit{lower
+panel} shows the torque on the bar by different components. The solid lines
+show the torque exerted by the halo in both the N-body and SMUGGLE cases. The
+dashed line shows the torque exerted by the gas phase in the SMUGGLE run
+(there is no gas in the N-body run). Details on how these properties
+are calculated is given in the Methods section.}\label{fig:prop}
+\end{figure}
+
+\begin{figure*}[h!]%
+\centering
+\includegraphics[width=0.9\textwidth]{fig/fig3.pdf}
+\caption{The wake excited in the dark matter halo in the N-body case
+(\textit{left panel}) and SMUGGLE case (\textit{right panel}) after
+$2.6\,\textrm{Gyr}$. The \textit{left} and \textit{right panels} show a
+surface density projection in the $x$-$y$ plane of the dark matter halo after
+an axisymmetric average has been subracted. The solid line indicates the
+direction of the bar while the dashed line indicates the direction of the halo
+wake (both measured by taking the second Fourier component within a sphere of
+all material within a radius of $X\,\textrm{kpc}$). The \textit{center panel}
+shows the time evolution of the angle difference between the bar and the halo
+wake, as measured from the second Fourier component. After the first Gyr, the
+angle difference in the SMUGGLE case is smaller than in the N-body case by
+about a factor of two, reflecting how the dark matter halo in the SMUGGLE case
+is unable to exert as negative a torque on the bar as in the N-body
+case.}\label{fig:wake}
+\end{figure*}
+
+\begin{figure}[h!]
+\centering
+\includegraphics{fig/fig4.pdf}
+\caption{The torque on the bar by the gas when the pattern speed of the bar is
+kept at a constant value. Only gas within the corotation radius is able to
+infall. Since slower bars have larger corotation radii, slower bars experience
+a larger net torque than faster bars. The setup of the simulations used here
+is identical to the SMUGGLE case discussed earlier and in the Methods section,
+except the N-body disk is rotated as a solid body with a constant angular
+velocity.}\label{fig:equil}
+\end{figure}
+
 
 It has long been known that non-axisymmetric features in a stellar disk act to
 redistribute mass and angular momentum.\cite{1972MNRAS.157....1L} The
@@ -287,8 +371,8 @@ regions of dark matter halos to be underdense\cite{1998ApJ...493L...5D,
 2021MNRAS.508..926R} Second, we show that the role of gas is of paramount
 importance in studies which attempt to uncover the nature of dark matter from
 its effect of slowing down the bar.\cite{2021MNRAS.500.4710C,
-2021MNRAS.505.2412C} Third, we provide an explanation for how the Milky Way's
-bar could be both long-lived and a fast rotator, of which there is some
+2021MNRAS.505.2412C} Third
+ed and a fast rotator, of which there is some
 observational evidence.\cite{2019MNRAS.490.4740B} And finally, we complicate
 the picture of radial mixing expected to sculpt the Milky Way's disk
 \cite{2012MNRAS.420..913B, 2015ApJ...808..132H}, a process which relies upon
@@ -319,69 +403,6 @@ ref.\cite{2016MNRAS.463.1751C}, who note that it indeed has a low gas
 fraction. In general, we predict that all gas-rich spiral galaxies should
 rotate quickly while gas-poor spiral galaxies should rotate slowly.
 
-\begin{figure*}[h]%
-\centering
-\includegraphics[width=0.8\textwidth]{fig/fig1.pdf}
-\caption{Surface density projections in an N-body only simulation (upper
-panels) and a simulation which includes the SMUGGLE model (bottom panels). We
-can see that in the N-body run, the bar grows in length and strength. In the
-SMUGGLE run (which includes a gaseous phase and a model for the multi-phase
-interstellar medium), the bar remains at approximately the same length and
-strength over the course of the simulation. The N-body model is identical to
-the GALAKOS model, discussed in the text.}\label{fig:overview}
-\end{figure*}
-
-\begin{figure}[h]%
-\centering
-\includegraphics[width=0.45\textwidth]{fig/fig2.pdf}
-\caption{Various bar properties from the N-body and SMUGGLE runs. The
-\textit{upper panel} show the evolution of the pattern speed. As expected, the
-bar in the N-body run slows down due to interactions between the bar and the
-dark matter halo. However, the bar in the SMUGGLE run does not slow down and
-instead remains at a constant pattern speed. The \textit{middle panel} shows
-the evolution of the bar length. In the N-body case, the bar lengthens. This
-occurs because as the pattern speed drops, bar-like orbits at larger radii are
-possible. Stars are captured on these orbits, lengthening the bar. This
-process does not occur in the SMUGGLE cases since the bar pattern speed is not
-decreasing, and therefore the bar length remains constant. The \textit{lower
-panel} shows the torque on the bar by different components. The solid lines
-show the torque exerted by the halo in both the N-body and SMUGGLE cases. The
-dashed line shows the torque exerted by the gas phase in the SMUGGLE run
-(there is no gas in the N-body run). Details on how these properties
-are calculated is given in the Methods section.}\label{fig:prop}
-\end{figure}
-
-\begin{figure*}[h]%
-\centering
-\includegraphics[width=0.9\textwidth]{fig/fig3.pdf}
-\caption{The wake excited in the dark matter halo in the N-body case
-(\textit{left panel}) and SMUGGLE case (\textit{right panel}) after
-$2.6\,\textrm{Gyr}$. The \textit{left} and \textit{right panels} show a
-surface density projection in the $x$-$y$ plane of the dark matter halo after
-an axisymmetric average has been subracted. The solid line indicates the
-direction of the bar while the dashed line indicates the direction of the halo
-wake (both measured by taking the second Fourier component within a sphere of
-all material within a radius of $X\,\textrm{kpc}$). The \textit{center panel}
-shows the time evolution of the angle difference between the bar and the halo
-wake, as measured from the second Fourier component. After the first Gyr, the
-angle difference in the SMUGGLE case is smaller than in the N-body case by
-about a factor of two, reflecting how the dark matter halo in the SMUGGLE case
-is unable to exert as negative a torque on the bar as in the N-body
-case.}\label{fig:wake}
-\end{figure*}
-
-\begin{figure}[h]
-\centering
-\includegraphics{fig/fig4.pdf}
-\caption{The torque on the bar by the gas when the pattern speed of the bar is
-kept at a constant value. Only gas within the corotation radius is able to
-infall. Since slower bars have larger corotation radii, slower bars experience
-a larger net torque than faster bars. The setup of the simulations used here
-is identical to the SMUGGLE case discussed earlier and in the Methods section,
-except the N-body disk is rotated as a solid body with a constant angular
-velocity.}\label{fig:equil}
-\end{figure}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -389,13 +410,26 @@ velocity.}\label{fig:equil}
 
 \begin{addendum}
   
-\item [Acknowledgements] Foo.
+\item [Acknowledgements] We would like to thank Greg L. Bryan, Drummond B.
+Fielding, Keith Hawkins, Jason A. S. Hunt, Sarah M. R. Jeffreson, Kathryn V.
+Johnston, Julio F. Navarro, David N. Spergel, Martin D. Weinberg, and Yanfei
+Zou for helpful discussions. A.B. would like to thank Todd Phillips for
+helpful discussions. Some computations in this paper were run on the FASRC
+Cannon cluster supported by the FAS Division of Science Research Computing
+Group at Harvard University. Resources supporting this work were also provided
+by the NASA High-End Computing (HEC) Program through the NASA Advanced
+Supercomputing (NAS) Division at Ames Research Center. A.B. was supported by
+the Future Investigators in NASA Earth and Space Science and Technology
+(FINESST) award number 80NSSC20K1536 during the completion of this work. L.H.
+funding. E.D. funding. F.M. funding. C.C. funding. J.Q. funding. L.V.S.
+funding. P.T. funding. M.V. funding.
 
 \item[Author Contributions] Foo.
 
   \item[Data Availability] Foo.
     
-  \item[Code Availability] Foo.
+  \item[Code Availability] A public version of the AREPO code is available at
+  \url{https://arepo-code.org/}.
     
 \end{addendum}
 
@@ -403,6 +437,7 @@ velocity.}\label{fig:equil}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\FloatBarrier
 \newpage
 
 \setcounter{page}{1}
@@ -411,9 +446,10 @@ velocity.}\label{fig:equil}
 \renewcommand{\figurename}{Extended Data Figure}
 \renewcommand{\thetable}{Extended Data \arabic{table}}
 
-\begin{center}
+\noindent
 {\bf \Large \uppercase{Methods} }
-\end{center}
+
+\bigskip
 
 \noindent
 {\bf SMUGGLE Model}
@@ -453,7 +489,6 @@ to machine precision.
 {\bf Smooth Interstellar Medium Model}
 \\
 \noindent
-
 In addition to the SMUGGLE model, we considered a simpler model of the
 interstellar medium based upon ref.\cite{2003MNRAS.339..289S} In this model,
 the multiphase nature of the interstellar medium is modeled in a subgrid
@@ -503,6 +538,17 @@ created a hole within the central $4\,\textrm{kpc}$. This hole guards
 against an initial dramatic infall of gas within the bar region, which we
 found to destroy the bar.
 
+\begin{figure}[t]%
+\centering
+\includegraphics[width=0.45\textwidth]{fig/fig-vcirc.pdf}
+\caption{The circular velocity curve for the N-body run (blue) and the SMUGGLE
+run (orange) compared to observational estimates.\cite{2019ApJ...871..120E} We
+see that the circular velocity curve for both runs is marginally larger than
+the Milky Way's, but still comparable. The SMUGGLE circular velocity curve is
+larger than the N-body curve due to the additional mass in the gas phase.}
+\label{fig:vcirc}
+\end{figure}
+
 Our setup is initially out of equilibrium, but we found that after
 $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
 configuration and initial transients appear not to affect the results after
@@ -534,18 +580,7 @@ $6.4\times10^6$ particles in the stellar disk, $1.1\times10^6$ in the bulge,
 $1.2\times10^6$ in the gas disk, and $25.3\times10^6$ in the dark matter halo.
 We used a softening length of $0.02\,\textrm{kpc}$ for all components.
 
-\begin{figure}[h]%
-\centering
-\includegraphics[width=0.45\textwidth]{fig/fig-vcirc.pdf}
-\caption{The circular velocity curve for the N-body run (blue) and the SMUGGLE
-run (orange) compared to observational estimates.\cite{2019ApJ...871..120E} We
-see that the circular velocity curve for both runs is marginally larger than
-the Milky Way's, but still comparable. The SMUGGLE circular velocity curve is
-larger than the N-body curve due to the additional mass in the gas phase.}
-\label{fig:vcirc}
-\end{figure}
-
-\begin{figure}[h]%
+\begin{figure}[t!]%
 \centering
 \includegraphics[width=0.45\textwidth]{fig/fig-surf.pdf}
 \caption{The time evolution of the gas surface density (\textit{upper}) and
@@ -594,19 +629,7 @@ measured in the bin extending from a radius of $2.5$ to $3\,\textrm{kpc}$.
 After correcting for the periodicity of $\phi_b$, we measured the pattern
 speed as the two-sided finite gradient of $\phi_b$ as a function of time.
 
-The time evolution of the bar strength, defined as the maximum of
-$\left|A_2/A_0\right|$ as a function of radius, is shown in Extended Data
-Fig.~\ref{fig:strength}. The quantity $\left|A_2/A_0\right|$ varies from $0$
-to $1$, with larger values indicating a stronger bar pattern. We see that in
-the N-body case, $\left|A_2/A_0\right|$ increases over time as the bar pattern
-slows. This is consistent with previous N-body simulations which showed a
-clear correlation between the bar pattern speed and the bar
-strength.\cite{2003MNRAS.341.1179A} In the SMUGGLE case, we see that the bar
-strength has an initial drop but then remains at a roughly constant but
-slightly decreasing strength. This is consistent with the pattern speed in the
-SMUGGLE case being roughly constant or slightly increasing.
-
-\begin{figure}[h]%
+\begin{figure}[t!]%
 \centering
 \includegraphics[width=0.45\textwidth]{fig/fig-A2.pdf}
 \caption{The time evolution of the bar strength, measured as the second
@@ -620,6 +643,34 @@ between pattern speed and strength since the bar in this case is not slowing
 down.}
 \label{fig:strength}
 \end{figure}
+
+\begin{figure*}[t!]%
+\centering
+\includegraphics[width=0.95\textwidth]{fig/fig-bar_decomp.pdf}
+\caption{Demonstration of our bar decomposition procedure based on
+ref.\cite{2016MNRAS.463.1952P} The \textit{left panel} shows a surface density
+projection through the stellar component of the N-body simulation (disk and
+bulge). The \textit{middle panel} shows the component of the disk identified
+as being trapped in the bar while the \textit{right panel} shows the component
+of the disk identified as not being trapped in the bar. The fact that the
+untrapped stars form a roughly axisymmetric structure indicates our bar
+decomposition is sufficiently accurate. {\color{red} I will remake this figure
+- I ended up losing the files which stored the bar membership, so I just
+pulled these screenshots from an earlier presentation.}}
+\label{fig:decomp}
+\end{figure*}
+
+The time evolution of the bar strength, defined as the maximum of
+$\left|A_2/A_0\right|$ as a function of radius, is shown in Extended Data
+Fig.~\ref{fig:strength}. The quantity $\left|A_2/A_0\right|$ varies from $0$
+to $1$, with larger values indicating a stronger bar pattern. We see that in
+the N-body case, $\left|A_2/A_0\right|$ increases over time as the bar pattern
+slows. This is consistent with previous N-body simulations which showed a
+clear correlation between the bar pattern speed and the bar
+strength.\cite{2003MNRAS.341.1179A} In the SMUGGLE case, we see that the bar
+strength has an initial drop but then remains at a roughly constant but
+slightly decreasing strength. This is consistent with the pattern speed in the
+SMUGGLE case being roughly constant or slightly increasing.
 
 Computing the length of the bar and the torque on the bar by different
 components requires us to decompose the disk into a component which is trapped
@@ -653,22 +704,6 @@ that are identified as being trapped in the bar and the \textit{right} panel
 shows a projection of the stars that are not identified as being trapped. The
 fact that the \textit{right} panel is roughly axisymmetric indicates the bar
 decomposition is performing adequately.
-
-\begin{figure*}[h]%
-\centering
-\includegraphics[width=0.95\textwidth]{fig/fig-bar_decomp.pdf}
-\caption{Demonstration of our bar decomposition procedure based on
-ref.\cite{2016MNRAS.463.1952P} The \textit{left panel} shows a surface density
-projection through the stellar component of the N-body simulation (disk and
-bulge). The \textit{middle panel} shows the component of the disk identified
-as being trapped in the bar while the \textit{right panel} shows the component
-of the disk identified as not being trapped in the bar. The fact that the
-untrapped stars form a roughly axisymmetric structure indicates our bar
-decomposition is sufficiently accurate. {\color{red} I will remake this figure
-- I ended up losing the files which stored the bar membership, so I just
-pulled these screenshots from an earlier presentation.}}
-\label{fig:decomp}
-\end{figure*}
 
 After the disk has been decomposed into a trapped and untrapped component, we
 measured the bar length as being the radius $R_b$ which encapsulates $99\%$ of
