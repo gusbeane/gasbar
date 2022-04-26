@@ -36,6 +36,7 @@
 \newcommand{\Rot}{\ensuremath{\mathcal{R}}}
 
 \newcommand{\Nbody}{$N$-body}
+\newcommand{\Msun}{\ensuremath{M_{\odot}}}
 
 \title{Stellar Bars in Isolated Gas-Rich Spiral Galaxies Do Not Slow Down}
 
@@ -532,13 +533,17 @@ the GALAKOS disk has been allowed to evolve for $1.5\,\textrm{Gyr}$. The
 purpose of allowing the GALAKOS disk to evolve first for a short period of
 time is to allow for the bar to form unimpacted by the presence of the gas
 (which would normally disrupt the formation of the bar). Throughout this work,
-we consider $t=0$ for the \Nbody{} run to be the time at which we added the gas
-phase for the SMUGGLE run (i.e. we ignore the first $1.5\,\textrm{Gyr}$ of
-evolution of the \Nbody{} disk when the bar is forming). We made one additional
-modification when stitching the gas disk together with the \Nbody{} disk - we
-created a hole within the central $4\,\textrm{kpc}$. This hole guards
-against an initial dramatic infall of gas within the bar region, which we
-found to destroy the bar.
+we consider $t=0$ for the \Nbody{} run to be the time at which we added the
+gas phase for the SMUGGLE run (i.e. we ignore the first $1.5\,\textrm{Gyr}$ of
+evolution of the \Nbody{} disk when the bar is forming). We made one
+additional modification when stitching the gas disk together with the \Nbody{}
+disk - we created a hole within the central $4\,\textrm{kpc}$. This hole
+guards against an initial dramatic infall of gas within the bar region, which
+we found to destroy the bar. Models of the Milky Way's gas surface density
+profile indicate a reduction in gas in the bar region from $\sim1$ to
+$\sim4\,\textrm{kpc}$,\cite{2022ApJ...929L..18E} and so our practice of
+allowing the gas distribution to have a hole in the central region is
+consistent with our choice to begin the simulations with a bar already formed.
 
 \begin{figure}[t]%
 \centering
@@ -571,8 +576,14 @@ Fig.~\ref{fig:vcirc} compared to observational
 estimates.\cite{2019ApJ...871..120E} Our disk is slightly more massive than
 the Milky Way disk, and in the SMUGGLE run the addition of the gas phase
 results in a slightly higher circular velocity. We also show the evolution of
-the surface density profile in Extended Data Fig.~\ref{fig:surf} compared to
-observational estimates.\cite{2012ARAA..50..531K}
+the surface density profile in Extended Data Fig.~\ref{fig:surf} We find that
+in our simulation the atomic and molecular gas surface density and the SFR
+surface density is broadly consistent with the expected values for the Milky
+Way.\cite{2022ApJ...929L..18E} The discrepancy between $1$ and
+$4\,\textrm{kpc}$ is likely due to the fact that the distances to molecular
+cloud which underlines this work used a simple kinematic distance based on an
+axisymmetric model of the Milky Way,\cite{2017ApJ...834...57M} which is likely
+not accurate in the bar region where gas has large non-circular velocities.
 
 We used a mass resolution of $7.5\times10^3\,M_{\odot}$ for the baryonic
 components (initial stellar disk, stellar bulge, and gas) and a mass
@@ -586,18 +597,17 @@ We used a softening length of $0.02\,\textrm{kpc}$ for all components.
 \begin{figure}[t!]%
 \centering
 \includegraphics[width=9cm]{fig/fig-surf.pdf}
-\caption{The time evolution of the gas surface density (\textit{upper}) and
+\caption{The time evolution of the molecular gas surface density (\textit{upper}) and
 the star formation rate (SFR) surface density (\textit{lower}) at various
 times during the simulation. Colored lines indicate the profiles at selected
-times during the simulation while the horizontal dashed lines indicate
-approximate values for the Milky Way.\cite{2012ARAA..50..531K} We see that the
-gas surface density is slightly higher but within an order of magnitude of the
-Milky Way's typical gas surface density. We see a sharp decrease in the gas
-and SFR surface density along the extent of the bar from $\sim1$ to
+times during the simulation while the black dashed lines indicate models for
+the Milky Way which allow the CO-to-H$_2$ conversion factor $X_{\textrm{CO}}$
+to vary with metallicity.\cite{2022ApJ...929L..18E} We see that the molecular
+gas and SFR surface densities are within an order of magnitude of the Milky
+Way's typical values at all times.  We see a sharp decrease in the gas and SFR
+surface densities along the extent of the bar from $\sim1$ to
 $\sim4\,\textrm{kpc}$, related to the gas inflow in this region. {\color{red}
-I will add the actual points from ref.\cite{2012ARAA..50..531K} (Fig. 7), but
-just placing approx horizontal lines for now. The profiles are roughly flat
-anyways.}}
+Waiting on atomic gas data from Juergen Kerp.}}
 \label{fig:surf}
 \end{figure}
 
@@ -731,3 +741,4 @@ is kept constant, as is done in Fig.~\ref{fig:equil}.
 
 
 
+% 
