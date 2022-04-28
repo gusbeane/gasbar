@@ -441,7 +441,7 @@ funding. P.T. funding. M.V. funding.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \FloatBarrier
-\newpage
+\clearpage
 
 \setcounter{page}{1}
 \setcounter{figure}{0}
@@ -453,57 +453,6 @@ funding. P.T. funding. M.V. funding.
 {\bf \Large \uppercase{Methods} }
 
 \bigskip
-
-\noindent
-{\bf SMUGGLE Model}
-\\
-\noindent
-We use the Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE) model
-\cite{2019MNRAS.489.4233M} implemented within the moving-mesh, finite-volume
-hydrodynamics code AREPO \cite{2010MNRAS.401..791S}. The SMUGGLE model
-includes self-gravity, hydrodynamics, radiative heating and cooling, star
-formation, and stellar feedback. Explicit gas cooling and heating of the
-multi-phase interstellar medium is implemented, covering temperature ranges
-between $10$ and $10^8\,\textrm{K}$.
-
-Star formation occurs in cells above a density threshold
-($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) according to
-ref.\cite{2003MNRAS.339..289S} with a star-formation efficiency of $\epsilon =
-0.01$. Star formation converts gas cells into star particles which represent
-single stellar populations. For each star particle, the deposition of energy,
-momentum, and mass from stellar winds and supernovae is modeled.
-Photo-ionization and radiation pressure are modeled using an approximate
-treatment. A more detailed description of this model can be found in the
-flagship SMUGGLE paper.\cite{2019MNRAS.489.4233M}
-
-We used the fiducial model parameters, except that we increased the number of
-effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from
-$64$ to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
-inefficient photo-ionization feedback since the photo-ionizing budget had not
-been exhausted after deposition into $64$ neighboring cells. We also used an
-updated version of SMUGGLE using a new mechanical feedback routine similar to
-the one described in ref.\cite{2018MNRAS.480..800H} This updated routine is a
-tensor renormalization which ensures linear and angular momentum conservation
-to machine precision.
-
-\vspace{12pt}
-
-\noindent
-{\bf Smooth Interstellar Medium Model}
-\\
-\noindent
-In addition to the SMUGGLE model, we considered a simpler model of the
-interstellar medium based upon ref.\cite{2003MNRAS.339..289S} In this model,
-the multiphase nature of the interstellar medium is modeled in a subgrid
-manner by allowing each resolution element to have a ``cold'' and ``hot''
-component, with the equation of state of the gas suitably modified. Gas is
-allowed to interchange between the ``cold'' and ``hot'' components through
-processes such as cooling and stellar feedback. Cold gas is allowed to undergo
-star formation. The pattern speed evolution of this setup is given in Extended
-Data Fig.~X, which shows that the pattern speed evolves in a similar manner to
-the SMUGGLE case shown in Fig.~\ref{fig:prop}.
-
-\vspace{12pt}
 
 \noindent
 {\bf Initial Setup}
@@ -557,6 +506,22 @@ additional mass in the gas phase.}
 \label{fig:vcirc}
 \end{figure}
 
+\begin{figure}[h!]%
+\centering
+\includegraphics[width=9cm]{fig/fig-GFM.pdf}
+\caption{\textbf{Pattern speed evolution of a smooth ISM model.} This
+evolution is shown for the fiducial disk in the \Nbody{} (blue), SMUGGLE
+(orange), and smooth ISM (red) cases. The smooth ISM model is an older model
+for the ISM which treats its multiphase nature in a subgrid
+fashion.\cite{2003MNRAS.339..289S} This fundamentally differs from the SMUGGLE
+model, which explicitly resolve the hot and cold phases of the
+ISM.\cite{2019MNRAS.489.4233M} The pattern speed in the smooth ISM case is
+broadly similar to the evolution in the SMUGGLE case. This shows that the
+stability of the pattern speed is not simply a result of our assumed model for
+the ISM.}
+\label{fig:GFM}
+\end{figure}
+
 Our setup is initially out of equilibrium, but we found that after
 $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
 configuration and initial transients appear not to affect the results after
@@ -593,6 +558,23 @@ simulations.\cite{2017MNRAS.467..179G} This corresponds to approximately
 $6.4\times10^6$ particles in the stellar disk, $1.1\times10^6$ in the bulge,
 $1.2\times10^6$ in the gas disk, and $25.3\times10^6$ in the dark matter halo.
 We used a softening length of $0.02\,\textrm{kpc}$ for all components.
+Snapshots were saved at equal intervals of $0.005$ in the time units of the
+simulation ($\textrm{kpc}/(\textrm{km}/\textrm{s})\sim1\,\textrm{Gyr}$).
+
+\begin{figure}[t!]%
+\centering
+\includegraphics[width=9cm]{fig/fig-fgas.pdf}
+\caption{\textbf{Pattern speed evolution with varying gas fractions.} We
+explored the impact of lowering the initial gas surface density of our
+fiducial disk on the evolution of the pattern speed. The surface densities we
+tested of $20$, $15$, $10$, and $5\,\Msun/\textrm{kpc}^2$ correspond to
+initial gas fractions of $16\%$, $10\%$, $7\%$, and $4\%$. We find that
+initial surface densities $20$, $15$, and $10\,\Msun/\textrm{kpc}^2$ result in
+bars which remain at a constant pattern speed, while an initial surface
+density of $5\,\Msun/\textrm{kpc}^2$ results in a bar which slows down in
+roughly the same manner as the \Nbody{} case. }
+\label{fig:fgas}
+\end{figure}
 
 \begin{figure}[t!]%
 \centering
@@ -614,10 +596,74 @@ Waiting on atomic gas data from Juergen Kerp.}}
 \vspace{12pt}
 
 \noindent
+{\bf SMUGGLE Model}
+\\
+\noindent
+We use the Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE) model
+\cite{2019MNRAS.489.4233M} implemented within the moving-mesh, finite-volume
+hydrodynamics code AREPO \cite{2010MNRAS.401..791S}. The SMUGGLE model
+includes self-gravity, hydrodynamics, radiative heating and cooling, star
+formation, and stellar feedback. Explicit gas cooling and heating of the
+multi-phase interstellar medium is implemented, covering temperature ranges
+between $10$ and $10^8\,\textrm{K}$.
+
+Star formation occurs in cells above a density threshold
+($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) according to
+ref.\cite{2003MNRAS.339..289S} with a star-formation efficiency of $\epsilon =
+0.01$. Star formation converts gas cells into star particles which represent
+single stellar populations. For each star particle, the deposition of energy,
+momentum, and mass from stellar winds and supernovae is modeled.
+Photo-ionization and radiation pressure are modeled using an approximate
+treatment. A more detailed description of this model can be found in the
+flagship SMUGGLE paper.\cite{2019MNRAS.489.4233M}
+
+We used the fiducial model parameters, except that we increased the number of
+effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from
+$64$ to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
+inefficient photo-ionization feedback since the photo-ionizing budget had not
+been exhausted after deposition into $64$ neighboring cells. We also used an
+updated version of SMUGGLE using a new mechanical feedback routine similar to
+the one described in ref.\cite{2018MNRAS.480..800H} This updated routine is a
+tensor renormalization which ensures linear and angular momentum conservation
+to machine precision.
+
+\vspace{12pt}
+
+\noindent
+{\bf Smooth Interstellar Medium Model}
+\\
+\noindent
+In addition to the SMUGGLE model, we considered a simpler model of the
+interstellar medium based upon ref.\cite{2003MNRAS.339..289S} In this model,
+the multiphase nature of the interstellar medium is modeled in a subgrid
+manner by allowing each resolution element to have a ``cold'' and ``hot''
+component, with the equation of state of the gas suitably modified. Gas is
+allowed to interchange between the ``cold'' and ``hot'' components through
+processes such as cooling and stellar feedback. Cold gas is allowed to undergo
+star formation. The pattern speed evolution of this setup is given in Extended
+Data Fig.~\ref{fig:GFM}, which shows that the pattern speed evolves in a
+similar manner to the SMUGGLE case shown in Fig.~\ref{fig:prop}.
+
+\vspace{12pt}
+
+\noindent
 {\bf Varying Gas Fraction}
 \\
 \noindent
-To be written.
+We also performed a test in which we varied the initial gas fraction of the
+disk. In our fiducial run, we set the surface density of the gas disk from
+$4\,\textrm{kpc}$ to $\sim9.3\,\textrm{kpc}$ to be $20\,\Msun/\textrm{kpc}^2$.
+We also ran with surface densities of $15$, $10$, and
+$5\,\Msun/\textrm{kpc}^2$. These correspond to initial gas fractions of
+approximately $16\%$, $10\%$, $7\%$, and $4\%$. The pattern speed evolution is
+shown in Extended Data Fig.~\ref{fig:fgas} We find that the bar in disks with
+initial surface densities of $20$, $15$, and $10\,\Msun/\textrm{kpc}$ evolve
+with a constant pattern speed while the bar in a disk with initial surface
+density of $5\,\Msun/\textrm{kpc}^2$ slows down at a similar rate to the \Nbody{} case.
+
+As a result, we conclude that for the disk, bar, and halo properties
+considered in this work, a gas fraction of only approximately $5\%$ is
+necessary in order for the proposed stabilizing mechanism to operate. Furthermore, we co
 
 \vspace{12pt}
 
