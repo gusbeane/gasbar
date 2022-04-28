@@ -150,11 +150,11 @@ def run():
     rng = [[-7.5, 7.5], [-7.5, 7.5]]
     extent = [rng[0][0], rng[0][1], rng[1][0], rng[1][1]]
     
-    vmin = -0.002
-    vmax = 0.002
+    vmin = -0.002 * (1E10/1E6)
+    vmax = 0.002 * (1E10/1E6)
 
     cm = 1/2.54
-    fig, ax = plt.subplots(1, 3, figsize=(18*cm, 6*cm))
+    fig, ax = plt.subplots(1, 4, figsize=(18*cm, 6*cm), gridspec_kw={"width_ratios":[1.1, 1, 1.1, 0.05]})
 
     # First panel, wake of Nbody.
     sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
@@ -163,7 +163,7 @@ def run():
     Rbar = bar_prop_Nbody['Rbar'][Nbody_idx]
     print(fourier_Nbody['A2_angle'][Nbody_idx], bar_prop_Nbody['bar_angle'][Nbody_idx], fourier_Nbody['A2_h_angle'][Nbody_idx])
 
-    ax[0].imshow(heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
+    ax[0].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
     ax[0].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
     dphi = fourier_Nbody['A2_h_angle'][Nbody_idx] - fourier_Nbody['A2_angle'][Nbody_idx]
     dphi /= 2.0
@@ -172,7 +172,7 @@ def run():
     ax[0].axes.xaxis.set_visible(False)
     ax[0].axes.yaxis.set_visible(False)
 
-    ax[0].set_aspect('auto')
+    ax[0].set_aspect('equal')
 
     # Second panel, diff in angle.
     dphiN = compute_dphi(fourier_Nbody['A2_angle'], fourier_Nbody['A2_h_angle'])
@@ -180,6 +180,9 @@ def run():
 
     tN = fourier_Nbody['time']
     tS = fourier_SMUGGLE['time']
+
+    dphiN = savgol_filter(dphiN, 81, 3)
+    dphiS = savgol_filter(dphiS, 81, 3)
 
     ax[1].plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label=r'$N$-body')
     ax[1].plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
@@ -190,6 +193,10 @@ def run():
     ax[1].set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
 
     ax[1].legend(frameon=False)
+    ax[1].set_aspect('auto')
+    ax[1].set_xticks([0, 1, 2, 3, 4, 5])
+
+    ax[1].set_aspect(1.0/ax[1].get_data_ratio(), adjustable='box')
 
     # Third panel, wake of SMUGGLE.
     sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1], fields=None)
@@ -198,16 +205,23 @@ def run():
     Rbar = bar_prop_SMUGGLE['Rbar'][SMUGGLE_idx]
     print(fourier_SMUGGLE['A2_angle'][SMUGGLE_idx], bar_prop_SMUGGLE['bar_angle'][SMUGGLE_idx], fourier_SMUGGLE['A2_h_angle'][SMUGGLE_idx])
 
-    ax[2].imshow(heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
+    im = ax[2].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
     ax[2].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
     dphi = fourier_SMUGGLE['A2_h_angle'][SMUGGLE_idx] - fourier_SMUGGLE['A2_angle'][SMUGGLE_idx]
     dphi /= 2.0
     ax[2].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
 
-    ax[2].set_aspect('auto')
+    ax[2].set_aspect('equal')
+
+    fig.colorbar(im, cax=ax[3], pad=0.02, label=r'$\Delta \Sigma\,[\,M_{\odot}/\textrm{pc}^2\,]$')
 
     ax[2].axes.xaxis.set_visible(False)
     ax[2].axes.yaxis.set_visible(False)
+
+    ax[0].set_title(r'$N$-body')
+    ax[2].set_title(r'SMUGGLE')
+
+    fig.subplots_adjust(wspace=0, hspace=0)
 
     fig.tight_layout()
 

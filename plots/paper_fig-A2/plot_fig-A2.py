@@ -65,11 +65,11 @@ def run():
     
     fourier = read_fourier(Nbody, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax.plot(t-t[300], A2A0, c=tb_c[0], label=r'$N$-body')
+    ax.plot(t-t[300], savgol_filter(A2A0, 81, 3), c=tb_c[0], label=r'$N$-body')
 
     fourier = read_fourier(phS2R35, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax.plot(t, A2A0, c=tb_c[1], label='SMUGGLE')
+    ax.plot(t, savgol_filter(A2A0, 81, 3), c=tb_c[1], label='SMUGGLE')
 
     ax.set(xlim=(0, 5), ylim=(0, 0.7))
     ax.set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')

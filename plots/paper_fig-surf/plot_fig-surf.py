@@ -107,9 +107,13 @@ def compute_dphi(phi_disk, phi_halo):
 
 def run():
     cm = 1/2.54
-    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9*cm, 12*cm))
+    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(9*cm, 14*cm))
     idx_list = [0, 100, 200, 400, 600, 800]
     center = np.array([200., 200., 200.])
+
+    data_mol = np.genfromtxt('sigmol-G1a-4p5.txt')
+    data_sfr = np.genfromtxt('sigsfr-G1a-4p5.txt')
+    data_atomic = np.genfromtxt('surf_all.out')
 
     for i,idx in enumerate(tqdm(idx_list)):
         sn = read_snap(idx, phS2R35, lvl, parttype=[0], fields=None)
@@ -118,11 +122,13 @@ def run():
         R = np.linalg.norm(pos[:,:2], axis=1)
         Rbins = np.logspace(-2, np.log10(20), 25)
 
-        mass = sn.part0.mass.value
+        mass = sn.part0.mass.value * sn.part0.MolecularHFrac
+        mass_atomic = sn.part0.mass.value * (1-sn.part0.MolecularHFrac)
         if i==0:
             r = np.linalg.norm(pos, axis=1)
 
         aveR, surf = compute_surface_density(R, mass, Rbins)
+        aveR_atomic, surf_atomic = compute_surface_density(R, mass_atomic, Rbins)
 
         if True:
             label_0 = repr(sn.Time.value)
@@ -131,8 +137,8 @@ def run():
             label_0 = None
             label_1 = repr(sn.Time.value)
 
-
-        ax[0].plot(aveR, (1E10 / 1E6) * surf, label=label_0, c=tb_c[i]) # convert to Msun/pc^2
+        ax[0].plot(aveR_atomic, (1E10/1E6) * surf_atomic, label=label_0, c=tb_c[i])
+        ax[1].plot(aveR, (1E10 / 1E6) * surf, label=label_1, c=tb_c[i]) # convert to Msun/pc^2
 
         sfr = sn.part0.sfr.value
         key = np.where(sfr > 0)[0]
@@ -142,24 +148,36 @@ def run():
         surf[np.logical_or(np.isnan(surf), surf==0.0)] = 1E-9
         print(surf)
 
-        ax[1].plot(aveR, (1E9 / 1E6) * surf, label=label_1, c=tb_c[i]) # convert to Msun/Gyr/pc^2
+        ax[2].plot(aveR, (1E9 / 1E6) * surf, label=label_1, c=tb_c[i]) # convert to Msun/Gyr/pc^2
 
-    ax[0].axhline(10, c='k', ls='dashed')
-    ax[1].axhline(10.**(0.5), c='k', ls='dashed')
+    ax[0].plot(data_atomic[:,0], 0.008*data_atomic[:,3], c='k', ls='dashed') # convert to Msun/pc^2 from 1E18 /cm^2
+    ax[1].plot(data_mol[:,0], (1./1E6) * data_mol[:,1], c='k', ls='dotted') # convert to Msun/pc^2
+    ax[2].plot(data_sfr[:,0], (1E9/1E6) * data_sfr[:,1], c='k', ls='dotted') # convert to Msun/Gyr/pc^2
+
+    custom_lines = [mpl.lines.Line2D([0], [0], color='k', ls='dashed'),
+                    mpl.lines.Line2D([0], [0], color='k', ls='dotted')]
+    ax[1].legend(custom_lines, ['Kalberla \& Dedes (2008)', 'Evans et al. (2022)'], frameon=False)
+
+    # ax[0].axhline(10, c='k', ls='dashed')
+    # ax[1].axhline(10.**(0.5), c='k', ls='dashed')
 
     ax[0].set(yscale='log')
     ax[1].set(yscale='log')
-    ax[1].set(xlim=(0, 10))
+    ax[2].set(yscale='log')
+    ax[2].set(xlim=(0, 10))
 
     ax[1].set_ylim(1E-1, 1E2)
-    ax[0].set_ylim(1E0, 1E3)
+    ax[2].set_ylim(1E-1, 1E2)
+    ax[0].set_ylim(1E-1, 1E2)
 
-    ax[0].set(ylabel=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot} / \textrm{pc}^2\,]$')
-    ax[1].set(ylabel=r'$\Sigma_{\textrm{SFR}}\,[\,M_{\odot} / \textrm{Gyr} / \textrm{pc}^2\,]$')
-    ax[1].set(xlabel=r'$R\,[\,\textrm{kpc}\,]$')
+    ax[0].set(ylabel=r'$\Sigma_{\textrm{atomic}}\,[\,M_{\odot} / \textrm{pc}^2\,]$')
+    ax[1].set(ylabel=r'$\Sigma_{\textrm{mol}}\,[\,M_{\odot} / \textrm{pc}^2\,]$')
+    ax[2].set(ylabel=r'$\Sigma_{\textrm{SFR}}\,[\,M_{\odot} / \textrm{Gyr} / \textrm{pc}^2\,]$')
+    ax[2].set(xlabel=r'$R\,[\,\textrm{kpc}\,]$')
 
     ax[0].legend(frameon=False, title=r'$t\,[\,\text{Gyr}\,]$', ncol=2)
-    # ax[1].legend(frameon=False)
+    # ax[1].legend(frameon=False, title=r'$t\,[\,\text{Gyr}\,]$', ncol=2)
+    ax[2].legend(frameon=False)
 
     fig.tight_layout()
     fig.savefig('fig-surf.pdf')
