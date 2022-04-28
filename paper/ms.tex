@@ -733,6 +733,24 @@ the negative of the torque on the other components by the bar. A similar
 method was applied in measuring the torque for the disk when the pattern speed
 is kept constant, as is done in Fig.~\ref{fig:equil}.
 
+\vspace{12pt}
+
+\noindent
+{\bf Plotting Details}
+\\
+\noindent
+We saved snapshots in intervals of $0.005$ in the time units of the
+simulation, $\textrm{kpc}/(\textrm{km}/\textrm{s})$, which is very nearly
+equal to $1\,\textrm{Gyr}$ (it is $\sim0.977\,\textrm{Gyr}$). Therefore,
+throughout this work we referred to the native code time unit as
+$\textrm{Gyr}$. None of our results are sensitive to this choice.
+
+In order to remove numerical noise in several quantities we computed, we
+applied a Savitzky-Golay filter\cite{1964AnaCh..36.1627S} as implemented in
+\texttt{scipy} using a window length of $81$ and polynomial order of $3$. This
+filter was applied to plots of pattern speeds, bar lengths and strengths,
+torques, and angle differences.
+
 % \bibliography{ref2}
 
 
