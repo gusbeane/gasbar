@@ -126,7 +126,7 @@ $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 \caption{\textbf{Projected surface densities of simulated barred galaxies with
 and without the interstellar medium.} The upper panels show an \Nbody{} only
 simulation while the lower panels show a simulation which includes the SMUGGLE
-model for the ISM. Columns show different points in time, separated by
+model for the ISM. Columns show different points in time, separated by about
 $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar grows in
 length and strength. In the SMUGGLE run, the bar remains at approximately the
 same length and strength over the course of the simulation. The \Nbody{} model
@@ -247,7 +247,7 @@ with the Milky Way bar in terms of pattern speed and length
 respectively). We modify this setup to include a gas phase, the details of
 which are provided in the Methods section.
 
-A surface density projection of our simulations is shown in
+A face-on surface density projection of our simulations is shown in
 Fig.~\ref{fig:overview}. The upper three panels show the disk in the \Nbody{}
 run while the lower three panels show the disk in the SMUGGLE run. Each column
 shows the disk $\sim1\,\textrm{Gyr}$ apart in time. There is a large
@@ -284,12 +284,12 @@ the bar, with an average torque from $1$ to $4\,\textrm{Gyr}$ of $-58.0$ in
 units of $10^{10}M_{\odot}\,(\textrm{km}/\textrm{s})^2$. The halo in the
 SMUGGLE case exerts a similar negative torque on the bar in the first Gyr of
 evolution, but after that the halo exerts a much smaller torque on the bar,
-averaging only $-7.8$ in the same units and over the same interval. The gas in
-the SMUGGLE case exerts a steady positive torque averaging $11.7$ in the same
-units and over the same interval.
+averaging only $-7.8$ in the same units and over the same time interval. The gas in
+the SMUGGLE case exerts a steady positive torque averaging $11.7$ over $1\,\textrm{Gyr}$ in the same
+units.
 
 The fact that the dark matter halo in the SMUGGLE case exerts a smaller
-positive torque on the bar can be understood in terms of the halo wake
+negative torque on the bar can be understood in terms of the halo wake
 mechanism. In the \Nbody{} case, halo material which is resonant with the bar
 will form a wake which lags behind and exerts a negative torque on the bar,
 which slows it down.\cite{1984MNRAS.209..729T, 1985MNRAS.213..451W,
@@ -344,9 +344,9 @@ thus experience a larger positive torque from the gas phase.
 We performed an experiment to test this hypothesis by forcing the stellar disk
 in the SMUGGLE run to rotate at a constant angular rate and measuring the
 torque on the bar by the gas phase at different rotation rates. The result of
-this experiment is shown in Fig.~\ref{fig:equil}, which shows that a more
+this experiment is illustrated in Fig.~\ref{fig:equil}, which shows that a more
 slowly rotating bar experiences a larger positive torque from the gas. We have
-therefore shown evidence for an equilibrium mechanism which keeps the pattern
+therefore presented evidence for an equilibrium mechanism which keeps the pattern
 speed of the bar constant, resulting from the complex interplay between the
 dark matter halo and the gas phase.
 
@@ -366,8 +366,7 @@ disk. If the gas available is below this threshold, then the pattern speed
 will decrease in a similar fashion to standard \Nbody{} simulations.
 Importantly, arbitrarily increasing the gas fraction does not cause the
 pattern speed to continuously increase. This is consistent with our proposed
-equilibrium mechanism and with previous studies of barred galaxies which
-varied the gas fraction.\cite{2010ApJ...719.1470V} The exact critical gas
+equilibrium mechanism and with previous studies of barred galaxies with varying gas fractions.\cite{2010ApJ...719.1470V} The exact critical gas
 fraction above which our mechanism operates is likely dependent on the
 properties of the bar, disk, and dark matter halo -- further work is needed to
 characterize how this gas fraction varies with such properties. Details on
@@ -441,7 +440,7 @@ Computing (HEC) Program through the NASA Advanced Supercomputing (NAS)
 Division at Ames Research Center. A.B. was supported by the Future
 Investigators in NASA Earth and Space Science and Technology (FINESST) award
 number 80NSSC20K1536 during the completion of this work. L.H. funding. E.D.
-funding. F.M. funding. C.C. funding. J.Q. acknowledges support from NSF grant
+funding. C.C. funding. J.Q. acknowledges support from NSF grant
 AST-2008490. L.V.S. funding. P.T. acknowledges support from NSF grant
 AST-1909933, AST-2008490, and NASA ATP Grant 80NSSC20K0502. M.V. acknowledges
 support through NASA ATP 19-ATP19-0019, 19-ATP19-0020, 19-ATP19-0167, and NSF
@@ -626,8 +625,8 @@ $\sim4\,\textrm{kpc}$, related to the gas inflow in this region.}
 \noindent
 We use the Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE) model
 \cite{2019MNRAS.489.4233M} implemented within the moving-mesh, finite-volume
-hydrodynamics code AREPO \cite{2010MNRAS.401..791S}. The SMUGGLE model
-includes self-gravity, hydrodynamics, radiative heating and cooling, star
+hydrodynamics and gravity code AREPO \cite{2010MNRAS.401..791S}. The SMUGGLE model
+additionally includes radiative heating and cooling, star
 formation, and stellar feedback. Explicit gas cooling and heating of the
 multi-phase interstellar medium is implemented, covering temperature ranges
 between $10$ and $10^8\,\textrm{K}$.
@@ -635,8 +634,8 @@ between $10$ and $10^8\,\textrm{K}$.
 Star formation occurs in cells above a density threshold
 ($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) with a star-formation efficiency of
 $\epsilon = 0.01$. Star formation converts gas cells into star particles which
-represent single stellar populations. For each star particle, the deposition
-of energy, momentum, and mass from stellar winds and supernovae is modeled.
+represent single stellar populations with an initial mass function according to ref.\cite{2001ApJ...554.1274C} For each star particle, the deposition
+of energy, momentum, mass, and metals from stellar winds and supernovae is modeled.
 Photo-ionization and radiation pressure are modeled using an approximate
 treatment. A more detailed description of this model can be found in the
 flagship SMUGGLE paper.\cite{2019MNRAS.489.4233M}
@@ -676,18 +675,18 @@ similar manner to the SMUGGLE case shown in Fig.~\ref{fig:prop}.
 \noindent
 We also performed a test in which we varied the initial gas fraction of the
 disk. In our fiducial run, we set the surface density of the gas disk from
-$4\,\textrm{kpc}$ to $\sim9.3\,\textrm{kpc}$ to be $20\,\Msun/\textrm{kpc}^2$.
+$4\,\textrm{kpc}$ to $\sim9.3\,\textrm{kpc}$ to be $20\,\Msun/\textrm{pc}^2$.
 We also ran with surface densities of $15$, $10$, and
-$5\,\Msun/\textrm{kpc}^2$. These correspond to initial gas fractions of
+$5\,\Msun/\textrm{pc}^2$. These correspond to initial gas fractions of
 approximately $16\%$, $10\%$, $7\%$, and $4\%$. The pattern speed evolution is
 shown in Extended Data Fig.~\ref{fig:fgas} We find that the bar in disks with
-initial surface densities of $20$, $15$, and $10\,\Msun/\textrm{kpc}$ evolve
+initial surface densities of $20$, $15$, and $10\,\Msun/\textrm{pc}^2$ evolve
 with a constant pattern speed while the bar in a disk with initial surface
 density of $5\,\Msun/\textrm{kpc}^2$ slows down at a similar rate to the \Nbody{} case.
 
 As a result, we conclude that for the disk, bar, and halo properties
 considered in this work, a gas fraction of only approximately $5\%$ is
-necessary in order for the proposed stabilizing mechanism to operate. Furthermore, we co
+necessary in order for the proposed stabilizing mechanism to operate.
 
 \vspace{12pt}
 
@@ -717,7 +716,7 @@ speed as the two-sided finite gradient of $\phi_b$ as a function of time.
 \includegraphics[width=9cm]{fig/fig-A2.pdf}
 \caption{\textbf{Evolution of bar strength.} The bar strength is measured as
 the maximum of the second Fourier component divided by the zeroth Fourier
-component (a formula is given in the Methods section). We see that in the
+component. We see that in the
 \Nbody{} case (blue) the bar strength increases with time, consistent with
 previous results showing that the bar strength increases as bars slow down. In
 the SMUGGLE case (orange), we see that the bar strength remains roughly
@@ -777,7 +776,7 @@ the bar if it met the following criteria:
 \frac{{\sigma_R}_0 + {\sigma_R}_1}{\left<R\right>_0 + \left<R\right>_1} < 0.22
 \end{equation}
 These criterion are slightly different and simplified from the ones used in
-ref.\cite{2016MNRAS.463.1952P}, but we found to empirically work well at
+ref.\cite{2016MNRAS.463.1952P}, but we found them to empirically work well at
 decomposing the disk into a bar and disk component. In Extended Data
 Fig.~\ref{fig:decomp}, we show an example of this decomposition. The
 \textit{left} panel shows a surface density projection of the stellar disk and
