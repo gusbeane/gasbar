@@ -402,19 +402,25 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, bar_angle_out,
     tlist = np.array(h5in['Time'])
 
     # load disk particles
-    pos = np.array(h5in['PartType2/Coordinates']).swapaxes(0, 1)
-    vel = np.array(h5in['PartType2/Velocities']).swapaxes(0, 1)
+    # pos = np.array(h5in['PartType2/Coordinates']).swapaxes(0, 1)
+    pos = np.array(h5in['PartType2/Coordinates'])
+    # vel = np.array(h5in['PartType2/Velocities']).swapaxes(0, 1)
+    vel = np.array(h5in['PartType2/Velocities'])
     ids = np.array(h5in['PartType2/ParticleIDs'])
 
     # load bulge particles
-    pos = np.concatenate((pos, np.array(h5in['PartType3/Coordinates']).swapaxes(0, 1) ))
-    vel = np.concatenate((vel, np.array(h5in['PartType3/Velocities']).swapaxes(0, 1) ))
+    # pos = np.concatenate((pos, np.array(h5in['PartType3/Coordinates']).swapaxes(0, 1) ))
+    pos = np.concatenate((pos, np.array(h5in['PartType3/Coordinates']) ))
+    # vel = np.concatenate((vel, np.array(h5in['PartType3/Velocities']).swapaxes(0, 1) ))
+    vel = np.concatenate((vel, np.array(h5in['PartType3/Velocities']) ))
     ids = np.concatenate((ids, np.array(h5in['PartType3/ParticleIDs'])))
 
     # load star particles (if they exist)
     if 'PartType4' in h5in.keys():
-        pos = np.concatenate((pos, np.array(h5in['PartType4/Coordinates']).swapaxes(0, 1) ))
-        vel = np.concatenate((vel, np.array(h5in['PartType4/Velocities']).swapaxes(0, 1) ))
+        # pos = np.concatenate((pos, np.array(h5in['PartType4/Coordinates']).swapaxes(0, 1) ))
+        pos = np.concatenate((pos, np.array(h5in['PartType4/Coordinates']) ))
+        # vel = np.concatenate((vel, np.array(h5in['PartType4/Velocities']).swapaxes(0, 1) ))
+        vel = np.concatenate((vel, np.array(h5in['PartType4/Velocities']) ))
         ids = np.concatenate((ids, np.array(h5in['PartType4/ParticleIDs'])))
     # vel = np.array(h5in['Velocities'])
 
@@ -437,7 +443,7 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, bar_angle_out,
     h5out.create_dataset('bar_angle', data=bar_angle)
     return None
 
-def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space/data/'):
+def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space2/data/'):
     prefix = 'data/bar_orbit_' + name +'/'
     if not os.path.isdir(prefix):
         os.mkdir(prefix)
