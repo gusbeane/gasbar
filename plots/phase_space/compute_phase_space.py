@@ -55,7 +55,7 @@ def sort_by_id(chunk_ids, tot_ids, pos, vel, acc):
     return pos_chunk, vel_chunk, acc_chunk
 
 
-def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, id_chunks_star=None, data_dir='data_old/'):
+def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, id_chunks_star=None, tmp_dir='data_scr/'):
     print('starting thread: ', snap_id)
 
     h5out_list = []
@@ -63,7 +63,7 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, 
     Nsnap = len(idx_list)
     
     # Create a temporary directory which will store each chunk of ids as a separate file.
-    prefix = data_dir + name + '/tmp' + str(snap_id)
+    prefix = tmp_dir + name + '/tmp' + str(snap_id)
     if not os.path.isdir(prefix):
         os.mkdir(prefix)
     
@@ -169,7 +169,7 @@ def _run_thread(path, name, idx_list, snap_id, id_chunks_disk, id_chunks_bulge, 
 
     return None
 
-def _concat_h5_files(name, chunk_id, id_chunk_disk_list, id_chunk_bulge_list, indices_chunks, nsnap, id_chunk_star_list=None, data_dir='data_old/'):
+def _concat_h5_files(name, chunk_id, id_chunk_disk_list, id_chunk_bulge_list, indices_chunks, nsnap, id_chunk_star_list=None, tmp_dir = 'data_scr/', data_dir='data/'):
     # First create hdf5 output file
     fout = data_dir + name + '/phase_space_' + name + '.' + str(chunk_id) + '.hdf5'
     h5out = h5.File(fout, mode='w')
@@ -200,7 +200,7 @@ def _concat_h5_files(name, chunk_id, id_chunk_disk_list, id_chunk_bulge_list, in
 
 
     # Prefix for temporary data files.
-    prefix = data_dir + name + '/tmp'
+    prefix = tmp_dir + name + '/tmp'
 
     for j,idx_list in enumerate(indices_chunks):
         fin = prefix + str(j) + '/tmp' + str(chunk_id) + '.hdf5'
@@ -268,7 +268,7 @@ def get_id_indices_chunks(nsnap, path, nchunk, nproc):
 
     return id_chunks_disk, id_chunks_bulge, id_chunks_star, indices_chunks
 
-def run(path, name, nsnap, nproc, nchunk, data_dir='data_old/'):
+def run(path, name, nsnap, nproc, nchunk, data_dir='data/', tmp_dir='data_scr/'):
     
     print('running ', name)
     print('h5py version: ', h5.__version__)
@@ -279,6 +279,9 @@ def run(path, name, nsnap, nproc, nchunk, data_dir='data_old/'):
     # If output directory does not exist, make it
     if not os.path.isdir(data_dir+name):
         os.mkdir(data_dir+name)
+
+    if not os.path.isdir(tmp_dir+name):
+        os.mkdir(tmp_dir+name)
 
     # Runs through each chunk of indices and reads the snapshot of each index. Each chunk of ids is written to a different temporary file.
     t0 = time.time()
@@ -298,7 +301,9 @@ def run(path, name, nsnap, nproc, nchunk, data_dir='data_old/'):
     t1 = time.time()
     print('Second loop took', t1-t0, 's')
 
-    return None    
+    shutil.rmtree(tmp_dir+name)
+
+    return None
 
 if __name__ == '__main__':
     nproc = int(sys.argv[1])
@@ -325,7 +330,8 @@ if __name__ == '__main__':
         nchunk = nchunk_list[i]
 
         # out = run(path, name, nsnap, nproc, nchunk)
-        cProfile.run("run(path, name, nsnap, nproc, nchunk)", filename='prof.dat')
+        # cProfile.run("run(path, name, nsnap, nproc, nchunk)", filename='prof.dat')
+        run(path, name, nsnap, nproc, nchunk)
     else:
         for path, name, nsnap, nchunk in zip(tqdm(path_list), name_list, nsnap_list, nchunk_list):
             out = run(path, name, nsnap, nproc, nchunk)

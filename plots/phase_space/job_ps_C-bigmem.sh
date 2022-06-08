@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -p bigmem
 #SBATCH -J phspce 
-#SBATCH -n 8
+#SBATCH -n 24
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err

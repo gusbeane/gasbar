@@ -2,7 +2,7 @@
 
 # compile
 mpicc -g -ggdb -lm -lhdf5 -o compute_phase_space compute_phase_space.c
-#gcc -g -ggdb -lm -lhdf5 -o compute_phase_space compute_phase_space.c
+#mpicc -DHALO -g -ggdb -lm -lhdf5 -o compute_phase_space compute_phase_space.c
 
 # run
 mpirun -np 32 ./compute_phase_space Nbody lvl4
