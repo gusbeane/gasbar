@@ -236,6 +236,7 @@ if __name__ == '__main__':
     pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
                  (Nbody, 'lvl4'), (Nbody, 'lvl3'), (Nbody, 'lvl2'),
                  (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3-snap700'),
                  #(phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-snap700'),
                  #(phgvS2Rc35, 'lvl3-GFM'), (phgvS2Rc35, 'lvl3-isotherm'),
                  #(phgvS2Rc35, 'lvl4-GFM'),
