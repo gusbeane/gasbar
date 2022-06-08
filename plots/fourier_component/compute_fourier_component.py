@@ -226,6 +226,7 @@ if __name__ == '__main__':
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
     phgvS15Rc35 = 'phantom-vacuum-Sg15-Rc3.5'
     phgvS10Rc35 = 'phantom-vacuum-Sg10-Rc3.5'
+    phgvS08Rc35 = 'phantom-vacuum-Sg08-Rc3.5'
     phgvS05Rc35 = 'phantom-vacuum-Sg05-Rc3.5'
     
     
@@ -234,25 +235,13 @@ if __name__ == '__main__':
 
     pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
                  (Nbody, 'lvl4'), (Nbody, 'lvl3'), (Nbody, 'lvl2'),
-                 (Nbody, 'lvl3-GMCs'),
-                 #(fid_dP_c1, 'lvl5'), (fid_dP_c1, 'lvl4'), (fid_dP_c1, 'lvl3'),
-                 #(fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3'),
-                 #(fid_dP_c1_bG2, 'lvl5'), (fid_dP_c1_bG2, 'lvl4'), (fid_dP_c1_bG2, 'lvl3'),
-                 #(fid_dP_c1_sp, 'lvl5'), (fid_dP_c1_sp, 'lvl4'), (fid_dP_c1_sp, 'lvl3'),
-                 #(fid_dP_c1_MB, 'lvl5'), (fid_dP_c1_MB, 'lvl4'), (fid_dP_c1_MB, 'lvl3'),
-                 #(phv, 'lvl3'),
-                 #(phgv, 'lvl3'),
-                 #(phgvS1, 'lvl3'),
-                 #(phgvS2, 'lvl3'),
-                 #(phgvS2Rc35, 'lvl3'), (phgvS2Rc35, 'lvl3-isotherm'), 
-                 #(phgvS2Rc35RF, 'lvl4-Paulfix'), (phgvS2Rc35RF, 'lvl3-Paulfix'),
-                 #(phgS1, 'lvl3')]
                  (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
-                 (phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-snap700'),
-                 (phgvS2Rc35, 'lvl3-GFM'), (phgvS2Rc35, 'lvl3-isotherm'),
-                 (phgvS2Rc35, 'lvl4-GFM'),
+                 #(phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-snap700'),
+                 #(phgvS2Rc35, 'lvl3-GFM'), (phgvS2Rc35, 'lvl3-isotherm'),
+                 #(phgvS2Rc35, 'lvl4-GFM'),
                  (phgvS15Rc35, 'lvl3'),
                  (phgvS10Rc35, 'lvl3'),
+                 (phgvS08Rc35, 'lvl3'),
                  (phgvS05Rc35, 'lvl3')]
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
