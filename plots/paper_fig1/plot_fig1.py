@@ -116,12 +116,14 @@ def run():
     for i in range(len(Nbody_idx)):
         # plot Nbody
         ba = bar_angle_Nbody[Nbody_idx[i]]
+        print('Nbody idx:', Nbody_idx[i], 'ba: ', ba)
         heatmap_N = gen_heatmap(Nbody_idx[i], Nbody, lvl, nres, rng, ba)
         print(np.min(heatmap_N), np.max(heatmap_N))
         ax[0][i].imshow(heatmap_N.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
 
         # plot SMUGGLE
         ba = bar_angle_SMUGGLE[SMUGGLE_idx[i]]
+        print('SMUGGLE idx:', SMUGGLE_idx[i], 'ba: ', ba)
         heatmap_S = gen_heatmap(SMUGGLE_idx[i], phS2R35, lvl, nres, rng, ba)
         print(np.min(heatmap_S), np.max(heatmap_S))
         ax[1][i].imshow(heatmap_S.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))

@@ -154,7 +154,7 @@ def run():
     vmax = 0.002 * (1E10/1E6)
 
     cm = 1/2.54
-    fig, ax = plt.subplots(1, 4, figsize=(18*cm, 6*cm), gridspec_kw={"width_ratios":[1.1, 1, 1.1, 0.05]})
+    fig, ax = plt.subplots(1, 4, figsize=(18*cm, 6*cm), gridspec_kw={"width_ratios":[1, 1, 1, 0.05]})
 
     # First panel, wake of Nbody.
     sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
@@ -163,16 +163,16 @@ def run():
     Rbar = bar_prop_Nbody['Rbar'][Nbody_idx]
     print(fourier_Nbody['A2_angle'][Nbody_idx], bar_prop_Nbody['bar_angle'][Nbody_idx], fourier_Nbody['A2_h_angle'][Nbody_idx])
 
-    ax[0].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
-    ax[0].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
+    ax[1].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
+    ax[1].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
     dphi = fourier_Nbody['A2_h_angle'][Nbody_idx] - fourier_Nbody['A2_angle'][Nbody_idx]
     dphi /= 2.0
-    ax[0].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
+    ax[1].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
 
-    ax[0].axes.xaxis.set_visible(False)
-    ax[0].axes.yaxis.set_visible(False)
+    ax[1].axes.xaxis.set_visible(False)
+    ax[1].axes.yaxis.set_visible(False)
 
-    ax[0].set_aspect('equal')
+    ax[1].set_aspect('equal')
 
     # Second panel, diff in angle.
     dphiN = compute_dphi(fourier_Nbody['A2_angle'], fourier_Nbody['A2_h_angle'])
@@ -184,19 +184,19 @@ def run():
     dphiN = savgol_filter(dphiN, 81, 3)
     dphiS = savgol_filter(dphiS, 81, 3)
 
-    ax[1].plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label=r'$N$-body')
-    ax[1].plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
-    ax[1].axhline(0.0, c='k')
+    ax[0].plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label=r'$N$-body')
+    ax[0].plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
+    ax[0].axhline(0.0, c='k')
 
     # ax[1].axvline(tS[520])
 
-    ax[1].set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+    ax[0].set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
 
-    ax[1].legend(frameon=False)
-    ax[1].set_aspect('auto')
-    ax[1].set_xticks([0, 1, 2, 3, 4, 5])
+    ax[0].legend(frameon=False)
+    # ax[0].set_aspect('auto')
+    ax[0].set_xticks([0, 1, 2, 3, 4, 5])
 
-    ax[1].set_aspect(1.0/ax[1].get_data_ratio(), adjustable='box')
+    ax[0].set_aspect(1.0/ax[0].get_data_ratio(), adjustable='box')
 
     # Third panel, wake of SMUGGLE.
     sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1], fields=None)
@@ -218,10 +218,17 @@ def run():
     ax[2].axes.xaxis.set_visible(False)
     ax[2].axes.yaxis.set_visible(False)
 
-    ax[0].set_title(r'$N$-body')
+    ax[1].set_title(r'$N$-body')
     ax[2].set_title(r'SMUGGLE')
 
     fig.subplots_adjust(wspace=0, hspace=0)
+
+    # for x in ax:
+        # x.patch.set_edgecolor('black')  
+        # x.patch.set_linewidth('1')  
+
+    ax[1].plot([4.5, 6.5], [-6, -6], c='k', lw=2)
+    ax[1].text(5.5, -5.5, r'$2\,\textrm{kpc}$', c='k', ha='center')
 
     fig.tight_layout()
 
