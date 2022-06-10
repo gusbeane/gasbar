@@ -18,6 +18,8 @@
 
 \usepackage{amsmath}
 
+\DeclareMathOperator\arcsinh{arcsinh}
+
 \usepackage{fontspec}
 \setmainfont{texgyrepagella}[
   Extension = .otf,
@@ -124,14 +126,16 @@ $^{*}$ \texttt{\mbox{angus.beane@cfa.harvard.edu}}
 \begin{figure*}[h!]%
 \centering
 \includegraphics[width=18cm]{fig/fig1.pdf}
-\caption{\textbf{Projected surface densities of simulated barred galaxies with
+\caption{\textbf{Synthetic Hubble Space Telescope images of our simulations with
 and without the interstellar medium.} The upper panels show an \Nbody{} only
 simulation while the lower panels show a simulation which includes the SMUGGLE
-model for the ISM. Columns show different points in time, separated by about
-$1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar grows in
-length and strength. In the SMUGGLE run, the bar remains at approximately the
-same length and strength over the course of the simulation. The \Nbody{} model
-is identical to the GALAKOS model, discussed in the text.}\label{fig:overview}
+model for the interstellar medium. Each panel is $20\,\textrm{kpc}$ to a side.
+Columns show different points in time, separated by about $1\,\textrm{Gyr}$.
+We can see that in the \Nbody{} run, the bar grows in length and strength. In
+the SMUGGLE run, the bar remains at approximately the same length and strength
+over the course of the simulation. The \Nbody{} model is identical to the
+GALAKOS model, discussed in the text. Details on the production of these
+synthetic images is given in the Methods section.}\label{fig:overview}
 \end{figure*}
 
 \begin{figure}[h!]%
@@ -205,7 +209,7 @@ its length and strength to increase\cite{1992ApJ...400...80H,
 2006ApJ...637..214M, 2007MNRAS.375..460W, 2009ApJ...697..293D}. Intuitively,
 the bar excites a wake of resonant material in a dark matter halo in a manner
 akin to dynamical friction. This wake lags a bar and thus exerts a negative
-torque on it.
+torque on it. For a review of bar dynamics, see ref.\cite{1993RPPh...56..173S}
 
 The expectation that a dark matter halo acts to slow down a bar is in
 conflict with observational estimates of bar pattern speeds. Bar rotation
@@ -432,7 +436,7 @@ down. Therefore, we expect barred spiral galaxies which have been gas-poor for
 extended periods of time to be rotating very slowly. We therefore predict that
 observations which target such galaxies (e.g., lenticular barred
 galaxies\cite{2009ARAA..47..159B}) would find slowly rotating bars. There does
-exist one such example of a galaxy which is known to be a slow rotator -- the
+exist one example of a galaxy which is known to be a slow rotator -- the
 low surface brightness galaxy UGC 628.\cite{2009AA...499L..25C} This galaxy
 has been studied in detail by ref.\cite{2016MNRAS.463.1751C}, who note that it
 indeed has a low gas fraction for galaxies of its type. We predict a general
@@ -455,16 +459,18 @@ computations in this paper were run on the FASRC Cannon cluster supported by
 the FAS Division of Science Research Computing Group at Harvard University.
 Resources supporting this work were also provided by the NASA High-End
 Computing (HEC) Program through the NASA Advanced Supercomputing (NAS)
-Division at Ames Research Center. A.B. was supported by the Future
-Investigators in NASA Earth and Space Science and Technology (FINESST) award
-number 80NSSC20K1536 during the completion of this work. L.H. funding. E.D.
-funding. C.C. funding. J.Q. acknowledges support from NSF grant
-AST-2008490. L.V.S. is grateful for financial support from NASA ATP
-80NSSC20K0566, NSF AST 1817233 and NSF CAREER 1945310
-grants. P.T. acknowledges support from NSF grant
-AST-1909933, AST-2008490, and NASA ATP Grant 80NSSC20K0502. M.V. acknowledges
-support through NASA ATP 19-ATP19-0019, 19-ATP19-0020, 19-ATP19-0167, and NSF
-grants AST-1814053, AST-1814259, AST-1909831, AST-2007355 and AST-2107724.
+Division at Ames Research Center. This research has made use of the Spanish
+Virtual Observatory (https://svo.cab.inta-csic.es) project funded by
+MCIN/AEI/10.13039/501100011033/ through grant PID2020-112949GB-I00. A.B. was
+supported by the Future Investigators in NASA Earth and Space Science and
+Technology (FINESST) award number 80NSSC20K1536 during the completion of this
+work. L.H. funding. E.D. funding. C.C. funding. J.Q. acknowledges support from
+NSF grant AST-2008490. L.V.S. is grateful for financial support from NASA ATP
+80NSSC20K0566, NSF AST 1817233 and NSF CAREER 1945310 grants. P.T.
+acknowledges support from NSF grant AST-1909933, AST-2008490, and NASA ATP
+Grant 80NSSC20K0502. M.V. acknowledges support through NASA ATP 19-ATP19-0019,
+19-ATP19-0020, 19-ATP19-0167, and NSF grants AST-1814053, AST-1814259,
+AST-1909831, AST-2007355 and AST-2107724.
 
 \item[Author Contributions] Foo.
 
@@ -494,7 +500,7 @@ grants AST-1814053, AST-1814259, AST-1909831, AST-2007355 and AST-2107724.
 \bigskip
 
 \noindent
-{\bf Initial Setup}
+{\bf Initial setup}
 \\
 \noindent
 The initial setup of the galactic disk used in this work follows closely the
@@ -513,7 +519,9 @@ balance. We modified the radial profile of this code in order to allow us to
 generate a disk with a constant surface density within some cut-off radius,
 and then exponentially declining beyond that radius with the scale-length of
 the stellar disk. We used an initial surface density of
-$20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\textrm{kpc}$.
+$20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\textrm{kpc}$. The
+initial gas disk is generated with a temperature of $10^4\,\textrm{K}$ and
+solar metallicity.
 
 After generating the gaseous disk in this way, we stitched the gas disk
 together with the GALAKOS \Nbody{} disk (and bulge and dark matter halo) after
@@ -527,11 +535,11 @@ evolution of the \Nbody{} disk when the bar is forming). We made one
 additional modification when stitching the gas disk together with the \Nbody{}
 disk - we created a hole within the central $4\,\textrm{kpc}$. This hole
 guards against an initial dramatic infall of gas within the bar region, which
-we found to destroy the bar. Models of the Milky Way's gas surface density
-profile indicate a reduction in gas in the bar region from $\sim1$ to
-$\sim4\,\textrm{kpc}$,\cite{2022ApJ...929L..18E} and so our practice of
-allowing the gas distribution to have a hole in the central region is
-consistent with our choice to begin the simulations with a bar already formed.
+we found to destroy the bar. It is not uncommon for observed barrred galaxies
+to have gas deficits in the bar region (though not in the very
+center),\cite{1993RPPh...56..173S} and so our practice of allowing the gas
+distribution to have a hole in the central region is consistent with our
+choice to begin the simulations with a bar already formed.
 
 \begin{figure}[t]%
 \centering
@@ -654,7 +662,7 @@ $\sim4\,\textrm{kpc}$, related to the gas inflow in this region.}
 \vspace{12pt}
 
 \noindent
-{\bf SMUGGLE Model}
+{\bf SMUGGLE model}
 \\
 \noindent
 We use the Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE) model
@@ -687,7 +695,7 @@ to machine precision.
 \vspace{12pt}
 
 \noindent
-{\bf Smooth Interstellar Medium Model}
+{\bf Smooth interstellar medium model}
 \\
 \noindent
 In addition to the SMUGGLE model, we considered a simpler model of the
@@ -704,7 +712,7 @@ similar manner to the SMUGGLE case shown in Fig.~\ref{fig:prop}.
 \vspace{12pt}
 
 \noindent
-{\bf Varying Gas Fraction}
+{\bf Varying gas fraction}
 \\
 \noindent
 We also performed a test in which we varied the initial gas fraction of the
@@ -845,9 +853,8 @@ the stars identified as being trapped in the bar, allowing for some outliers.
 For the computation of the torque, we used the tree algorithm in
 \texttt{MakeNewDisk}\cite{2005MNRAS.361..776S} customized to be accessible
 from \texttt{Python} using \texttt{Cython}. This algorithm is based on the
-\texttt{TREESPH} code.\cite{1989ApJS...70..419H} We constructed a tree using
-only the star particles identified as being trapped in the bar using an
-opening angle of $0.35$. We then queried the tree at the locations of all
+\texttt{TREESPH} code.\cite{1989ApJS...70..419H} We constructed a tree with an opening angle of $0.35$ using
+only the star particles identified as being trapped in the bar. We then queried the tree at the locations of all
 resolution elements in the other components and computed the torque of the bar
 on such components. The torque on the bar by the other components is simply
 the negative of the torque on the other components by the bar. A similar
@@ -857,7 +864,43 @@ is kept constant, as is done in Fig.~\ref{fig:equil}.
 \vspace{12pt}
 
 \noindent
-{\bf Plotting Details}
+{\bf Idealized mock light images}
+\\
+\noindent
+We created synthetic mock light images at $1024^2$ resolution in
+Fig.~\ref{fig:overview} for the \textit{Hubble Space Telescope} using a
+post-processed Monte Carlo radiation transfer simulation with the SKIRT9 code
+including secondary emission from dust.\cite{2020AC....3100381C} Emission from
+star particles was calculated assuming a Bruzual-Charlot spectral energy
+distribution\cite{2003MNRAS.344.1000B} and a Chabrier initial stellar mass
+function\cite{2003PASP..115..763C}. The luminosity from each star particle was
+smoothed using a cubic spline kernel with each star particle being assigned a
+smoothing length equal to its distance to its $32$nd closest neighbor. We
+launched $10^9$ photon packets per simulation segment. For star particles
+which were present in the initial simulation (i.e., initial disk and bulge
+particles), we assumed that they have an age of $5\,\textrm{Gyr}$ and solar
+metallicity. For star particles in the SMUGGLE simulation which are newly
+formed, we used their recorded ages and metallicities.
+
+For the SMUGGLE simulations, we included absorption and emission from dust. We
+assumed the THEMIS (The Heterogeneous dust Evolution Model for Interstellar
+Solids) dust model\cite{2017AA...602A..46J} to convert gas metallicity and
+mass density to dust mass density. For the \Nbody{} simulations we ran the
+SKIRT9 code in a mode without an obscuring medium, but otherwise applied the
+same procedure.
+
+We used the profiles for filters F814W, F606W, and F475W on the Advanced
+Camera for Surveys (ACS) instrument for red, green, and blue pixel values,
+respectively. Filtered fluxes were converted to RGB values using an $\arcsinh$
+scaling following ref.\cite{2004PASP..116..133L} Scalings and cutoff values
+were adjusted manually to create visually appealing images. Filter profiles
+were provided by the Spanish Virtual Observatory Filter
+Service.\cite{2012ivoa.rept.1015R, 2020sea..confE.182R}
+
+\vspace{12pt}
+
+\noindent
+{\bf Plotting details}
 \\
 \noindent
 We saved snapshots in intervals of $0.005$ in the time units of the
