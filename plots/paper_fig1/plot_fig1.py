@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import arepo
 import h5py as h5
 import matplotlib as mpl
+from astropy.io import fits
+from scipy.interpolate import interp1d
 
 from matplotlib import rc
 mpl.use('Agg')
@@ -13,94 +15,100 @@ mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
+skirt_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/SKIRT/'
 
 # names
 Nbody = 'Nbody'
-phS2R35 = 'phantom-vacuum-Sg20-Rc3.5'
+# phS2R35 = 'phantom-vacuum-Sg20-Rc3.5'
+phS2R35 = 'smuggle'
 
 lvl = 'lvl3'
 
-def read_snap(idx, name, lvl, parttype=[2, 3, 4], fields=['Coordinates', 'Masses']):
-    sn = arepo.Snapshot(snap_path+name+'/'+lvl+'/output', idx, combineFiles=True, parttype=parttype,
-                        fields=fields)
-    return sn
+def load_filter_data(wavelength):
+    # assumes wavelength argument is in microns (SKIRT output)
+    # and filter files are stored in angstrom (from http://svo2.cab.inta-csic.es/theory/fps/)
 
-def read_bar_angle(name, lvl):
-    t = h5.File(bprop_path + 'bar_prop_' + name + '-' + lvl + '.hdf5', mode='r')
-    out = t['bar_angle'][:]
-    t.close()
+    filter_b_dat = np.genfromtxt('HST_ACS_HRC.F475W.dat')
+    filter_b_dat[:,0] /= 10000
+    filter_b_interp = interp1d(filter_b_dat[:,0], filter_b_dat[:,1], bounds_error=False, fill_value=0.0)
 
+    filter_g_dat = np.genfromtxt('HST_ACS_HRC.F606W.dat')
+    filter_g_dat[:,0] /= 10000
+    filter_g_interp = interp1d(filter_g_dat[:,0], filter_g_dat[:,1], bounds_error=False, fill_value=0.0)
+
+    filter_r_dat = np.genfromtxt('HST_ACS_HRC.F814W.dat')
+    filter_r_dat[:,0] /= 10000
+    filter_r_interp = interp1d(filter_r_dat[:,0], filter_r_dat[:,1], bounds_error=False, fill_value=0.0)
+
+    fb = filter_b_interp(wavelength)
+    fg = filter_g_interp(wavelength)
+    fr = filter_r_interp(wavelength)
+
+    return fr, fg, fb
+
+def rgb_from_flux(flux, m, M, beta):
+    num = np.arcsinh((flux - m)/beta)
+    den = np.arcsinh((M-m)/beta)
+    
+    out = num/den
+    
+    out[flux < m] = 0.0
+    out[flux > M] = 1.0
+    
     return out
 
-def extract_pos_mass(sn, center):
-    pos = np.array([]).reshape((0, 3))
-    mass = np.array([])
-    for i in [2, 3, 4]:
-        if sn.NumPart_Total[i] == 0:
-            continue
-
-        part = getattr(sn, 'part'+str(i))
-
-        pos_ = part.pos.value - center
-        pos = np.concatenate((pos, pos_))
-
-        if sn.MassTable[i] > 0.0:
-            mass_ = np.full(sn.NumPart_Total[i], sn.MassTable[i])
-        else:
-            mass_ = part.mass.value
-        
-        mass = np.concatenate((mass, mass_))
+def gen_image(idx, name, lvl):
+    # first define some parameters
+    # just made ad hoc by fiddling with a jupyter notebook
+    m_r = 8.702199520584396e-13 * 0.1
+    M_r = 8.702199520584396e-13 * 35
+    beta_r = 8.702199520584396e-13 * 0.631
     
-    return pos, mass
-
-def get_center(name):
-    if 'Nbody' in name:
-        center = np.array([0., 0., 0.])
-    else:
-        center = np.array([200., 200., 200.])
-
-    return center
-
-def rotate_pos(pos, ang):
-
-    Rmat = np.array([[np.cos(ang), -np.sin(ang), 0.0],
-                     [np.sin(ang),  np.cos(ang), 0.0],
-                     [0.0,         0.0,          1.0]])
+    m_g = 7.477015680471923e-13 * 0.1
+    M_g = 7.477015680471923e-13 * 25.1
+    beta_g = 7.477015680471923e-13 * 0.631
     
-    pos = np.swapaxes(pos, 0, 1)
-    pos = np.matmul(Rmat, pos)
-    pos = np.swapaxes(pos, 0, 1)
-    
-    return pos
+    m_b = 2.585393310960858e-13 * 0.1
+    M_b = 2.585393310960858e-13 * 30
+    beta_b = 2.585393310960858e-13 * 0.631
 
-def gen_heatmap(idx, name, lvl, nres, range, bar_angle):
-    sn = read_snap(idx, name, lvl)
-    center = get_center(name)
+    # load in data
+    fname = skirt_path + 'run_' + name + '/snap' + "{:03d}".format(idx) + '/' + name + '_fo_total.fits'
+    hdul = fits.open(fname)
+    wavelength = hdul[1].data # in microns
+    wavelength = np.array(wavelength.tolist()).reshape(len(wavelength))
+    image_data = hdul[0].data
+    image_data = np.array(image_data.tolist())
 
-    pos, mass = extract_pos_mass(sn, center)
+    # load in filters and apply it to the data
+    fr, fg, fb = load_filter_data(wavelength)
 
-    pos = rotate_pos(pos, -bar_angle)
+    flux_r_band_applied = np.array([fr[i] * image_data[i] for i in range(len(fr))])
+    flux_g_band_applied = np.array([fg[i] * image_data[i] for i in range(len(fg))])
+    flux_b_band_applied = np.array([fb[i] * image_data[i] for i in range(len(fb))])
 
-    heatmap, _, _ = np.histogram2d(pos[:,0], pos[:,1], bins=(nres, nres), range=range, weights=mass)
+    # print(flux_r_band_applied)
+    # print(flux_r_band_applied.shape)
+    # print(wavelength)
+    # print(wavelength.shape)
+    # print('\n')
+    # print(wavelength.astype(np.float64))
 
-    dx = (range[0][1] - range[0][0]) / nres
-    dy = (range[1][1] - range[1][0]) / nres
-    
-    heatmap /= dx * dy
+    rband_image = np.trapz(flux_r_band_applied, wavelength.astype(np.float64), axis=0)
+    gband_image = np.trapz(flux_g_band_applied, wavelength.astype(np.float64), axis=0)
+    bband_image = np.trapz(flux_b_band_applied, wavelength.astype(np.float64), axis=0)
 
-    return heatmap
+    # convert filter valeus to rgb values
+    r_value = rgb_from_flux(rband_image, m_r, M_r, beta_r)
+    g_value = rgb_from_flux(gband_image, m_g, M_g, beta_g)
+    b_value = rgb_from_flux(bband_image, m_b, M_b, beta_b)
 
+    image = np.stack([r_value, g_value, b_value], axis=-1)
+    return image
 
 def run():
     nres = 256
-    rng = [[-7.5, 7.5], [-7.5, 7.5]]
-
-    vmin = 0.005
-    vmax = 1.0
-
-    bar_angle_Nbody = read_bar_angle(Nbody, lvl)
-    bar_angle_SMUGGLE = read_bar_angle(phS2R35, lvl)
-
+    rng = [[-10., 10.], [-10., 10.]]
 
     Nbody_idx = [500, 700, 900]
     SMUGGLE_idx = [200, 400, 600]
@@ -115,29 +123,40 @@ def run():
 
     for i in range(len(Nbody_idx)):
         # plot Nbody
-        ba = bar_angle_Nbody[Nbody_idx[i]]
-        print('Nbody idx:', Nbody_idx[i], 'ba: ', ba)
-        heatmap_N = gen_heatmap(Nbody_idx[i], Nbody, lvl, nres, rng, ba)
-        print(np.min(heatmap_N), np.max(heatmap_N))
-        ax[0][i].imshow(heatmap_N.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+        print('name=', Nbody, ' idx=', Nbody_idx[i])
+        fname = 'image_'+Nbody+str(Nbody_idx[i])+'.npy'
+        try:
+            image = np.load(fname)
+        except:
+            image = gen_image(Nbody_idx[i], Nbody, lvl)
+            np.save(fname, image)
+        
+        ax[0][i].imshow(image.swapaxes(0, 1), extent=extent)
 
         # plot SMUGGLE
-        ba = bar_angle_SMUGGLE[SMUGGLE_idx[i]]
-        print('SMUGGLE idx:', SMUGGLE_idx[i], 'ba: ', ba)
-        heatmap_S = gen_heatmap(SMUGGLE_idx[i], phS2R35, lvl, nres, rng, ba)
-        print(np.min(heatmap_S), np.max(heatmap_S))
-        ax[1][i].imshow(heatmap_S.T, extent=extent, origin='lower', norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+        print('name=', phS2R35, ' idx=', SMUGGLE_idx[i])
+        fname = 'image_'+phS2R35+str(SMUGGLE_idx[i])+'.npy'
+        try:
+            image = np.load(fname)
+        except:
+            image = gen_image(SMUGGLE_idx[i], phS2R35, lvl)
+            np.save(fname, image)
+        
+        ax[1][i].imshow(image.swapaxes(0, 1), extent=extent)
     
     for x in ax.ravel():
         x.axes.xaxis.set_ticks([])
         x.axes.yaxis.set_ticks([])
     
+    ax[1][2].plot([6.5, 8.5], [-8, -8], c='w', lw=2)
+    ax[1][2].text(7.5, -7.5, r'$2\,\textrm{kpc}$', c='w', ha='center')
+
     ax[0][0].set_title(r'$t=1\,\textrm{Gyr}$')
     ax[0][1].set_title(r'$t=2\,\textrm{Gyr}$')
     ax[0][2].set_title(r'$t=3\,\textrm{Gyr}$')
 
-    ax[0][0].set_ylabel(r'$N$-body')
-    ax[1][0].set_ylabel('SMUGGLE')
+    ax[0][0].set_ylabel(r'without interstellar medium')
+    ax[1][0].set_ylabel(r'with interstellar medium')
 
     fig.tight_layout()
 
