@@ -36,6 +36,8 @@ plots/freq/data*
 plots/agama_pot/data*
 .ipynb_checkpoints
 
+plots/paper_fig1/*.npy
+
 plots/*/data*
 
 plots/torques/src
