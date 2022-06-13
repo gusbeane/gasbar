@@ -161,6 +161,7 @@ def run():
     fig.tight_layout()
 
     fig.savefig('fig1.pdf')
+    fig.savefig('fig1.tif', dpi=256)
 
 
 if __name__ == '__main__':
