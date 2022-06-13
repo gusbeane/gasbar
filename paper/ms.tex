@@ -1,5 +1,5 @@
 %\documentstyle[amssymb,12pt,draft,epsf,palatino]{nature-pvd}
-\documentclass{natureprintstyle}
+\documentclass[twoside]{natureprintstyle}
 \bibliographystyle{naturemag}
 
 \usepackage{aas_macros}
@@ -16,6 +16,24 @@
 \usepackage[symbol]{footmisc}
 \usepackage{placeins}
 \usepackage{amsmath}
+
+% Adds line numbers, just for submission stage.
+\usepackage[switch]{lineno}
+\linenumbers
+
+% Defines footer format for the date.
+\usepackage{datetime}
+
+\newdateformat{footerfmt}{%
+\THEDAY\,\,\monthname[\THEMONTH]\,\,\THEYEAR}
+
+% Adds current date to the footer.
+\usepackage{fancyhdr}
+% \fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[RO]{\textsc{\footerfmt\today}}
+\fancyfoot[LE]{\textsc{\footerfmt\today}}
+\pagestyle{fancy}
 
 \DeclareMathOperator\arcsinh{arcsinh}
 
@@ -51,6 +69,11 @@ Laura~V.~Sales$^{6}$, Paul~Torrey$^{5}$ and Mark~Vogelsberger$^{7}$
 
 
 \begin{document}
+
+% Enforces same format on first page as on subsequent pages.
+\makeatletter
+\let\ps@plain\ps@fancy
+\makeatother
 
 \maketitle
 
@@ -471,12 +494,20 @@ Grant 80NSSC20K0502. M.V. acknowledges support through NASA ATP 19-ATP19-0019,
 19-ATP19-0020, 19-ATP19-0167, and NSF grants AST-1814053, AST-1814259,
 AST-1909831, AST-2007355 and AST-2107724.
 
-\item[Author Contributions] Foo.
+\item[Author Contributions] A.B., L.H., and E.D. contributed to the conception
+of the study. A.B. performed the simulations, led the analysis, and wrote the
+manuscript. F.M. led and, J.Q., L.V.S., P.T., and M.V. contributed to the
+development of the SMUGGLE code. All authors contributed to aspects of the
+analysis.
 
-  \item[Data Availability] Foo.
+\item[Data Availability]  Simulation output and initial conditions will be
+made publicly available.
     
-  \item[Code Availability] A public version of the AREPO code is available at
-  \url{https://arepo-code.org/}.
+\item[Code Availability] A public version of the AREPO code is available at
+\url{https://arepo-code.org/}. An associated GitHub repository containing
+analysis and plotting scripts will be made publicly available (currently
+private). For the submission stage, we have included a tarball of this
+repository.
     
 \end{addendum}
 
