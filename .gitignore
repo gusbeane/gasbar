@@ -39,6 +39,7 @@ plots/agama_pot/data*
 plots/paper_fig1/*.npy
 
 plots/*/data*
+analysis/*/data*
 
 plots/torques/src
 
