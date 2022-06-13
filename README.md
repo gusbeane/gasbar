@@ -6,6 +6,8 @@
 
 ### Angus Beane, Lars Hernquist, Elena D’Onghia, Federico Marinacci, Charlie Conroy, Jia Qi, Laura V. Sales, Paul Torrey, and Mark Vogelsberger
 
+![fig1](https://github.com/gusbeane/starbar/blob/master/plots/paper_fig1/fig1.png)
+
 This GitHub repository contains associated data and scripts used in the above submitted paper.
 
 ## File Layout
