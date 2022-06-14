@@ -18,8 +18,8 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
-torque_path = '/n/home01/abeane/starbar/plots/torques/data/'
+bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
+torque_path = '/n/home01/abeane/starbar/analysis/torques/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -62,55 +62,13 @@ def read_bar_prop(name, lvl):
 
     return out
 
-def read_torque(name, lvl):
-    base = torque_path + 'torques_' + name + '-' + lvl + '/torques_' + name + '-' + lvl + '.'
-
-    # nfiles = len(glob.glob(base + '*.hdf5'))
-    nfiles = 1200
-
-    tz_halo = []
-    tz_not_bar = []
-    tz_gas = []
-
-    tlist = []
-
-    for i in tqdm(range(nfiles)):
-        fname = base + str(i) + '.hdf5'
-        t = h5.File(fname, mode='r')
-
-        torque_halo = t['total_torques'].attrs['halo']
-        tz_halo.append(torque_halo[2])
-
-        torque_not_bar = t['total_torques'].attrs['not_bar']
-        tz_not_bar.append(torque_not_bar[2])
-    
-        if 'gas' in t['total_torques'].attrs.keys():
-            torque_gas = t['total_torques'].attrs['gas']
-            tz_gas.append(torque_gas[2])
-        
-        tlist.append(t['parameters'].attrs['Time'])
-        
-        t.close()
-    
-    tz_halo = np.array(tz_halo)
-    tz_not_bar = np.array(tz_not_bar)
-    tz_gas = np.array(tz_gas)
-    tlist = np.array(tlist)
-
-    return tlist, tz_halo, tz_not_bar, tz_gas
-
-def moving_average(a, n=3) :
-    ret = np.cumsum(a, dtype=float)
-    ret[n:] = ret[n:] - ret[:-n]
-    return ret[n - 1:] / n
-
 def read_agama_pot(idx, name, lvl):
-    base = '/n/home01/abeane/starbar/plots/agama_pot/data/'
+    base = '/n/home01/abeane/starbar/analysis/agama_pot/data/'
     fname = base + 'pot_' + name + '-' + lvl + '/pot_' + name + '-' + lvl + '.' + str(idx) + '.txt'
     return agama.Potential(fname)
 
 def read_all_agama_pot(name, lvl):
-    base = '/n/home01/abeane/starbar/plots/agama_pot/data/'
+    base = '/n/home01/abeane/starbar/analysis/agama_pot/data/'
     fbase = base + 'pot_' + name + '-' + lvl + '/pot_' + name + '-' + lvl + '.*.txt'
     nsnap = len(glob.glob(fbase))
 
@@ -176,7 +134,7 @@ def run():
     ax.set(ylim=(1.2, 2), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$', xlim=(0, 5))
 
     fig.tight_layout()
-    fig.savefig('fig-rot.pdf')
+    fig.savefig('rot_param.pdf')
 
 if __name__ == '__main__':
     run()
