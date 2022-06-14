@@ -160,8 +160,8 @@ def run():
 
     fig.tight_layout()
 
-    fig.savefig('overview.pdf')
-    fig.savefig('overview.png', dpi=256)
+    fig.savefig('mockHST.pdf')
+    fig.savefig('mockHST.png', dpi=256)
 
 
 if __name__ == '__main__':

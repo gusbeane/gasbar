@@ -38,7 +38,7 @@ plots/freq/data*
 plots/agama_pot/data*
 .ipynb_checkpoints
 
-plots/overview/*.npy
+plots/mockHST/*.npy
 
 plots/*/data*
 analysis/*/data*
