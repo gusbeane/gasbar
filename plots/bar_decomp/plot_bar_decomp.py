@@ -16,7 +16,7 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
+bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 
 # names
 Nbody = 'Nbody'
@@ -127,8 +127,8 @@ def gen_heatmap(pos, mass, nres, range):
     return heatmap
 
 def run(name, lvl, idx):
-    phase_space_path = '/n/home01/abeane/starbar/plots/phase_space2/data'
-    in_bar_path = '/n/home01/abeane/starbar/plots/in_bar/data'
+    phase_space_path = '/n/home01/abeane/starbar/analysis/phase_space/data'
+    in_bar_path = '/n/home01/abeane/starbar/analysis/in_bar/data'
     
     center = get_center(name)
     mass = get_mass(lvl)
@@ -193,7 +193,7 @@ def run(name, lvl, idx):
     
     fig.tight_layout()
 
-    fig.savefig('fig-bar.pdf')
+    fig.savefig('bar_decomp.pdf')
 
 
 if __name__ == '__main__':
