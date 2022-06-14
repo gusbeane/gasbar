@@ -17,9 +17,7 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
-fourier_path = '/n/home01/abeane/starbar/plots/fourier_component/data/'
-torque_path = '/n/home01/abeane/starbar/plots/torques/data/'
+fourier_path = '/n/home01/abeane/starbar/analysis/fourier_component/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -76,7 +74,7 @@ def run():
     ax.legend(frameon=False)
 
     fig.tight_layout()
-    fig.savefig('fig-A2.pdf')
+    fig.savefig('A2_over_A0.pdf')
 
 
 if __name__ == '__main__':
