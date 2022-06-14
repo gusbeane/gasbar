@@ -14,7 +14,7 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
+bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 skirt_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/SKIRT/'
 
 # names
@@ -160,8 +160,8 @@ def run():
 
     fig.tight_layout()
 
-    fig.savefig('fig1.pdf')
-    fig.savefig('fig1.png', dpi=256)
+    fig.savefig('overview.pdf')
+    fig.savefig('overview.png', dpi=256)
 
 
 if __name__ == '__main__':
