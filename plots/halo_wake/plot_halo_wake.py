@@ -19,8 +19,8 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-fourier_path = '/n/home01/abeane/starbar/plots/fourier_sphere/data/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
+fourier_path = '/n/home01/abeane/starbar/analysis/fourier_sphere/data/'
+bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -50,7 +50,7 @@ def compute_surface_density(R, mass, Rbins):
             if R[i] >= Rbins[j] and R[i] < Rbins[j+1]:
                 ave_R[j] += R[i]
                 N_in_bin[j] += 1
-                surf_dens[j] += mass
+                surf_dens[j] = surf_dens[j] + mass
     
     for j in range(len(Rbins)-1):
         if N_in_bin[j] > 0:
@@ -84,6 +84,7 @@ def compute_heatmap(sn, center, nres, rng, angle=0.0):
 
     Rbins = np.logspace(-3, 2, 80)
     R = np.linalg.norm(pos[:,:2], axis=1)
+    print(mass)
     ave_R, surf = compute_surface_density(R, mass, Rbins)
 
     surf_interp = interp1d(ave_R, surf, fill_value='extrapolate')
@@ -232,7 +233,7 @@ def run():
 
     fig.tight_layout()
 
-    fig.savefig('fig3.pdf')
+    fig.savefig('halo_wake.pdf')
 
     # talk plots
 
