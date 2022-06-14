@@ -20,6 +20,8 @@ hose_runs
 
 to_try.txt
 
+movies/*/data
+
 .DS_Store
 plots/movie_5panel/__pycache__/make_movie.cpython-37.pyc
 
