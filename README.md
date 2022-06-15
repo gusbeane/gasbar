@@ -6,7 +6,7 @@
 
 ### Angus Beane, Lars Hernquist, Elena D’Onghia, Federico Marinacci, Charlie Conroy, Jia Qi, Laura V. Sales, Paul Torrey, and Mark Vogelsberger
 
-![fig1](plots/paper_fig1/fig1.png)
+![fig1](plots/mockHST/mockHST.png)
 
 This GitHub repository contains associated data and scripts used in the above submitted paper.
 
@@ -15,6 +15,7 @@ This GitHub repository contains associated data and scripts used in the above su
 * `plots/` contains the scripts used to make the figures in the paper, as well as the data behind the figures
 * `analysis/` contains the main analysis scripts (does not include most of the simulation data)
 * `notebooks/` contains some explanatory notebooks
+* `movies/` contains scripts for making movies
 * `dev/` contains development files
 
 ## Downloading Simulation Files
