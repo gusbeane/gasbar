@@ -1,7 +1,7 @@
 #!/bin/sh
-#SBATCH -p hernquist,conroy
+#SBATCH -p itc_cluster,shared,conroy
 #SBATCH -J movie 
-#SBATCH -n 64 
+#SBATCH -n 48
 #SBATCH -N 1
 #SBATCH -o OUTPUT_frames.%j.out
 #SBATCH -e ERROR_frames.%j.err

@@ -7,12 +7,28 @@ from joblib import Parallel, delayed
 
 import arepo
 from tqdm import tqdm
+from vortrace import vortrace as vt
+
+def vortrace_projection(sn, nres, ext_xy, ext_xz, ext_yz, center):
+    BoxSize = float(sn.BoxSize)
+    pos = sn.part0.pos.value
+    rho = sn.part0.rho.value
+
+    pc = vt.ProjectionCloud(pos, rho, boundbox=[0., BoxSize, 0., BoxSize, 0., BoxSize])
+
+    bounds = [0., BoxSize]
+    dat_xy = pc.projection(ext_xy, nres, bounds, center, proj='xy')
+    dat_xz = pc.projection(ext_xz, nres, bounds, center, proj='xz')
+    dat_yz = pc.projection(ext_yz, nres, bounds, center, proj='yz')
+
+    return dat_xy, dat_xz, dat_yz
+
 
 def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4], 
                          center=np.array([200, 200, 200]), width=30., nres=256):
 
     sn = arepo.Snapshot(path+'/output', snapnum, parttype=parttype, 
-                        combineFiles=True, fields=['Coordinates', 'Masses'])
+                        combineFiles=True, fields=['Coordinates', 'Masses', 'Density'])
 
     time = sn.Time
 
@@ -30,6 +46,16 @@ def make_projection_snap(path, snapnum, parttype=[0, 2, 3, 4],
             heatmap_xy_out.append(np.zeros((nres, nres)))
             heatmap_xz_out.append(np.zeros((nres, nres)))
             heatmap_yz_out.append(np.zeros((nres, nres)))
+            continue
+
+        if pt==0:
+            try:
+                heatmap_xy, heatmap_xz, heatmap_yz = vortrace_projection(sn, nres, range_xy, range_xz, range_yz, center)
+            except:
+                heatmap_xy = heatmap_xz = heatmap_yz = np.zeros((nres, nres))
+            heatmap_xy_out.append(heatmap_xy)
+            heatmap_xz_out.append(heatmap_xz)
+            heatmap_yz_out.append(heatmap_yz)
             continue
 
         part = getattr(sn, 'part'+str(pt))

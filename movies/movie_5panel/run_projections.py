@@ -66,8 +66,8 @@ phgvS2Rc35_rf = 'phantom-vacuum-Sg20-Rc3.5-RadFeed'
 phgS1 = 'phantom-Sg10-Rc4.0'
 phgvS1Ngbft = 'phantom-vacuum-Sg10-Rc4.0-DesNumNgbEnrichment512-ftrap'
 
-pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'), #(Nbody, 'lvl2'),
-             (Nbody, 'lvl3-GMCs'), (Nbody, 'lvl3-stcHalo'),
+pair_list = [#(Nbody, 'lvl4'), (Nbody, 'lvl3'), #(Nbody, 'lvl2'),
+             #(Nbody, 'lvl3-GMCs'), (Nbody, 'lvl3-stcHalo'),
              #(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
              #(fid_dP_c1, 'lvl5'), (fid_dP_c1, 'lvl4'), (fid_dP_c1, 'lvl3'),
              #(fid_dP2_c1, 'lvl5'), (fid_dP2_c1, 'lvl4'), (fid_dP2_c1, 'lvl3'),
@@ -102,14 +102,14 @@ pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'), #(Nbody, 'lvl2'),
              #(phgvS2Rc35_rf, 'lvl3-eta1-eta2'), (phgvS2Rc35_rf, 'lvl3-eta1-eta2-OBbugfix'),
              #(phgvS2Rc35_rf, 'lvl4-Paulfix'), (phgvS2Rc35_rf, 'lvl4-GFM'), (phgvS2Rc35_rf, 'lvl3-Paulfix')]
              (phgvS2Rc35, 'lvl3'), #(phgvS2Rc35, 'lvl2'),
-             (phgvS2Rc35, 'lvl3-stcHalo'),
-             (phgvS2Rc35, 'lvl3-snap700'),
+             #(phgvS2Rc35, 'lvl3-stcHalo'),
+             #(phgvS2Rc35, 'lvl3-snap700'),
              #(phgvS2Rc35, 'lvl3-GFM'), 
-             (phgvS2Rc35, 'lvl3-stcHalo'),
+             #(phgvS2Rc35, 'lvl3-stcHalo'),
              #(phgvS2Rc35, 'lvl3-rot30'),
              #(phgvS2Rc35, 'lvl3-rot35'),
              #(phgvS2Rc35, 'lvl3-rot40'),
-             (phgvS15Rc35, 'lvl3')]
+             #(phgvS15Rc35, 'lvl3')]
              #(phgvS2Rc35, 'lvl3-GFM-snap050')]#, (phgvS2Rc35, 'lvl4-GFM')]
              #(f_noMB_Ngb512, 'lvl3'),
              #(f_Sg40, 'lvl4'), (f_Sg40, 'lvl3'),
@@ -126,6 +126,7 @@ pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'), #(Nbody, 'lvl2'),
              #(fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
              #(fid_dP_c1_h, 'lvl5'), (fid_dP_c1_h, 'lvl4'), #(fid_dP_c1_h, 'lvl3'),
              #(fid_dP_c1_h_v140, 'lvl5'), (fid_dP_c1_h_v140, 'lvl4')] #(fid_dP_c1_h, 'lvl3')]
+             ]
 
 name_list = [           p[0] + '-' + p[1] for p in pair_list]
 path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
