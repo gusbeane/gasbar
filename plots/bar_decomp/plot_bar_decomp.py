@@ -168,12 +168,16 @@ def run(name, lvl, idx):
         np.save('heatmap_in_bar.npy', heatmap_in_bar)
         np.save('heatmap_not_in_bar.npy', heatmap_not_in_bar)
 
-    cmap = copy.copy(plt.get_cmap('viridis'))
-    cmap.set_bad(cmap.colors[0])
+    cmap = copy.copy(plt.get_cmap('binary'))
+    # cmap.set_bad(cmap.colors[0])
+    interpolation='bicubic'
 
-    ax[0].imshow(heatmap.T, extent=extent, origin='lower', cmap=cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
-    ax[1].imshow(heatmap_in_bar.T, extent=extent, origin='lower', cmap=cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
-    ax[2].imshow(heatmap_not_in_bar.T, extent=extent, origin='lower', cmap=cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+    ax[0].imshow(heatmap.T, extent=extent, origin='lower', interpolation=interpolation,
+        cmap=cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+    ax[1].imshow(heatmap_in_bar.T, extent=extent, origin='lower', interpolation=interpolation,
+        cmap=cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+    ax[2].imshow(heatmap_not_in_bar.T, extent=extent, origin='lower', interpolation=interpolation,
+        cmap=cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
 
     ax[1].plot([4.5, 6.5], [-6, -6], c='w', lw=2)
     ax[1].text(5.5, -5.5, r'$2\,\textrm{kpc}$', c='w', ha='center')
