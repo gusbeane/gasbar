@@ -22,8 +22,7 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-fourier_path = '/n/home01/abeane/starbar/plots/fourier_sphere/data/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
+agama_pot_path = '/n/home01/abeane/starbar/analysis/agama_pot/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -39,17 +38,6 @@ def read_snap(idx, name, lvl, parttype=[2, 3, 4], fields=['Coordinates', 'Masses
                         fields=fields)
     return sn
 
-def read_fourier(name, lvl):
-    t = h5.File(fourier_path + 'fourier_' + name + '-' + lvl + '.hdf5', mode='r')
-    out = {}
-    for key in t.keys():
-        out[key] = t[key][:]
-    
-    out['A2_angle'] = np.arctan2(out['A2i'], out['A2r'])
-    out['A2_h_angle'] = np.arctan2(out['A2i_h'], out['A2r_h'])
-    
-    return out
-
 def read_bar_prop(name, lvl):
     t = h5.File(bprop_path + 'bar_prop_' + name + '-' + lvl + '.hdf5', mode='r')
     out = {}
@@ -62,8 +50,7 @@ def read_bar_prop(name, lvl):
     return out
 
 def read_agama_pot(idx, name, lvl):
-    base = '/n/home01/abeane/starbar/plots/agama_pot/data/'
-    fname = base + 'pot_' + name + '-' + lvl + '/pot_' + name + '-' + lvl + '.' + str(idx) + '.txt'
+    fname = agama_pot_path + 'pot_' + name + '-' + lvl + '/pot_' + name + '-' + lvl + '.' + str(idx) + '.txt'
     return agama.Potential(fname)
 
 def compute_vcirc(pot):
@@ -98,7 +85,7 @@ def run():
     ax.legend(frameon=False)
 
     fig.tight_layout()
-    fig.savefig('fig-vcirc.pdf')
+    fig.savefig('vcirc.pdf')
 
 
 if __name__ == '__main__':

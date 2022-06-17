@@ -19,8 +19,8 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-fourier_path = '/n/home01/abeane/starbar/plots/fourier_sphere/data/'
-bprop_path = '/n/home01/abeane/starbar/plots/bar_prop/data/'
+fourier_path = '/n/home01/abeane/starbar/analysis/fourier_sphere/data/'
+bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -180,7 +180,7 @@ def run():
     ax[2].legend(frameon=False)
 
     fig.tight_layout()
-    fig.savefig('fig-surf.pdf')
+    fig.savefig('surf_dens.pdf')
 
 
 if __name__ == '__main__':
