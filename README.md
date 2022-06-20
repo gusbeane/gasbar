@@ -14,17 +14,7 @@ This GitHub repository contains associated data and scripts used in the above su
 * `paper/` contains the LaTeX source files as well as frozen figures for the paper
 * `plots/` contains the scripts used to make the figures in the paper, as well as the data behind the figures
 * `analysis/` contains the main analysis scripts (does not include most of the simulation data)
-* `notebooks/` contains some explanatory notebooks
 * `movies/` contains scripts for making movies
-* `dev/` contains development files
-
-## Downloading Simulation Files
-
-One can also download the simulation data (~3 TB?) and place it in a `runs/` directory. When this is done, the scripts in `analysis/` should work. 
-
-The initial conditions are also available and can be placed in an `initial_conditions/` directory, or used in your own workflow.
-
-Unfortunately, it is not possible to re-run the simulations in this paper without access to the private version of `AREPO`. The necessary configuration and parameter files are located in the `runs/` directory, as well as the commit used in each run.
 
 ## Abstract
 
