@@ -136,6 +136,17 @@ def run():
     fig.tight_layout()
     fig.savefig('rot_param.pdf')
 
+    fig, ax = plt.subplots(1, 1, figsize=(9*cm, 9*cm))
+
+    ax.plot(bar_prop_Nbody['tlist'], rot_Nbody, c=tb_c[0], label='N-body')
+    ax.legend(frameon=False)
+    
+    ax.set(ylim=(1, 2), xlim=(0, 8), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
+
+    fig.tight_layout()
+    fig.savefig('rot_param-Nbody.pdf')
+
+
 if __name__ == '__main__':
     run()
 
