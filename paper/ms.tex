@@ -1,0 +1,240 @@
+% region preamble
+% mnras_template.tex 
+%
+% LaTeX template for creating an MNRAS paper
+%
+% v3.0 released 14 May 2015
+% (version numbers match those of mnras.cls)
+%
+% Copyright (C) Royal Astronomical Society 2015
+% Authors:
+% Keith T. Smith (Royal Astronomical Society)
+
+% Change log
+%
+% v3.0 May 2015
+%    Renamed to match the new package name
+%    Version number matches mnras.cls
+%    A few minor tweaks to wording
+% v1.0 September 2013
+%    Beta testing only - never publicly released
+%    First version: a simple (ish) template for creating an MNRAS paper
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basic setup. Most papers should leave these options alone.
+\documentclass[fleqn,usenatbib]{mnras}
+
+% MNRAS is set in Times font. If you don't have this installed (most LaTeX
+% installations will be fine) or prefer the old Computer Modern fonts, comment
+% out the following line
+% Depending on your LaTeX fonts installation, you might get better results with one of these:
+%\usepackage{mathptmx}
+%\usepackage{txfonts}
+
+% Use vector fonts, so it zooms properly in on-screen viewing software
+% Don't change these lines unless you know what you are doing
+\usepackage[T1]{fontenc}
+
+% Allow "Thomas van Noord" and "Simon de Laguarde" and alike to be sorted by "N" and "L" etc. in the bibliography.
+% Write the name in the bibliography as "\VAN{Noord}{Van}{van} Noord, Thomas"
+\DeclareRobustCommand{\VAN}[3]{#2}
+\let\VANthebibliography\thebibliography
+\def\thebibliography{\DeclareRobustCommand{\VAN}[3]{##3}\VANthebibliography}
+
+
+%%%%% AUTHORS - PLACE YOUR OWN PACKAGES HERE %%%%%
+
+% Only include extra packages if you really need them. Common packages are:
+\usepackage{graphicx}	% Including figure files
+\usepackage{amsmath}	% Advanced maths commands
+\usepackage{amssymb}	% Extra maths symbols
+\usepackage{newtxtext,newtxmath}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% AUTHORS - PLACE YOUR OWN COMMANDS HERE %%%%%
+
+% Please keep new commands to a minimum, and use \newcommand not \def to avoid
+% overwriting existing commands. Example:
+%\newcommand{\pcm}{\,cm$^{-2}$}	% per cm-squared
+
+% endregion
+
+%%%%%%%%%%%%%%%%%%% TITLE PAGE %%%%%%%%%%%%%%%%%%%
+
+% Title of the paper, and the short title which is used in the headers.
+% Keep the title short and informative.
+\title[Stellar Bars and Gas]{Stellar Bars in Isolated Gas-Rich Spiral Galaxies Do Not Slow Down}
+
+\author[A. Beane et al.]{Angus Beane,$^{1}$\thanks{E-mail: angus.beane@cfa.harvard.edu (AB)}
+Lars Hernquist,$^{1}$
+Elena~D'Onghia,$^{2,3}$
+Federico~Marinacci,$^{4}$
+Charlie Conroy,$^{1}$
+Jia~Qi,$^{5}$\newauthor
+Laura~V.~Sales,$^{6}$
+Paul~Torrey,$^{5}$
+Mark~Vogelsberger$^{7}$
+\\
+% List of institutions
+$^{1}$Center for Astrophysics $|$ Harvard \& Smithsonian,  Cambridge, MA, USA\\
+$^{2}$Department of Physics, University of Wisconsin-Madison, Madison, WI, USA\\
+$^{3}$Department of Astronomy, University of Wisconsin-Madison, Madison, WI, USA\\
+$^{4}$Department of Physics \& Astronomy `Augusto Righi', University of Bologna, Bologna, Italy\\
+$^{5}$Department of Astronomy, University of Florida, Gainesville, FL, USA\\
+$^{6}$Department of Physics \& Astronomy, University of California, Riverside, CA, USA\\
+$^{7}$Department of Physics, Massachusetts Institute of Technology, Cambridge, MA, USA\\
+}
+
+% These dates will be filled out by the publisher
+\date{Accepted XXX. Received YYY; in original form ZZZ}
+
+% Enter the current year, for the copyright statements etc.
+\pubyear{2015}
+
+% Don't change these lines
+\begin{document}
+\label{firstpage}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+\maketitle
+
+% Abstract of the paper
+\begin{abstract}
+	Elongated bar-like features are ubiquitous in galaxies, occurring at the
+	centers of approximately two-thirds of spiral
+	disks \citep{2000AJ....119..536E, 2007ApJ...657..790M}.  Due to gravitational
+	interactions between the bar and the other components of galaxies, it is
+	expected that angular momentum and matter will redistribute over long (Gyr)
+	timescales in barred galaxies \citep{1972MNRAS.157....1L,
+	1984MNRAS.209..729T, 1985MNRAS.213..451W}. Previous work ignoring the gas
+	phase of galaxies has conclusively demonstrated that bars should slow their
+	rotation over time due to their interaction with dark matter halos
+	\cite{1992ApJ...400...80H, 2000ApJ...543..704D, 2002MNRAS.330...35A,
+	2002ApJ...569L..83A, 2003MNRAS.341.1179A, 2003MNRAS.346..251O,
+	2005MNRAS.363..991H, 2006ApJ...637..214M, 2007MNRAS.375..460W,
+	2009ApJ...697..293D}. We have performed a simulation of a Milky Way-like
+	galactic disk hosting a strong bar which includes a state-of-the-art model
+	of the interstellar medium and a live dark matter halo. In this simulation
+	the bar pattern does not slow down over time, and instead remains at a
+	stable, constant rate of rotation. This behavior has been observed in
+	previous simulations using more simplified models for the interstellar gas
+	but it has remained unexplained\cite{1993AA...268...65F,
+	2010ApJ...719.1470V}. We propose that the gas phase of the disk and the dark
+	matter halo act in concert to stabilize the bar pattern speed and prevent the
+	bar from slowing down or speeding up. We find that in a Milky Way-like disk,
+	a gas fraction of only about \boldmath$5\%$ is necessary for this mechanism
+	to operate. This result naturally explains why nearly all observed bars
+	rotate rapidly\cite{2011MSAIS..18...23C, 2015AA...576A.102A,
+	2019MNRAS.482.1733G} and is especially relevant for our understanding of how
+	the Milky Way arrived at its present state.
+\end{abstract}
+
+% Select between one and six entries from the list of approved keywords.
+% Don't make up new ones.
+\begin{keywords}
+keyword1 -- keyword2 -- keyword3
+\end{keywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+\section{Methods, Observations, Simulations etc.}
+
+% \subsection{Figures and tables}
+
+% Figures and tables should be placed at logical positions in the text. Don't
+% worry about the exact layout, which will be handled by the publishers.
+
+% Figures are referred to as e.g. Fig.~\ref{fig:example_figure}, and tables as
+% e.g. Table~\ref{tab:example_table}.
+
+% % Example figure
+% \begin{figure}
+% 	% To include a figure from a file named example.*
+% 	% Allowable file formats are eps or ps if compiling using latex
+% 	% or pdf, png, jpg if compiling using pdflatex
+% 	\includegraphics[width=\columnwidth]{example}
+%     \caption{This is an example figure. Captions appear below each figure.
+% 	Give enough detail for the reader to understand what they're looking at,
+% 	but leave detailed discussion to the main body of the text.}
+%     \label{fig:example_figure}
+% \end{figure}
+
+% % Example table
+% \begin{table}
+% 	\centering
+% 	\caption{This is an example table. Captions appear above each table.
+% 	Remember to define the quantities, symbols and units used.}
+% 	\label{tab:example_table}
+% 	\begin{tabular}{lccr} % four columns, alignment for each
+% 		\hline
+% 		A & B & C & D\\
+% 		\hline
+% 		1 & 2 & 3 & 4\\
+% 		2 & 4 & 6 & 8\\
+% 		3 & 5 & 7 & 9\\
+% 		\hline
+% 	\end{tabular}
+% \end{table}
+
+
+\section{Conclusions}
+
+The last numbered section should briefly summarise what has been done, and describe
+the final conclusions which the authors draw from their work.
+
+\section*{Acknowledgements}
+
+The Acknowledgements section is not numbered. Here you can thank helpful
+colleagues, acknowledge funding agencies, telescopes and facilities used etc.
+Try to keep it short.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Data Availability}
+
+ 
+The inclusion of a Data Availability Statement is a requirement for articles published in MNRAS. Data Availability Statements provide a standardised format for readers to understand the availability of data underlying the research results described in the article. The statement may refer to original data generated in the course of the study or to third-party data analysed in the article. The statement should describe and provide means of access, where possible, by linking to the data or providing the required accession numbers for the relevant databases or DOIs.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%
+
+% The best way to enter references is to use BibTeX:
+
+\bibliographystyle{mnras}
+\bibliography{ref} % if your bibtex file is called example.bib
+
+
+% Alternatively you could enter them by hand, like this:
+% This method is tedious and prone to error if you have lots of references
+%\begin{thebibliography}{99}
+%\bibitem[\protect\citeauthoryear{Author}{2012}]{Author2012}
+%Author A.~N., 2013, Journal of Improbable Astronomy, 1, 1
+%\bibitem[\protect\citeauthoryear{Others}{2013}]{Others2013}
+%Others S., 2012, Journal of Interesting Stuff, 17, 198
+%\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Some extra material}
+
+If you want to present additional material which would interrupt the flow of the main paper,
+it can be placed in an Appendix which appears after the list of references.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Don't change these lines
+\bsp	% typesetting comment
+\label{lastpage}
+\end{document}
+
+% End of mnras_template.tex
