@@ -245,33 +245,35 @@ parameters as the GALAKOS disk, more details of which can be found in the
 original paper.
 
 The addition of the gas phase was done as follows. The version of
-\texttt{MakeNewDisk} used for the original GALAKOS model can generate a gas
-disk which is radially exponential and in vertical gravito-hydrodynamic
-balance. We modified the radial profile of this code in order to allow us to
-generate a disk with a constant surface density within some cut-off radius,
-and then exponentially declining beyond that radius with the scale-length of
-the stellar disk. Our fiducial model used an initial surface density of
+\texttt{MakeNewDisk} used for the original GALAKOS model can generate a gas disk
+which is radially exponential and in vertical gravito-hydrodynamic balance. We
+modified the radial profile of this code in order to allow us to generate a disk
+with a constant surface density within some cut-off radius, and then
+exponentially declining beyond that radius with the scale-length of the stellar
+disk. Our fiducial model used an initial surface density of
 $20\,M_{\odot}/\textrm{pc}^2$ and a cut-off radius of $9.3\,\textrm{kpc}$. The
-initial gas disk is generated with a temperature of $10^4\,\textrm{K}$ and
-solar metallicity.
+initial gas disk is generated with a temperature of $10^4\,\textrm{K}$ and solar
+metallicity.
 
-After generating the gaseous disk in this way, we stitched the gas disk
-together with the GALAKOS \Nbody{} disk (and bulge and dark matter halo) after
-the GALAKOS disk has been allowed to evolve for $1.5\,\textrm{Gyr}$. The
-purpose of allowing the GALAKOS disk to evolve first for a short period of
-time is to allow for the bar to form unimpacted by the presence of the gas
-(which would normally disrupt the formation of the bar). Throughout this work,
-we consider $t=0$ for the \Nbody{} run to be the time at which we added the
-gas phase for the SMUGGLE run (i.e. we ignore the first $1.5\,\textrm{Gyr}$ of
-evolution of the \Nbody{} disk when the bar is forming). We made one
-additional modification when stitching the gas disk together with the \Nbody{}
-disk - we created a hole within the central $4\,\textrm{kpc}$. This hole
-guards against an initial dramatic infall of gas within the bar region, which
-we found to destroy the bar. It is not uncommon for observed barred galaxies
-to have gas deficits in the bar region (though not in the very
-center)\cite{1993RPPh...56..173S}, and so our practice of allowing the gas
-distribution to have a hole in the central region is consistent with our
-choice to begin the simulations with a bar already formed.
+After generating the gaseous disk in this way, we stitched the gas disk together
+with the GALAKOS \Nbody{} disk (and bulge and dark matter halo) after the
+GALAKOS disk has been allowed to evolve for $1.5\,\textrm{Gyr}$. The purpose of
+allowing the GALAKOS disk to evolve first for a short period of time is to allow
+for the bar to form unimpacted by the presence of the gas. We found that
+including the gas before the bar has formed disrupts the formation of the bar,
+as has been seen in previous work \citep[e.g.,][]{2013MNRAS.429.1949A}.
+Throughout this work, we consider $t=0$ for the \Nbody{} run to be the time at
+which we added the gas phase for the SMUGGLE run (i.e., we ignore the first
+$1.5\,\textrm{Gyr}$ of evolution of the \Nbody{} disk when the bar is forming).
+
+We made one additional modification when stitching the gas disk together with
+the \Nbody{} disk - we created a hole within the central $4\,\textrm{kpc}$. This
+hole guards against an initial dramatic infall of gas within the bar region,
+which we found to destroy the bar. It is not uncommon for observed barred
+galaxies to have gas deficits in the bar region \citep[though not in the very
+center;][]{1993RPPh...56..173S}. Therefore, our practice of allowing the gas
+distribution to have a hole in the central region is consistent with our choice
+to begin the simulations with a bar already formed.
 
 \begin{figure}
 \centering
@@ -285,6 +287,17 @@ SMUGGLE circular velocity curve is larger than the \Nbody{} curve due to the
 additional mass in the gas phase.}
 \label{fig:vcirc}
 \end{figure}
+
+We used a mass resolution of $7.5\times10^3\,M_{\odot}$ for the baryonic
+components (initial stellar disk, stellar bulge, and gas) and a mass resolution
+of $3.75\times10^4\,M_{\odot}$ for the dark matter halo. This mass resolution is
+closest to ``level 3'' in the AURIGA simulations \citep{2017MNRAS.467..179G}.
+This corresponds to approximately $6.4\times10^6$ particles in the stellar disk,
+$1.1\times10^6$ in the bulge, $1.2\times10^6$ in the gas disk, and
+$25.3\times10^6$ in the dark matter halo. We used a softening length of
+$0.02\,\textrm{kpc}$ for all components. Snapshots were saved at equal intervals
+of $0.005$ in the time units of the simulation,
+$\textrm{kpc}/(\textrm{km}/\textrm{s})$.
 
 Our setup is initially out of equilibrium, but we found that after
 $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
