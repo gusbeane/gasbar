@@ -59,6 +59,8 @@
 \newcommand{\Rb}{\ensuremath{R_{\textrm{b}}}}
 
 \newcommand{\Nbody}{$N$-body}
+\newcommand{\AREPO}{\textsc{AREPO}}
+\newcommand{\SMUGGLE}{SMUGGLE}
 
 %%%%% AUTHORS - PLACE YOUR OWN COMMANDS HERE %%%%%
 
@@ -299,6 +301,198 @@ $0.02\,\textrm{kpc}$ for all components. Snapshots were saved at equal intervals
 of $0.005$ in the time units of the simulation,
 $\textrm{kpc}/(\textrm{km}/\textrm{s})$.
 
+\subsection{Numerical Model}
+We use the Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE) model
+\citep{2019MNRAS.489.4233M} implemented within the moving-mesh, finite-volume
+hydrodynamics and gravity code \AREPO{} \citep{2010MNRAS.401..791S}. The SMUGGLE
+model additionally includes radiative heating and cooling, star formation, and
+stellar feedback. Explicit gas cooling and heating of the multi-phase
+interstellar medium is implemented, covering temperature ranges between $10$ and
+$10^8\,\textrm{K}$.
+
+Star formation occurs in cells above a density threshold
+($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) with a star-formation efficiency of
+$\epsilon = 0.01$. Star formation converts gas cells into star particles which
+represent single stellar populations with a Chabrier initial mass
+function \citep{2003PASP..115..763C}. For each star particle, the deposition of
+energy, momentum, mass, and metals from stellar winds and supernovae is modeled.
+Photo-ionization and radiation pressure are modeled using an approximate
+treatment. A more detailed description of this model can be found in the
+flagship SMUGGLE paper \citep{2019MNRAS.489.4233M}.
+
+We used the fiducial model parameters, except that we increased the number of
+effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from
+$64$ to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
+inefficient photo-ionization feedback since the photo-ionizing budget had not
+been exhausted after deposition into $64$ neighboring cells. We also used an
+updated version of SMUGGLE using a new mechanical feedback routine similar to
+the one described in \citet{2018MNRAS.480..800H}. This updated routine is a
+tensor renormalization which ensures linear and angular momentum conservation
+to machine precision.
+
+In addition to the SMUGGLE model, we considered a simpler model of the
+interstellar medium based upon \citet{2003MNRAS.339..289S}. In this model, the
+multiphase nature of the interstellar medium is modeled in a subgrid manner by
+allowing each resolution element to have a ``cold'' and ``hot'' component, with
+the equation of state of the gas suitably modified. Gas is allowed to
+interchange between the ``cold'' and ``hot'' components through processes such
+as cooling and stellar feedback. Cold gas is allowed to undergo star formation.
+We refer to this model as the ``smooth interstellar medium'' model, and it is
+described in more detail in \citet{2019MNRAS.489.4233M}.
+
+\subsection{Bar Analysis}
+The analysis of various bar properties is performed as follows. First, the
+pattern speed is measured from the angle of the second Fourier component. We
+measured the second Fourier component by computing,
+\begin{equation}
+\begin{split}
+A_2 &= \sum_i m_i e^{i 2 \phi_i} \\
+A_0 &= \sum_i m_i \textrm{,}
+\end{split}
+\end{equation}
+where $m_i$ and $\phi_i$ are the mass and azimuthal angle of each particle,
+respectively. We computed $A_2$ and $A_0$ in cylindrical bins of width
+$0.5\,\textrm{kpc}$ from radii of $0$ to $30\,\textrm{kpc}$. We defined the
+angle of the bar $\phi_b$ to be twice the angle of the complex number $A_2$ as
+measured in the bin extending from a radius of $2.5$ to $3\,\textrm{kpc}$.
+After correcting for the periodicity of $\phi_b$, we measured the pattern
+speed as one-half the two-sided finite gradient of $\phi_b$ as a function of
+time.
+
+\begin{figure}
+\centering
+\includegraphics[width=9cm]{fig/A2_over_A0.pdf}
+\caption{\textbf{Evolution of bar strength.} The bar strength is measured as
+the maximum of the second Fourier component divided by the zeroth Fourier
+component. We see that in the
+\Nbody{} case (blue) the bar strength increases with time, consistent with
+previous results showing that the bar strength increases as bars slow down. In
+the SMUGGLE case (orange), we see that the bar strength remains roughly
+constant, possibly slightly decreasing with time. This is also consistent with
+the expected relation between pattern speed and strength since the bar in this
+case is not slowing down.}
+\label{fig:strength}
+\end{figure}
+
+\begin{figure*}
+\centering
+\includegraphics[width=18cm]{fig/bar_decomp.pdf}
+\caption{\textbf{Disk decomposition into the barred and unbarred disk.} This
+procedure is based on \citet{2016MNRAS.463.1952P} The \textit{left panel} shows
+a face-on surface density projection through the stellar component of the
+\SMUGGLE{} simulation (disk and bulge) at $t=1\,\textrm{Gyr}$. The
+\textit{middle panel} shows the component of the disk identified as being
+trapped in the bar while the \textit{right panel} shows the component of the
+disk identified as not being trapped in the bar. The fact that the untrapped
+stars form a roughly axisymmetric structure indicates our bar decomposition is
+sufficiently accurate.}
+\label{fig:decomp}
+\end{figure*}
+
+The time evolution of the bar strength, defined as the maximum of
+$\left|A_2/A_0\right|$ as a function of radius, is shown in Extended Data
+Fig.~\ref{fig:strength}. The quantity $\left|A_2/A_0\right|$ varies from $0$
+to $1$, with larger values indicating a stronger bar pattern. We see that in
+the \Nbody{} case, $\left|A_2/A_0\right|$ increases over time as the bar pattern
+slows. This is consistent with previous \Nbody{} simulations which showed a
+clear correlation between the bar pattern speed and the bar
+strength\cite{2003MNRAS.341.1179A}. In the SMUGGLE case, we see that the bar
+strength has an initial drop but then remains at a roughly constant, but
+slightly decreasing, strength. This is consistent with the pattern speed in the
+SMUGGLE case being roughly constant or slightly increasing.
+
+Computing the length of the bar and the torque on the bar by different
+components requires us to decompose the disk into a component which is trapped
+by the bar and a component which is untrapped. In order to do this, we follow
+closely the technique developed in ref.\cite{2016MNRAS.463.1952P} We analyzed
+the orbit of each star particle (meaning initial disk, bulge, and newly formed
+stars) by extracting the $x$-$y$ positions of the apoapse of each in a frame
+corotating with the bar (apoapses are defined as local maxima in $r$). For
+each apoapse, we searched for the $19$ closest apoapses in time and applied a
+$k$-means clustering algorithm on this set of $20$ points with $k=2$. We then
+computed for each of the two clusters the average angle from the bar
+$\left<\Delta \phi\right>_{0,1}$, the standard deviation in $R$ of the points
+${\sigma_R}_{0,1}$, and the average radius of the cluster
+$\left<R\right>_{0,1}$. At each apoapse, a particle was considered to be in
+the bar if it met the following criteria:
+\begin{equation}
+\textrm{max}\left(\left<\Delta \phi\right>_{0,1}\right) < \pi / 8
+\end{equation}
+\begin{equation}
+\frac{{\sigma_R}_0 + {\sigma_R}_1}{\left<R\right>_0 + \left<R\right>_1} < 0.22
+\end{equation}
+These criterion are slightly different and simplified from the ones used in
+ref.\cite{2016MNRAS.463.1952P}, but we found them to empirically work well at
+decomposing the disk into a bar and disk component. In Extended Data
+Fig.~\ref{fig:decomp}, we show an example of this decomposition. The
+\textit{left} panel shows a surface density projection of the stellar disk and
+bulge (including newly formed stars) from the SMUGGLE model after
+$1\,\text{Gyr}$ of evolution in a frame such that the bar is aligned with the
+$x$-axis. The \textit{middle} panel shows a projection of the subset of stars
+that are identified as being trapped in the bar and the \textit{right} panel
+shows a projection of the stars that are not identified as being trapped. The
+fact that the \textit{right} panel is roughly axisymmetric indicates the bar
+decomposition is performing adequately.
+
+After the disk has been decomposed into a trapped and untrapped component, we
+measured the bar length as being the radius $R_b$ which encapsulates $99\%$ of
+the stars identified as being trapped in the bar, allowing for some outliers.
+For the computation of the torque, we used the tree algorithm in
+\texttt{MakeNewDisk}\cite{2005MNRAS.361..776S} customized to be accessible
+from \texttt{Python} using \texttt{Cython}. This algorithm is based on the
+\texttt{TREESPH} code\cite{1989ApJS...70..419H}. We constructed a tree with an opening angle of $0.35$ using
+only the star particles identified as being trapped in the bar. We then queried the tree at the locations of all
+resolution elements in the other components and computed the torque of the bar
+on such components. The torque on the bar by the other components is simply
+the negative of the torque on the other components by the bar. A similar
+method was applied in measuring the torque for the disk when the pattern speed
+is kept constant, as is done in Fig.~\ref{fig:equil}.
+
+% \subsection{Idealized Mock Light Images}
+% We created synthetic mock light images at $1024^2$ resolution in
+% Fig.~\ref{fig:overview} for the \textit{Hubble Space Telescope} using a
+% post-processed Monte Carlo radiation transfer simulation with the SKIRT9 code
+% including secondary emission from dust\cite{2020AC....3100381C}. Emission from
+% star particles was calculated assuming a Bruzual-Charlot spectral energy
+% distribution\cite{2003MNRAS.344.1000B} and a Chabrier initial stellar mass
+% function\cite{2003PASP..115..763C}. The luminosity from each star particle was
+% smoothed using a cubic spline kernel with each star particle being assigned a
+% smoothing length equal to its distance to its $32$nd closest neighbor. We
+% launched $10^9$ photon packets per simulation segment. For star particles
+% which were present in the initial simulation (i.e., initial disk and bulge
+% particles), we assumed that they have an age of $5\,\textrm{Gyr}$ and solar
+% metallicity. For star particles in the SMUGGLE simulation which are newly
+% formed, we used their recorded ages and metallicities.
+
+% For the SMUGGLE simulations, we included absorption and emission from dust. We
+% assumed the THEMIS (The Heterogeneous dust Evolution Model for Interstellar
+% Solids) dust model\cite{2017AA...602A..46J} to convert gas metallicity and
+% mass density to dust mass density. For the \Nbody{} simulations we ran the
+% SKIRT9 code in a mode without an obscuring medium, but otherwise applied the
+% same procedure.
+
+% We used the profiles for filters F814W, F606W, and F475W on the Advanced
+% Camera for Surveys (ACS) instrument for red, green, and blue pixel values,
+% respectively. Filtered fluxes were converted to RGB values using an $\arcsinh$
+% scaling following ref.\cite{2004PASP..116..133L} Scalings and cutoff values
+% were adjusted manually to create visually appealing images. Filter profiles
+% were provided by the Spanish Virtual Observatory Filter
+% Service\cite{2012ivoa.rept.1015R, 2020sea..confE.182R}.
+
+\subsection{Plotting Details}
+We saved snapshots in intervals of $0.005$ in the time units of the
+simulation, $\textrm{kpc}/(\textrm{km}/\textrm{s})$, which is very nearly
+equal to $1\,\textrm{Gyr}$ (it is $\sim0.977\,\textrm{Gyr}$). Therefore,
+throughout this work we referred to the native code time unit as
+$\textrm{Gyr}$. None of our results are sensitive to this choice.
+
+In order to remove numerical noise in several quantities we computed, we
+applied a Savitzky-Golay filter \citep{1964AnaCh..36.1627S} as implemented in
+\texttt{scipy} using a window length of $81$ and polynomial order of $3$. This
+filter was applied to plots of pattern speeds, bar lengths and strengths,
+torques, and angle differences.
+
+\section{Discussion}
 Our setup is initially out of equilibrium, but we found that after
 $\sim500\,\textrm{Myr}$, the entire system has settled into a steady-state
 configuration and initial transients appear not to affect the results after
@@ -351,16 +545,9 @@ used a simple kinematic distance based on an axisymmetric model of the Milky
 Way\cite{2017ApJ...834...57M}, which is not accurate in the bar region where
 gas has large non-circular velocities.
 
-We used a mass resolution of $7.5\times10^3\,M_{\odot}$ for the baryonic
-components (initial stellar disk, stellar bulge, and gas) and a mass
-resolution of $3.75\times10^4\,M_{\odot}$ for the dark matter halo. This mass
-resolution is closest to ``level 3'' in the AURIGA
-simulations\cite{2017MNRAS.467..179G}. This corresponds to approximately
-$6.4\times10^6$ particles in the stellar disk, $1.1\times10^6$ in the bulge,
-$1.2\times10^6$ in the gas disk, and $25.3\times10^6$ in the dark matter halo.
-We used a softening length of $0.02\,\textrm{kpc}$ for all components.
-Snapshots were saved at equal intervals of $0.005$ in the time units of the
-simulation ($\textrm{kpc}/(\textrm{km}/\textrm{s})\sim1\,\textrm{Gyr}$).
+The pattern speed evolution of this setup is given in Extended Data
+Fig.~\ref{fig:GFM}, which shows that the pattern speed evolves in a similar
+manner to the SMUGGLE case shown in Fig.~\ref{fig:prop}.
 
 
 % \subsection{Figures and tables}
