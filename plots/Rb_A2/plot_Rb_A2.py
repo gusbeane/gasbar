@@ -10,6 +10,9 @@ from scipy.signal import savgol_filter
 
 time_conv = 977.79222168
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 mpl.use('Agg')
 
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
@@ -92,7 +95,7 @@ def run():
     t300 = bar_prop_Nbody['tlist'][300]
 
     cm = 1/2.54
-    fig, ax = plt.subplots(2, 1, figsize=(8*cm, 8*cm), sharex=True)
+    fig, ax = plt.subplots(2, 1, figsize=(columnwidth*cm, columnwidth*cm), sharex=True)
     
     # First panel, length of bar and mass of bar.
     ax[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0],
