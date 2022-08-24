@@ -167,17 +167,22 @@ bar than its contribution to the mass of a galaxy would suggest
 
 We have performed a simulation of a disk galaxy using the finite-volume,
 gravito-hydrodynamics code AREPO \citep{2010MNRAS.401..791S}. We use the galaxy
-formation code Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE). This disk galaxy
-exhibits almost no evolution in the bar pattern speed over several Gyr when the
-gas phase is accounted for and properly modeled. This behavior has been observed
-in a few previous works \citep{1993AA...268...65F, 2010ApJ...719.1470V,
-2014MNRAS.438L..81A}, but we are the first to exhibit that the behavior ought to
-be present in a large fraction of galaxies. We are also the first to provide a
-physical explanation of the behavior with clear observational predictions. We
-show synthetic \textit{Hubble Space Telescope} images of our barred galaxy in a
-case with and without gas in Fig.~\ref{fig:overview}. We see that the bar grows
-longer and stronger without gas, while it remains at approximately the same
-length and strength when gas is included.
+formation model Stars and MUltiphase Gas in GaLaxiEs
+\citep[SMUGGLE;][]{2019MNRAS.489.4233M}. This disk galaxy exhibits almost no
+evolution in the bar pattern speed over several Gyr when the gas phase is
+accounted for and properly modeled. This behavior has been observed in a few
+previous works \citep{1993AA...268...65F, 2010ApJ...719.1470V,
+2014MNRAS.438L..81A}. However, we are the first to exhibit that the behavior
+ought to be present in a large fraction of galaxies, since it occurs in our
+simulation with gas fractions as low as about $5\%$. We are also the first to
+provide a physical explanation of the behavior with clear observational
+predictions.
+
+We show synthetic \textit{Hubble Space Telescope} images of our barred galaxy in
+a case with and without gas in Fig.~\ref{fig:overview}. We see that the bar
+grows longer and stronger without gas, while it remains at approximately the
+same length and strength when gas is included. Details on the production of
+these synthetic images are given in Appendix~\ref{app:hst}.
 
 % In this work, we present a simulation of an isolated, gas-rich disk galaxy. Our
 % galaxy exhibits some similarities to the Milky Way, described in more detail in
@@ -330,10 +335,10 @@ interstellar medium based upon \citet{2003MNRAS.339..289S}. In this model, the
 multiphase nature of the interstellar medium is modeled in a subgrid manner by
 allowing each resolution element to have a ``cold'' and ``hot'' component, with
 the equation of state of the gas suitably modified. Gas is allowed to
-interchange between the ``cold'' and ``hot'' components through processes such
-as cooling and stellar feedback. Cold gas is allowed to undergo star formation.
-We refer to this model as the ``smooth interstellar medium'' model, and it is
-described in more detail in \citet{2019MNRAS.489.4233M}.
+interchange between the cold and hot components through processes such as
+cooling and stellar feedback. Cold gas is allowed to undergo star formation. We
+refer to this model as the smooth interstellar medium model, and it is described
+in more detail in \citet{2019MNRAS.489.4233M}.
 
 \subsection{Bar Analysis}
 The analysis of various bar properties is performed as follows. First, the
@@ -360,7 +365,7 @@ closely the methods described in \citet{2016MNRAS.463.1952P}. Our implementation
 is described in more detail in Appendix~\ref{app:bardecomp}. After the disk has
 been decomposed into a trapped and untrapped component, we measured the bar
 length as being the radius $R_b$ which encapsulates $99\%$ of the stars
-identified as being trapped in the bar, allowing for some outliers.
+identified as being trapped in the bar.
 
 To compute torques we used the tree algorithm in \texttt{MakeNewDisk}
 \citep{2005MNRAS.361..776S} customized to be accessible from \texttt{Python}
@@ -370,9 +375,7 @@ $0.35$ using only the star particles identified as being trapped in the bar. We
 then queried the tree at the locations of all resolution elements in the other
 components and computed the torque of the bar on such components. The torque on
 the bar by the other components is simply the negative of the torque on the
-other components by the bar. A similar method was applied in measuring the
-torque for the disk when the pattern speed is kept constant, as is done in
-Fig.~\ref{fig:equil}.
+other components by the bar.
 
 \subsection{Plotting Details}
 We saved snapshots in intervals of $0.005$ in the time units of the
@@ -391,17 +394,12 @@ torques, and angle differences.
 \label{sec:results}
 \begin{figure}
     \centering
-    \includegraphics[width=\columnwidth]{fig/ps_Rbar_torque.pdf}
+    \includegraphics[width=\columnwidth]{fig/ps_torque.pdf}
     \caption{The \textit{upper panel} shows the evolution
     of the pattern speed. As expected, the bar in the \Nbody{} run slows down due
     to interactions between the bar and the dark matter halo. However, the bar in
     the SMUGGLE run does not slow down and instead remains at a constant pattern
-    speed. The \textit{middle panel} shows the evolution of the bar length. In the
-    \Nbody{} case, the bar lengthens. This occurs because as the pattern speed
-    drops, bar-like orbits at larger radii are possible. Stars are captured on
-    these orbits, lengthening the bar. This process does not occur in the SMUGGLE
-    cases since the bar pattern speed is not decreasing, and therefore the bar
-    length remains constant. The \textit{lower panel} shows the torque on the bar
+    speed. The \textit{lower panel} shows the torque on the bar
     by different components. The solid lines show the torque exerted by the halo
     in both the \Nbody{} and SMUGGLE cases. The dashed line shows the torque
     exerted by the gas phase in the SMUGGLE run (there is no gas in the \Nbody{}
@@ -411,15 +409,22 @@ torques, and angle differences.
 
 \begin{figure}
     \centering
-    \includegraphics[width=9cm]{fig/A2_over_A0.pdf}
-    \caption{The evolution in bar strength. The bar strength is measured as the
-    maximum of the second Fourier component divided by the zeroth Fourier
-    component. We see that in the \Nbody{} case (blue) the bar strength
-    increases with time, consistent with previous results showing that the bar
-    strength increases as bars slow down. In the SMUGGLE case (orange), we see
-    that the bar strength remains roughly constant, possibly slightly decreasing
-    with time. This is also consistent with the expected relation between
-    pattern speed and strength since the bar in this case is not slowing down.}
+    \includegraphics[width=9cm]{fig/Rb_A2.pdf}
+    \caption{The evolution in bar length and strength. The \textit{upper panel}
+    shows the evolution of the bar length. In the \Nbody{} case, the bar
+    lengthens. This occurs because as the pattern speed drops, bar-like orbits
+    at larger radii are possible. Stars are captured on these orbits,
+    lengthening the bar. This process does not occur in the SMUGGLE cases since
+    the bar pattern speed is not decreasing, and therefore the bar length
+    remains constant. The bar strength, shown in the \textit{lower panel} is
+    measured as the maximum of the second Fourier component divided by the
+    zeroth Fourier component. We see that in the \Nbody{} case (blue) the bar
+    strength increases with time, consistent with previous results showing that
+    the bar strength increases as bars slow down. In the SMUGGLE case (orange),
+    we see that the bar strength remains roughly constant, possibly slightly
+    decreasing with time. This is also consistent with the expected relation
+    between pattern speed and strength since the bar in this case is not slowing
+    down.}
     \label{fig:strength}
 \end{figure}
 
@@ -437,13 +442,7 @@ line of numerical research on bars in \Nbody{} simulations
 However, in the SMUGGLE case the pattern speed remains constant. After the first
 Gyr of evolution, we find that the pattern speed increases by only $\sim10\%$
 over the next $4\,\textrm{Gyr}$, compared to a $\sim43\%$ decrease in the
-pattern speed for the \Nbody{} run over the same interval. As we saw
-qualitatively in Fig.~\ref{fig:overview}, the middle panel of
-Fig.~\ref{fig:prop} shows that the length of the bar in the \Nbody{} case grows
-over time while it remains roughly constant in the SMUGGLE case. This is also
-consistent with previous numerical work, which found that bars tend to grow as
-they slow down and the radius of corotation increases
-\citep{2000ApJ...543..704D, 2003MNRAS.341.1179A}.
+pattern speed for the \Nbody{} run over the same interval.
 
 The bottom panel of Fig.~\ref{fig:prop} shows the torque exerted on the bar by
 different components. The solid lines indicate the torque on the bar by the dark
@@ -457,17 +456,22 @@ $-7.8$ in the same units and over the same time interval. The gas in the SMUGGLE
 case exerts a steady positive torque averaging $11.7$ over $1\,\textrm{Gyr}$ in
 the same units.
 
-The time evolution of the bar strength, defined as the maximum of
-$\left|A_2/A_0\right|$ as a function of radius, is shown in
-Fig.~\ref{fig:strength}. The quantity $\left|A_2/A_0\right|$ varies from $0$ to
-$1$, with larger values indicating a stronger bar pattern. We see that in the
-\Nbody{} case, $\left|A_2/A_0\right|$ increases over time as the bar pattern
-slows. This is consistent with previous \Nbody{} simulations which showed a
-clear correlation between the bar pattern speed and the bar strength
-\citep[e.g.,][]{2003MNRAS.341.1179A}. In the SMUGGLE case, we see that the bar
-strength has an initial drop but then remains at a roughly constant, but
-slightly decreasing, strength. This is consistent with the pattern speed in the
-SMUGGLE case being roughly constant or slightly increasing.
+As we saw qualitatively in Fig.~\ref{fig:overview}, the middle panel of
+Fig.~\ref{fig:strength} shows that the length of the bar in the \Nbody{} case
+grows over time while it remains roughly constant in the SMUGGLE case. This is
+also consistent with previous numerical work, which found that bars tend to grow
+as they slow down and the radius of corotation increases
+\citep{2000ApJ...543..704D, 2003MNRAS.341.1179A}. The time evolution of the bar
+strength, defined as the maximum of $\left|A_2/A_0\right|$ as a function of
+radius, is shown in the lower panel Fig.~\ref{fig:strength}. The quantity
+$\left|A_2/A_0\right|$ varies from $0$ to $1$, with larger values indicating a
+stronger bar pattern. We see that in the \Nbody{} case, $\left|A_2/A_0\right|$
+increases over time as the bar pattern slows. This is consistent with previous
+\Nbody{} simulations which showed a clear correlation between the bar pattern
+speed and the bar strength \citep[e.g.,][]{2003MNRAS.341.1179A}. In the SMUGGLE
+case, we see that the bar strength has an initial drop but then remains at a
+roughly constant, but slightly decreasing, strength. This is consistent with the
+pattern speed in the SMUGGLE case being roughly constant or slightly increasing.
 
 % \subsection{Figures and tables}
 
@@ -509,23 +513,23 @@ SMUGGLE case being roughly constant or slightly increasing.
 \section{Discussion}
 \label{sec:discussion}
 \subsection{Pattern Speed Evolution}
-The lack of evolution in the pattern speed of the SMUGGLE case is intimately
-tied to the sudden decrease in torque exerted on the bar by the dark matter
-halo. We argue that this can be understood in terms of the halo wake mechanism.
-In the \Nbody{} case, halo material which is resonant with the bar will form a
-wake which lags behind and exerts a negative torque on the bar, slowing it down
-\citep{1984MNRAS.209..729T, 1985MNRAS.213..451W,
-1992ApJ...400...80H}.\footnote{Since the bar is not a solid body, it is not
-guaranteed that a negative torque will slow it down - e.g. a negative torque
-could shred the bar, reducing its moment of inertia without changing its pattern
-speed. However, the bar seems to empirically respond to a negative torque
-induced by a halo wake by slowing down.} As the bar slows down, the location of
-the resonances in phase space changes, allowing halo material newly resonant
-with the bar to participate in forming the wake. However, the gas is a reliable
-source of positive torque on the bar, speeding the bar up. This stops the
-resonance location from changing such that the halo cannot reinforce the wake,
-arresting the process by which the halo can slow the bar down. We term this
-process ``exhaustion.''
+The lack of evolution in the pattern speed of the SMUGGLE case (seen in
+Fig.~\ref{fig:prop}) is intimately tied to the sudden decrease in torque exerted
+on the bar by the dark matter halo. We argue that this can be understood in
+terms of the halo wake mechanism. In the \Nbody{} case, halo material which is
+resonant with the bar will form a wake which lags behind and exerts a negative
+torque on the bar, slowing it down \citep{1984MNRAS.209..729T,
+1985MNRAS.213..451W, 1992ApJ...400...80H}.\footnote{Since the bar is not a solid
+body, it is not guaranteed that a negative torque will slow it down - e.g. a
+negative torque could shred the bar, reducing its moment of inertia without
+changing its pattern speed. However, the bar seems to empirically respond to a
+negative torque induced by a halo wake by slowing down.} As the bar slows down,
+the location of the resonances in phase space changes, allowing halo material
+newly resonant with the bar to participate in forming the wake. However, the gas
+is a reliable source of positive torque on the bar, speeding the bar up. This
+stops the resonance location from changing such that the halo cannot reinforce
+the wake, arresting the process by which the halo can slow the bar down. We term
+this process ``exhaustion.''
 
 \begin{figure*}
     \centering
@@ -589,26 +593,26 @@ Over time, the pattern speed should slowly increase as the halo becomes
 progressively exhausted.
 
 \subsection{Delayed Gas Injection}
-A clear prediction of our proposed mechanism is that the constant pattern
-speed a particular galaxy will end up is somewhat arbitrary. In the real
-universe for an isolated galaxy it would be the formation pattern speed of the
-bar while in our simulation it is the pattern speed of the bar when gas is
-added to the system. We tested this by adding gas to the system at a later
-time when the bar has further grown and slowed down with time. In our
-particular test, we added the gas at a time when the pattern speed is
+A clear prediction of our proposed mechanism is that the constant pattern speed
+a particular galaxy will end up is somewhat arbitrary. In the real universe for
+an isolated galaxy it would be the formation pattern speed of the bar while in
+our simulation it is the pattern speed of the bar when gas is added to the
+system. We tested this by adding gas to the system at a later time when the bar
+has further grown and slowed down with time. In our particular test, we added
+the gas at a time when the pattern speed is
 $\sim30\,\textrm{km}/\textrm{s}/\textrm{kpc}$. As shown in
-Fig.~\ref{fig:snap700}, we find that the pattern speed evolution is very
-similar between the two cases (orange and red lines). If anything, the system
-with a lower pattern speed seems to speed up more, which is consistent with
-our picture since the stronger bar should experience a larger torque from the
-gas as it is more efficient at driving gas inflows. We also show in the
-Methods that more slowly rotating bars at fixed bar strength are more
-efficient at driving gas inflows as well. Nonetheless, when the initial pattern
-speed is lower (red line), the addition of gas does not cause the pattern
-speed to quickly return to the higher value of our fiducial simulation (orange
-line).
+Fig.~\ref{fig:snap700}, we find that the pattern speed evolution is very similar
+between the two cases (orange and red lines). If anything, the system with a
+lower pattern speed seems to speed up more, which is consistent with our picture
+since the stronger bar should experience a larger torque from the gas as it is
+more efficient at driving gas inflows. We also show in the
+Appendix~\ref{app:varyps} that more slowly rotating bars at fixed bar strength
+are more efficient at driving gas inflows as well. Nonetheless, when the initial
+pattern speed is lower (red line), the addition of gas does not cause the
+pattern speed to quickly return to the higher value of our fiducial simulation
+(orange line).
 
-\begin{figure}[t!]%
+\begin{figure}
     \centering
     \includegraphics[width=9cm]{fig/ps_late_start.pdf}
     \caption{Pattern speed evolution with a lower initial pattern speed. We
@@ -630,7 +634,7 @@ $4\,\textrm{kpc}$ to $\sim9.3\,\textrm{kpc}$ to be $20\,\Msun/\textrm{pc}^2$.
 We also ran with surface densities of $15$, $10$, and
 $5\,\Msun/\textrm{pc}^2$. These correspond to initial gas fractions of
 approximately $16\%$, $10\%$, $7\%$, and $4\%$. The pattern speed evolution is
-shown in Extended Data Fig.~\ref{fig:fgas} We find that the bar in disks with
+shown in Fig.~\ref{fig:fgas} We find that the bar in disks with
 initial surface densities of $20$, $15$, and $10\,\Msun/\textrm{pc}^2$ evolve
 with a constant pattern speed while the bar in a disk with initial surface
 density of $5\,\Msun/\textrm{kpc}^2$ slows down at a similar rate to the \Nbody{} case.
@@ -823,8 +827,7 @@ bar if it met the following criteria:
 \frac{{\sigma_R}_0 + {\sigma_R}_1}{\left<R\right>_0 + \left<R\right>_1} < 0.22
 \end{equation}
 These criterion are slightly different and simplified from the ones used in \citet{2016MNRAS.463.1952P}, but we found them to empirically work well at
-decomposing the disk into a bar and disk component. In Extended Data
-Fig.~\ref{fig:decomp}, we show an example of this decomposition. The
+decomposing the disk into a bar and disk component. In Fig.~\ref{fig:decomp}, we show an example of this decomposition. The
 \textit{left} panel shows a surface density projection of the stellar disk and
 bulge (including newly formed stars) from the SMUGGLE model after
 $1\,\text{Gyr}$ of evolution in a frame such that the bar is aligned with the
@@ -846,7 +849,7 @@ thus experience a larger positive torque from the gas phase.
 We performed an experiment to test this hypothesis by forcing the stellar disk
 in the SMUGGLE run to rotate at a constant angular rate and measuring the
 torque on the bar by the gas phase at different rotation rates. The result of
-this experiment is illustrated in Extended Data Fig.~\ref{fig:equil}, which shows that a more
+this experiment is illustrated in Fig.~\ref{fig:equil}, which shows that a more
 slowly rotating bar experiences a larger positive torque from the gas.
 
 \begin{figure}[h!]
@@ -909,7 +912,7 @@ spline with $20$ grid points in both the radial and vertical direction
 spanning $0.2$ to $50\,\textrm{kpc}$ in the radial direction and from $0.02$
 to $10\,\textrm{kpc}$ in the vertical direction. We fit the dark matter halo
 using a spherically symmetric multipole fit with a maximum angular harmonic
-coefficient of $l=2$. We plot the circular velocity curve in Extended Data
+coefficient of $l=2$. We plot the circular velocity curve in
 Fig.~\ref{fig:vcirc} compared to observational
 estimates\cite{2019ApJ...871..120E}. The SMUGGLE disk (which includes
 additional mass in the form of gas) has a slightly higher circular velocity
