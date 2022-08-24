@@ -21,6 +21,9 @@ fourier_path = basepath + '/analysis/fourier_component/data/'
 bprop_path = basepath + '/analysis/bar_prop/data/'
 torque_path = basepath + '/analysis/torques/data/'
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
 
@@ -109,7 +112,7 @@ def run():
     bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
 
     cm = 1/2.54
-    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(8*cm, 8*cm))
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(columnwidth*cm, columnwidth*cm))
 
     # First panel, pattern speed.
     t300 = bar_prop_Nbody['tlist'][300]
