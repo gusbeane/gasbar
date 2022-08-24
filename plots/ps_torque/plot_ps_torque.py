@@ -14,9 +14,12 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
+basepath = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/'
+
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
-torque_path = '/n/home01/abeane/starbar/analysis/torques/data/'
+fourier_path = basepath + '/analysis/fourier_component/data/'
+bprop_path = basepath + '/analysis/bar_prop/data/'
+torque_path = basepath + '/analysis/torques/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -106,7 +109,7 @@ def run():
     bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
 
     cm = 1/2.54
-    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(8*cm, 12*cm))
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(8*cm, 8*cm))
 
     # First panel, pattern speed.
     t300 = bar_prop_Nbody['tlist'][300]
@@ -138,11 +141,7 @@ def run():
     key = np.logical_and(t > 1, t < 5)
     print('Nbody', (np.min(ps[key]) - np.max(ps[key]))/np.max(ps[key]))
 
-    # Second panel, length of bar and mass of bar.
-    ax[1].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0])
-    ax[1].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['Rbar'], c=tb_c[1])
-
-    ax[1].set(ylim=(0, 7), ylabel=r'$R_{\text{bar}}\,[\,\text{kpc}\,]$')
+    
 
     # Third panel, torques.
     tlist, tz_halo, tz_not_bar, _= read_torque(Nbody, lvl)
@@ -152,18 +151,18 @@ def run():
     tz_halo_g = savgol_filter(tz_halo_g, 81, 3)
     tz_gas_g = savgol_filter(tz_gas_g, 81, 3)
 
-    ax[2].plot(tlist-tlist[300], -tz_halo, c=tb_c[0])
-    ax[2].plot(tlist_g, -tz_halo_g, c=tb_c[1])
-    ax[2].plot(tlist_g, -tz_gas_g, c=tb_c[1], ls='dashed')
+    ax[1].plot(tlist-tlist[300], -tz_halo, c=tb_c[0])
+    ax[1].plot(tlist_g, -tz_halo_g, c=tb_c[1])
+    ax[1].plot(tlist_g, -tz_gas_g, c=tb_c[1], ls='dashed')
 
-    ax[2].axhline(0, c='k')
+    ax[1].axhline(0, c='k')
 
-    ax[2].set(ylim=(-100, 100), ylabel=r'$\tau_{\text{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
-    ax[2].set_xlabel(r'$t\,[\,\text{Gyr}\,]$')
+    ax[1].set(ylim=(-100, 100), ylabel=r'$\tau_{\text{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
+    ax[1].set_xlabel(r'$t\,[\,\text{Gyr}\,]$')
 
     custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
                     mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
-    ax[2].legend(custom_lines, ['by halo', 'by gas'], frameon=False)
+    ax[1].legend(custom_lines, ['by halo', 'by gas'], frameon=False)
 
 
     fig.tight_layout()
