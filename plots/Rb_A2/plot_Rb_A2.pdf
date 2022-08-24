@@ -16,8 +16,11 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
+basepath = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/'
+
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-fourier_path = '/n/home01/abeane/starbar/analysis/fourier_component/data/'
+fourier_path = basepath + '/analysis/fourier_component/data/'
+bprop_path = basepath + '/analysis/bar_prop/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -57,24 +60,64 @@ def moving_average(a, n=3) :
     ret[n:] = ret[n:] - ret[:-n]
     return ret[n - 1:] / n
 
-def run():
-    cm = 1/2.54
-    fig, ax = plt.subplots(1, 1, figsize=(9*cm, 7*cm))
+def fix_bar_angle(bar_angle):
+    out = np.zeros(len(bar_angle))
+    out[0] = bar_angle[0]
+
+    for i in range(1, len(bar_angle)):
+        dphi = bar_angle[i] - bar_angle[i-1]
+        if dphi < -np.pi:
+            dphi += 2.*np.pi
+        
+        out[i] = out[i-1] + dphi
     
+    return out
+
+def read_bar_prop(name, lvl):
+    t = h5.File(bprop_path + 'bar_prop_' + name + '-' + lvl + '.hdf5', mode='r')
+    out = {}
+    for key in t['bar_prop'].keys():
+        out[key] = t['bar_prop'][key][:]
+    
+    out['bar_angle'] = fix_bar_angle(t['bar_angle'][:])
+    t.close()
+
+    return out
+
+def run():
+    bar_prop_Nbody = read_bar_prop(Nbody, lvl)
+    bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
+    print(bar_prop_Nbody)
+
+    t300 = bar_prop_Nbody['tlist'][300]
+
+    cm = 1/2.54
+    fig, ax = plt.subplots(2, 1, figsize=(8*cm, 8*cm), sharex=True)
+    
+    # First panel, length of bar and mass of bar.
+    ax[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0],
+                label=r'$N$-body')
+    ax[0].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['Rbar'], c=tb_c[1],
+                label='SMUGGLE')
+
+    ax[0].set(ylim=(0, 7), ylabel=r'$R_{\text{bar}}\,[\,\text{kpc}\,]$')
+    ax[0].legend(frameon=False)
+
+
     fourier = read_fourier(Nbody, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax.plot(t-t[300], savgol_filter(A2A0, 81, 3), c=tb_c[0], label=r'$N$-body')
+    ax[1].plot(t-t[300], savgol_filter(A2A0, 81, 3), c=tb_c[0], label=r'$N$-body')
 
     fourier = read_fourier(phS2R35, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax.plot(t, savgol_filter(A2A0, 81, 3), c=tb_c[1], label='SMUGGLE')
+    ax[1].plot(t, savgol_filter(A2A0, 81, 3), c=tb_c[1], label='SMUGGLE')
 
-    ax.set(xlim=(0, 5), ylim=(0, 0.7))
-    ax.set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')
-    ax.legend(frameon=False)
+    
+    ax[1].set(xlim=(0, 5), ylim=(0, 0.7))
+    ax[1].set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')
 
     fig.tight_layout()
-    fig.savefig('A2_over_A0.pdf')
+    fig.savefig('Rb_A2.pdf')
 
 
 if __name__ == '__main__':
