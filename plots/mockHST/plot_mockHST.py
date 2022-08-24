@@ -17,6 +17,9 @@ snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 skirt_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/SKIRT/'
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 # names
 Nbody = 'Nbody'
 # phS2R35 = 'phantom-vacuum-Sg20-Rc3.5'
@@ -119,7 +122,7 @@ def run():
 
     cm = 1/2.54
 
-    fig, ax = plt.subplots(2, 3, sharex=True, sharey=True, figsize=(18*cm, 12*cm))
+    fig, ax = plt.subplots(2, 3, sharex=True, sharey=True, figsize=(textwidth*cm, (12/16)*textwidth*cm))
 
     for i in range(len(Nbody_idx)):
         # plot Nbody
