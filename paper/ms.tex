@@ -67,6 +67,7 @@ $^{7}$Department of Physics, Massachusetts Institute of Technology, Cambridge, M
 
 % endregion
 
+
 % Don't change these lines
 \begin{document}
 \label{firstpage}
@@ -108,6 +109,11 @@ dynamics
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
+\the\columnwidth
+
+\the\textwidth
+
+% \showthe\textwidth
 Approximately two-thirds of spiral disks host an elongated bar-like feature at
 their center \citep{2000AJ....119..536E, 2007ApJ...657..790M}, including our own
 Milky Way \citep{1957AJ.....62...19J, 1991ApJ...379..631B}. The ubiquity of bars
@@ -199,7 +205,7 @@ before concluding in Section~\ref{sec:conclusions}.
 
 \begin{figure*}
     \centering
-    \includegraphics[width=18cm]{fig/mockHST.pdf}
+    \includegraphics[width=\textwidth]{fig/mockHST.pdf}
     \caption{Synthetic Hubble Space Telescope images of our simulations with and
     without the interstellar medium. The upper panels show an \Nbody{} only
     simulation while the lower panels show a simulation which includes the
@@ -899,25 +905,26 @@ Service \citep{2012ivoa.rept.1015R, 2020sea..confE.182R}.
 
 \section{Comparison to the Milky Way}
 \label{app:milkyway}
-Our fiducial disk model is a relatively good  model of the Milky Way for several
-Gyr. This is uncommon in models of galaxies that include the gas phase of the
-disk but no circumgalactic medium. As mentioned earlier, the pattern speed seems
-to match the observed pattern speed of the Milky Way's bar
-\citep{2019MNRAS.490.4740B}. We briefly summarize some of the other ways our disk is comparable to the Milky Way.
+For several Gyr, our fiducial disk exhibits several properties in reasonable
+agreement to the Milky Way. This is uncommon in models of galaxies that include
+the gas phase of the disk but no circumgalactic medium. As mentioned earlier,
+the pattern speed seems to match the observed pattern speed of the Milky Way's
+bar \citep{2019MNRAS.490.4740B}. We briefly summarize some of the other ways our
+disk is comparable to the Milky Way.
 
 We computed the circular velocity curve of our model using the \texttt{AGAMA}
-package\cite{2019MNRAS.482.1525V}. We fit the baryonic component (stellar
-disk, bulge, gas, and newly formed stars) with an axisymmetric cylindrical
-spline with $20$ grid points in both the radial and vertical direction
-spanning $0.2$ to $50\,\textrm{kpc}$ in the radial direction and from $0.02$
-to $10\,\textrm{kpc}$ in the vertical direction. We fit the dark matter halo
-using a spherically symmetric multipole fit with a maximum angular harmonic
-coefficient of $l=2$. We plot the circular velocity curve in
-Fig.~\ref{fig:vcirc} compared to observational
-estimates\cite{2019ApJ...871..120E}. The SMUGGLE disk (which includes
-additional mass in the form of gas) has a slightly higher circular velocity
-than the \Nbody{} disk which, itself, is slightly higher than the
-observational estimates.
+package\cite{2019MNRAS.482.1525V}. We fit the baryonic component (stellar disk,
+bulge, gas, and newly formed stars) with an axisymmetric cylindrical spline with
+$20$ grid points in both the radial and vertical direction spanning $0.2$ to
+$50\,\textrm{kpc}$ in the radial direction and from $0.02$ to $10\,\textrm{kpc}$
+in the vertical direction. We fit the dark matter halo using a spherically
+symmetric multipole fit with a maximum angular harmonic coefficient of $l=2$. We
+plot the circular velocity curve in Fig.~\ref{fig:vcirc} compared to
+observational estimates\cite{2019ApJ...871..120E}. The SMUGGLE disk (which
+includes additional mass in the form of gas) has a slightly higher circular
+velocity than the \Nbody{} disk which, itself, is slightly higher than the
+observational estimates. Overall, though, the circular velocity curves between
+our model and that observed in the Milky Way are broadly consistent.
 
 We also show the evolution of the surface density profile in Fig.~\ref{fig:surf}
 We find that in our simulation the atomic and molecular gas surface density and
