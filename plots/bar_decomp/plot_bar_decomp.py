@@ -15,6 +15,9 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 
@@ -142,7 +145,7 @@ def run(name, lvl, idx):
     bar_angle = read_bar_angle(name, lvl)
     cm = 1/2.54
 
-    fig, ax = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(18*cm, 6*cm))
+    fig, ax = plt.subplots(1, 3, sharex=True, sharey=True, figsize=(textwidth*cm, (1./3.)*textwidth*cm))
     
     try:
         heatmap = np.load('heatmap.npy')
