@@ -18,6 +18,9 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 fourier_path = '/n/home01/abeane/starbar/analysis/fourier_sphere/data/'
 bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
@@ -107,7 +110,7 @@ def compute_dphi(phi_disk, phi_halo):
 
 def run():
     cm = 1/2.54
-    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(9*cm, 14*cm))
+    fig, ax = plt.subplots(3, 1, sharex=True, figsize=(columnwidth*cm, (14/9)*columnwidth*cm))
     idx_list = [0, 100, 200, 400, 600, 800]
     center = np.array([200., 200., 200.])
 
