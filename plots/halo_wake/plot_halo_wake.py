@@ -14,6 +14,9 @@ from scipy.ndimage import gaussian_filter
 
 mpl.use('Agg')
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cmg
+
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
@@ -155,7 +158,7 @@ def run():
     vmax = 0.002 * (1E10/1E6)
 
     cm = 1/2.54
-    fig, ax = plt.subplots(1, 4, figsize=(18*cm, 6*cm), gridspec_kw={"width_ratios":[1, 1, 1, 0.05]})
+    fig, ax = plt.subplots(1, 4, figsize=(textwidth*cm, textwidth*(6/18)*cm), gridspec_kw={"width_ratios":[1, 1, 1, 0.05]})
 
     # First panel, wake of Nbody.
     sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
