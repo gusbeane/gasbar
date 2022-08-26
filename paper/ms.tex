@@ -110,6 +110,21 @@ dynamics
 
 \section{Introduction}
 \label{sec:intro}
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{fig/mockHST.pdf}
+    \caption{Synthetic Hubble Space Telescope images of our simulations with and
+    without the interstellar medium. The upper panels show an \Nbody{} only
+    simulation while the lower panels show a simulation which includes the
+    SMUGGLE model for the interstellar medium. Each panel is $20\,\textrm{kpc}$
+    to a side. Columns show different points in time, separated by
+    $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar grows in
+    length and strength. In the SMUGGLE run, the bar remains at approximately
+    the same length and strength over the course of the simulation. The \Nbody{}
+    model is identical to the GALAKOS model, discussed in the text. Details on
+    the production of these synthetic images is given in Appendix~\ref{app:hst}.}\label{fig:overview}
+\end{figure*}
+
 Approximately two-thirds of spiral disks host an elongated bar-like feature at
 their center \citep{2000AJ....119..536E, 2007ApJ...657..790M}, including our own
 Milky Way \citep{1957AJ.....62...19J, 1991ApJ...379..631B}. The ubiquity of bars
@@ -199,21 +214,6 @@ summarize the main results from our findings. We discuss these findings at more
 length and in the context of previous research in Section~\ref{sec:discussion}
 before concluding in Section~\ref{sec:conclusions}.
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=\textwidth]{fig/mockHST.pdf}
-    \caption{Synthetic Hubble Space Telescope images of our simulations with and
-    without the interstellar medium. The upper panels show an \Nbody{} only
-    simulation while the lower panels show a simulation which includes the
-    SMUGGLE model for the interstellar medium. Each panel is $20\,\textrm{kpc}$
-    to a side. Columns show different points in time, separated by
-    $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar grows in
-    length and strength. In the SMUGGLE run, the bar remains at approximately
-    the same length and strength over the course of the simulation. The \Nbody{}
-    model is identical to the GALAKOS model, discussed in the text. Details on
-    the production of these synthetic images is given in Appendix~\ref{app:hst}.}\label{fig:overview}
-\end{figure*}
-
 % The expectation that a dark matter halo acts to slow down a bar is in conflict
 % with observational estimates of bar pattern speeds. Bar rotation rates are
 % typically classified by the dimensionless ratio
@@ -243,7 +243,41 @@ before concluding in Section~\ref{sec:conclusions}.
 
 \section{Methods}
 \label{sec:methods}
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{fig/ps_torque.pdf}
+    \caption{The \textit{upper panel} shows the evolution
+    of the pattern speed. As expected, the bar in the \Nbody{} run slows down due
+    to interactions between the bar and the dark matter halo. However, the bar in
+    the SMUGGLE run does not slow down and instead remains at a constant pattern
+    speed. The \textit{lower panel} shows the torque on the bar
+    by different components. The solid lines show the torque exerted by the halo
+    in both the \Nbody{} and SMUGGLE cases. The dashed line shows the torque
+    exerted by the gas phase in the SMUGGLE run (there is no gas in the \Nbody{}
+    run). Details on how these properties are calculated is given in the Methods
+    section.}\label{fig:prop}
+\end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{fig/Rb_A2.pdf}
+    \caption{The evolution in bar length and strength. The \textit{upper panel}
+    shows the evolution of the bar length. In the \Nbody{} case, the bar
+    lengthens. This occurs because as the pattern speed drops, bar-like orbits
+    at larger radii are possible. Stars are captured on these orbits,
+    lengthening the bar. This process does not occur in the SMUGGLE cases since
+    the bar pattern speed is not decreasing, and therefore the bar length
+    remains constant. The bar strength, shown in the \textit{lower panel} is
+    measured as the maximum of the second Fourier component divided by the
+    zeroth Fourier component. We see that in the \Nbody{} case (blue) the bar
+    strength increases with time, consistent with previous results showing that
+    the bar strength increases as bars slow down. In the SMUGGLE case (orange),
+    we see that the bar strength remains roughly constant, possibly slightly
+    decreasing with time. This is also consistent with the expected relation
+    between pattern speed and strength since the bar in this case is not slowing
+    down.}
+    \label{fig:strength}
+\end{figure}
 \subsection{Initial Conditions}
 The initial setup of the galactic disk used in this work follows closely the
 GALAKOS model \citep{2020ApJ...890..117D}, which uses a modified version of the
@@ -394,41 +428,6 @@ torques, and angle differences.
 
 \section{Results}
 \label{sec:results}
-\begin{figure}
-    \centering
-    \includegraphics[width=\columnwidth]{fig/ps_torque.pdf}
-    \caption{The \textit{upper panel} shows the evolution
-    of the pattern speed. As expected, the bar in the \Nbody{} run slows down due
-    to interactions between the bar and the dark matter halo. However, the bar in
-    the SMUGGLE run does not slow down and instead remains at a constant pattern
-    speed. The \textit{lower panel} shows the torque on the bar
-    by different components. The solid lines show the torque exerted by the halo
-    in both the \Nbody{} and SMUGGLE cases. The dashed line shows the torque
-    exerted by the gas phase in the SMUGGLE run (there is no gas in the \Nbody{}
-    run). Details on how these properties are calculated is given in the Methods
-    section.}\label{fig:prop}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=9cm]{fig/Rb_A2.pdf}
-    \caption{The evolution in bar length and strength. The \textit{upper panel}
-    shows the evolution of the bar length. In the \Nbody{} case, the bar
-    lengthens. This occurs because as the pattern speed drops, bar-like orbits
-    at larger radii are possible. Stars are captured on these orbits,
-    lengthening the bar. This process does not occur in the SMUGGLE cases since
-    the bar pattern speed is not decreasing, and therefore the bar length
-    remains constant. The bar strength, shown in the \textit{lower panel} is
-    measured as the maximum of the second Fourier component divided by the
-    zeroth Fourier component. We see that in the \Nbody{} case (blue) the bar
-    strength increases with time, consistent with previous results showing that
-    the bar strength increases as bars slow down. In the SMUGGLE case (orange),
-    we see that the bar strength remains roughly constant, possibly slightly
-    decreasing with time. This is also consistent with the expected relation
-    between pattern speed and strength since the bar in this case is not slowing
-    down.}
-    \label{fig:strength}
-\end{figure}
 
 We show the time evolution of different bar properties in Fig.~\ref{fig:prop}.
 In the upper panel, we show the pattern speed over time in the \Nbody{} (blue)
@@ -474,6 +473,27 @@ speed and the bar strength \citep[e.g.,][]{2003MNRAS.341.1179A}. In the SMUGGLE
 case, we see that the bar strength has an initial drop but then remains at a
 roughly constant, but slightly decreasing, strength. This is consistent with the
 pattern speed in the SMUGGLE case being roughly constant or slightly increasing.
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=18cm]{fig/halo_wake.pdf}
+    \caption{The wake excited in the dark matter halo. The dark matter halo wake
+    is shown in the \Nbody{} case (\textit{middle panel}) and SMUGGLE case
+    (\textit{right panel}) after $2.6\,\textrm{Gyr}$ of evolution. The
+    \textit{middle} and \textit{right panels} show a surface density projection
+    in the $x$-$y$ plane of the dark matter halo after an axisymmetric average
+    has been subtracted. The solid line indicates the direction of the bar while
+    the dashed line indicates the direction of the halo wake (both measured by
+    taking the second Fourier component within a sphere of all material within a
+    radius of $4\,\textrm{kpc}$). The \textit{left panel} shows the time
+    evolution of the angle difference between the bar and the halo wake, as
+    measured from the second Fourier component. After the first Gyr, the angle
+    difference in the SMUGGLE case is smaller than in the \Nbody{} case by about
+    a factor of two, reflecting how the dark matter halo in the SMUGGLE case is
+    unable to exert as negative a torque on the bar as in the \Nbody{} case.}
+    \label{fig:wake}
+\end{figure*}
+
 
 % \subsection{Figures and tables}
 
@@ -532,26 +552,6 @@ is a reliable source of positive torque on the bar, speeding the bar up. This
 stops the resonance location from changing such that the halo cannot reinforce
 the wake, arresting the process by which the halo can slow the bar down. We term
 this process ``exhaustion.''
-
-\begin{figure*}
-    \centering
-    \includegraphics[width=18cm]{fig/halo_wake.pdf}
-    \caption{The wake excited in the dark matter halo. The dark matter halo wake
-    is shown in the \Nbody{} case (\textit{middle panel}) and SMUGGLE case
-    (\textit{right panel}) after $2.6\,\textrm{Gyr}$ of evolution. The
-    \textit{middle} and \textit{right panels} show a surface density projection
-    in the $x$-$y$ plane of the dark matter halo after an axisymmetric average
-    has been subtracted. The solid line indicates the direction of the bar while
-    the dashed line indicates the direction of the halo wake (both measured by
-    taking the second Fourier component within a sphere of all material within a
-    radius of $4\,\textrm{kpc}$). The \textit{left panel} shows the time
-    evolution of the angle difference between the bar and the halo wake, as
-    measured from the second Fourier component. After the first Gyr, the angle
-    difference in the SMUGGLE case is smaller than in the \Nbody{} case by about
-    a factor of two, reflecting how the dark matter halo in the SMUGGLE case is
-    unable to exert as negative a torque on the bar as in the \Nbody{} case.}
-    \label{fig:wake}
-\end{figure*}
 
 We can test this interpretation by measuring the angle offset between the halo
 wake and the bar. If the wake and the bar are aligned (i.e., there is no angle
@@ -614,20 +614,7 @@ pattern speed is lower (red line), the addition of gas does not cause the
 pattern speed to quickly return to the higher value of our fiducial simulation
 (orange line).
 
-\begin{figure}
-    \centering
-    \includegraphics[width=9cm]{fig/ps_late_start.pdf}
-    \caption{Pattern speed evolution with a lower initial pattern speed. We
-    tested the evolution of our system when gas is added to the \Nbody{} run at
-    a later time, but with all other simulation parameters kept the same. The
-    setup is therefore identical to our previous runs just with a bar that is
-    larger, stronger, and with a lower pattern speed. We find that the pattern
-    speed evolution is very similar to our fiducial case, except that the bar
-    retains its original pattern speed. This indicates a mechanism which keeps
-    the bar at its formation pattern speed, and that there is not a particular
-    pattern speed which the system tends to.}
-    \label{fig:snap700}
-\end{figure}
+
 
 \subsection{Varying Initial Gas Fractions}
 We also performed a test in which we varied the initial gas fraction of the
@@ -645,20 +632,7 @@ As a result, we conclude that for the disk, bar, and halo properties
 considered in this work, a gas fraction of only approximately $5\%$ is
 necessary in order for the proposed stabilizing mechanism to operate.
 
-\begin{figure}[t!]
-    \centering
-    \includegraphics[width=9cm]{fig/ps_fgas.pdf}
-    \caption{Pattern speed evolution with varying gas fractions. We explored the
-    impact of lowering the initial gas surface density of our fiducial disk on
-    the evolution of the pattern speed. The surface densities we tested of $20$,
-    $15$, $10$, and $5\,\Msun/\textrm{kpc}^2$ correspond to initial gas
-    fractions of $16\%$, $10\%$, $7\%$, and $4\%$. We find that initial surface
-    densities $20$, $15$, and $10\,\Msun/\textrm{kpc}^2$ result in bars which
-    remain at a constant pattern speed, while an initial surface density of
-    $5\,\Msun/\textrm{kpc}^2$ results in a bar which slows down in roughly the
-    same manner as the \Nbody{} case.}
-    \label{fig:fgas}
-\end{figure}
+
 
 \subsection{Smooth Interstellar Medium}
 We also performed a simulation of the same disk but with a simpler model of the
@@ -668,21 +642,6 @@ evolution is nearly the same in this case, and so conclude that our result is
 not sensitive to the details of the model for the interstellar medium. Details
 on the physics of this test is given in Section.~X.
 
-\begin{figure}[h!]%
-    \centering
-    \includegraphics[width=9cm]{fig/ps_GFM.pdf}
-    \caption{Pattern speed evolution of a smooth ISM model. This evolution is
-    shown for the fiducial disk in the \Nbody{} (blue), SMUGGLE (orange), and
-    smooth ISM (red) cases. The smooth ISM model is an older model for the ISM
-    which treats its multiphase nature in a subgrid fashion
-    \citep{2003MNRAS.339..289S}. This fundamentally differs from the SMUGGLE
-    model, which explicitly resolves the hot and cold phases of the ISM
-    \citep{2019MNRAS.489.4233M}. The pattern speed in the smooth ISM case is
-    broadly similar to the evolution in the SMUGGLE case. This shows that the
-    stability of the pattern speed is not simply a result of our assumed model
-    for the ISM.}
-\label{fig:GFM}
-\end{figure}
 
 \subsection{Observations}
 Observational estimates of the pattern speeds of bars indicate that nearly all
@@ -712,6 +671,35 @@ with higher gas fractions are rotating more slowly. However, it is not obvious
 this is in tension with our result since the gas fraction of galaxies correlates
 with other galactic properties \citep{2009ARAA..47..159B}. Furthermore, the
 measurement of pattern speeds is a delicate process still prone to large errors.
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{fig/ps_late_start.pdf}
+    \caption{Pattern speed evolution with a lower initial pattern speed. We
+    tested the evolution of our system when gas is added to the \Nbody{} run at
+    a later time, but with all other simulation parameters kept the same. The
+    setup is therefore identical to our previous runs just with a bar that is
+    larger, stronger, and with a lower pattern speed. We find that the pattern
+    speed evolution is very similar to our fiducial case, except that the bar
+    retains its original pattern speed. This indicates a mechanism which keeps
+    the bar at its formation pattern speed, and that there is not a particular
+    pattern speed which the system tends to.}
+    \label{fig:snap700}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{fig/ps_fgas.pdf}
+    \caption{Pattern speed evolution with varying gas fractions. We explored the
+    impact of lowering the initial gas surface density of our fiducial disk on
+    the evolution of the pattern speed. The surface densities we tested of $20$,
+    $15$, $10$, and $5\,\Msun/\textrm{kpc}^2$ correspond to initial gas
+    fractions of $16\%$, $10\%$, $7\%$, and $4\%$. We find that initial surface
+    densities $20$, $15$, and $10\,\Msun/\textrm{kpc}^2$ result in bars which
+    remain at a constant pattern speed, while an initial surface density of
+    $5\,\Msun/\textrm{kpc}^2$ results in a bar which slows down in roughly the
+    same manner as the \Nbody{} case.}
+    \label{fig:fgas}
+\end{figure}
 
 Second, the work of \citet{2021MNRAS.500.4710C} and \citet{2021MNRAS.505.2412C}
 have made indirect measurements of the deceleration of the bar's pattern speed
@@ -735,6 +723,23 @@ simulation -- e.g., satellite infall \citep{2011Natur.477..301P}, non-sphericity
 2019MNRAS.488.5788C}, or perhaps even the gaseous circumgalactic medium.
 Naturally, extending our present work to account for such effects is a crucial
 next step in understanding the formation and evolution of galactic bars.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{fig/ps_GFM.pdf}
+    \caption{Pattern speed evolution of a smooth ISM model. This evolution is
+    shown for the fiducial disk in the \Nbody{} (blue), SMUGGLE (orange), and
+    smooth ISM (red) cases. The smooth ISM model is an older model for the ISM
+    which treats its multiphase nature in a subgrid fashion
+    \citep{2003MNRAS.339..289S}. This fundamentally differs from the SMUGGLE
+    model, which explicitly resolves the hot and cold phases of the ISM
+    \citep{2019MNRAS.489.4233M}. The pattern speed in the smooth ISM case is
+    broadly similar to the evolution in the SMUGGLE case. This shows that the
+    stability of the pattern speed is not simply a result of our assumed model
+    for the ISM.}
+\label{fig:GFM}
+\end{figure}
 
 \section{Conclusions}
 \label{sec:conclusions}
