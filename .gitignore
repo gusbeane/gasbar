@@ -11,6 +11,8 @@ paper/*.log
 paper/*.aux
 paper/*.bbl
 paper/2104.09515
+paper/*.blg
+paper/*.synctex.gz
 
 runs
 initial_conditions
