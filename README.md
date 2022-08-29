@@ -1,6 +1,6 @@
 # Stellar Bars in Isolated Gas-Rich Spiral Galaxies Do Not Slow Down
 
-[![Generic badge](https://img.shields.io/badge/PDF-latest-orange.svg?style=flat)](https://github.com/gusbeane/starbar/blob/master-pdf/paper/ms.pdf)
+[![Generic badge](https://img.shields.io/badge/PDF-latest-orange.svg?style=flat)](https://github.com/gusbeane/starbar/blob/main-pdf/paper/ms.pdf)
 [![Generic badge](https://img.shields.io/badge/PDF-arXiv-red.svg?style=flat)]()
 [![Generic badge](https://img.shields.io/badge/PDF-ads-blue.svg?style=flat)]()
 

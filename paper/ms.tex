@@ -92,7 +92,7 @@ but it has remained unexplained. We propose that the gas phase of the disk and
 the dark matter halo act in concert to stabilize the bar pattern speed and
 prevent the bar from slowing down or speeding up. We find that in a Milky
 Way-like disk, a gas fraction of only about 5\% is necessary for this mechanism
-to operate. This result naturally explains why nearly all observed bars rotate
+to operate. Our result naturally explains why nearly all observed bars rotate
 rapidly and is especially relevant for our understanding of how the Milky Way
 arrived at its present state.
 \end{abstract}
@@ -126,21 +126,21 @@ dynamics
 \end{figure*}
 
 Approximately two-thirds of spiral disks host an elongated bar-like feature at
-their center \citep{2000AJ....119..536E, 2007ApJ...657..790M}, including our own
-Milky Way \citep{1957AJ.....62...19J, 1991ApJ...379..631B}. The ubiquity of bars
-is not difficult to explain, since stellar disks simulated in isolation almost
-always form bar-like structures \citep{1971ApJ...168..343H}. Several studies
-have shown that a spherical potential, such as a stellar bulge or dark matter
-halo, acts to stabilize a stellar disk against the bar instability
+their centers \citep{2000AJ....119..536E, 2007ApJ...657..790M}, including our
+own Milky Way \citep{1957AJ.....62...19J, 1991ApJ...379..631B}. The ubiquity of
+bars is not difficult to explain, since stellar disks simulated in isolation
+almost always form bar-like structures \citep{1971ApJ...168..343H}. Several
+studies have shown that a spherical potential, such as a stellar bulge or dark
+matter halo, acts to stabilize a stellar disk against bar formtaion
 \citep{1973ApJ...186..467O, 1976AJ.....81...30H}.
 
 It is more difficult to reconcile numerical simulations with the observed
 pattern speeds of extragalactic bars. Currently, the best technique for
 measuring the pattern speeds of individual galaxies is the Tremaine-Weinberg
-method \citep{1984ApJ...282L...5T, 2011MSAIS..18...23C}. This method has
+method \citep{1984ApJ...282L...5T, 2011MSAIS..18...23C}. This approach has
 recently been applied to samples of galaxies from the MaNGA survey
-\citep{2019MNRAS.482.1733G, 2020MNRAS.491.3655G}. These recent studies confirm
-what was found in earlier studies -- that nearly all extragalactic bars are fast
+\citep{2019MNRAS.482.1733G, 2020MNRAS.491.3655G}. These studies confirm
+what was found in earlier works, that nearly all extragalactic bars are fast
 rotators (i.e., they rotate close to their maximum rotation rate)
 
 This is a problem for theoretical simulations, for which there is ample evidence
@@ -174,7 +174,7 @@ gaseous disk. Some argue that the gas disk should slow down the bar more
 \citep{2003MNRAS.341.1179A}, while others argue that the tendency of the bar to
 drive gas inwards means the bar should speed up due to the effect of the gas
 disk \citep{2013MNRAS.429.1949A, 2014MNRAS.438L..81A}. Since the gas phase
-typically only contributes about $10-20\%$ of the mass of a galaxy at the
+typically contributes only about $10-20\%$ of the mass of a galaxy at the
 present day, one might naively expect it to have a subdominant effect on the
 bar. However, because gas is collisional, it can participate in non-resonant
 angular momentum exchange with the bar \citep{2011MNRAS.415.1027H}. Thus,
@@ -189,7 +189,7 @@ formation model Stars and MUltiphase Gas in GaLaxiEs
 evolution in the bar pattern speed over several Gyr when the gas phase is
 accounted for and properly modeled. This behavior has been observed in a few
 previous works \citep{1993AA...268...65F, 2010ApJ...719.1470V,
-2014MNRAS.438L..81A}. However, we are the first to exhibit that the behavior
+2014MNRAS.438L..81A}. However, we are the first to demonstrate that the behavior
 ought to be present in a large fraction of galaxies, since it occurs in our
 simulation with gas fractions as low as about $5\%$. We are also the first to
 provide a physical explanation of the behavior with clear observational
@@ -246,16 +246,15 @@ before concluding in Section~\ref{sec:conclusions}.
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{fig/ps_torque.pdf}
-    \caption{The \textit{upper panel} shows the evolution
-    of the pattern speed. As expected, the bar in the \Nbody{} run slows down due
-    to interactions between the bar and the dark matter halo. However, the bar in
-    the SMUGGLE run does not slow down and instead remains at a constant pattern
-    speed. The \textit{lower panel} shows the torque on the bar
-    by different components. The solid lines show the torque exerted by the halo
-    in both the \Nbody{} and SMUGGLE cases. The dashed line shows the torque
-    exerted by the gas phase in the SMUGGLE run (there is no gas in the \Nbody{}
-    run). Details on how these properties are calculated is given in the Methods
-    section.}\label{fig:prop}
+    \caption{The \textit{upper panel} shows the evolution of the pattern speed.
+    As expected, the bar in the \Nbody{} run slows down due to interactions
+    between the bar and the dark matter halo. However, the bar in the SMUGGLE
+    run does not slow down and instead remains at a constant pattern speed. The
+    \textit{lower panel} shows the torque on the bar by different components.
+    The solid lines indicate the torque exerted by the halo in both the \Nbody{}
+    and SMUGGLE cases. The dashed line is the torque exerted by the gas phase in
+    the SMUGGLE run (there is no gas in the \Nbody{} run). Details on how these
+    properties are calculated is given in the Methods section.}\label{fig:prop}
 \end{figure}
 
 \begin{figure}
@@ -305,19 +304,22 @@ GALAKOS disk has been allowed to evolve for $1.5\,\textrm{Gyr}$. The purpose of
 allowing the GALAKOS disk to evolve first for a short period of time is to allow
 for the bar to form unimpacted by the presence of the gas. We found that
 including the gas before the bar has formed disrupts the formation of the bar,
-as has been seen in previous work \citep[e.g.,][]{2013MNRAS.429.1949A}.
-Throughout this work, we consider $t=0$ for the \Nbody{} run to be the time at
-which we added the gas phase for the SMUGGLE run (i.e., we ignore the first
+as has been seen previously \citep[e.g.,][]{2013MNRAS.429.1949A}. Throughout
+this work, we consider $t=0$ for the \Nbody{} run to be the time at which we
+added the gas phase for the SMUGGLE run (i.e., we ignore the first
 $1.5\,\textrm{Gyr}$ of evolution of the \Nbody{} disk when the bar is forming).
 
 We made one additional modification when stitching the gas disk together with
-the \Nbody{} disk - we created a hole within the central $4\,\textrm{kpc}$. This
-hole guards against an initial dramatic infall of gas within the bar region,
-which we found to destroy the bar. It is not uncommon for observed barred
-galaxies to have gas deficits in the bar region \citep[though not in the very
-center;][]{1993RPPh...56..173S}. Therefore, our practice of allowing the gas
-distribution to have a hole in the central region is consistent with our choice
-to begin the simulations with a bar already formed.
+the \Nbody{} disk - we created a hole within the central $4\,\textrm{kpc}$ of
+the gas disks. This hole guards against an initial dramatic infall of gas within
+the bar region, which we found to destroy the bar. It is not uncommon for
+observed barred galaxies to have gas deficits in the bar region \citep[though
+not in the very center;][]{1993RPPh...56..173S}. Therefore, our practice of
+allowing the gas distribution to have a hole in the central region is consistent
+with our choice to begin the simulations with a bar already formed. In this
+manner, we are able to study the ensuing self-consistent interaction between the
+bar and the gas, but of course we are unable to explore the origin of bars in
+the presence of the gas.
 
 We used a mass resolution of $7.5\times10^3\,M_{\odot}$ for the baryonic
 components (initial stellar disk, stellar bulge, and gas) and a mass resolution
@@ -331,11 +333,11 @@ of $0.005$ in the time units of the simulation,
 $\textrm{kpc}/(\textrm{km}/\textrm{s})$.
 
 Our setup is initially out of equilibrium, but we found that after about
-$500\,\textrm{Myr}$, the system has settled into a steady-state configuration
-and initial transients appear not to affect the results after this point. The
-constant surface density of the initial gas disk is important for ensuring the
-gas disk is dense enough in order for comparisons to real galaxies to be
-appropriate.
+$500\,\textrm{Myr}$, the system has settled into a roughly steady-state
+configuration and initial transients appear not to affect the results after this
+point. The constant surface density of the initial gas disk is important for
+ensuring that the gas disk is dense enough in order for comparisons to real
+galaxies to be appropriate.
 
 \subsection{Numerical Model}
 We use the Stars and MUltiphase Gas in GaLaxiEs (SMUGGLE) model
@@ -349,32 +351,32 @@ $10^8\,\textrm{K}$.
 Star formation occurs in cells above a density threshold
 ($n_{\textrm{th}}=100\,\textrm{cm}^{-3}$) with a star-formation efficiency of
 $\epsilon = 0.01$. Star formation converts gas cells into star particles which
-represent single stellar populations with a Chabrier initial mass
-function \citep{2003PASP..115..763C}. For each star particle, the deposition of
-energy, momentum, mass, and metals from stellar winds and supernovae is modeled.
-Photo-ionization and radiation pressure are modeled using an approximate
+represent single stellar populations with a Chabrier initial mass function
+\citep{2003PASP..115..763C}. For each star particle, the deposition of energy,
+momentum, mass, and metals from stellar winds and supernovae is modeled.
+Photo-ionization and radiation pressure are handled using an approximate
 treatment. A more detailed description of this model can be found in the
 flagship SMUGGLE paper \citep{2019MNRAS.489.4233M}.
 
 We used the fiducial model parameters, except that we increased the number of
-effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from
-$64$ to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
+effective neighbors $N_{\textrm{ngb}}$ for the deposition of feedback from $64$
+to $512$. We found that a lower value of $N_{\textrm{ngb}}$ resulted in
 inefficient photo-ionization feedback since the photo-ionizing budget had not
-been exhausted after deposition into $64$ neighboring cells. We also used an
+been exhausted after deposition into $64$ neighboring cells. We also employed an
 updated version of SMUGGLE using a new mechanical feedback routine similar to
 the one described in \citet{2018MNRAS.480..800H}. This updated routine is a
-tensor renormalization which ensures linear and angular momentum conservation
-to machine precision.
+tensor renormalization which ensures linear and angular momentum conservation to
+machine precision.
 
 In addition to the SMUGGLE model, we considered a simpler model of the
-interstellar medium based upon \citet{2003MNRAS.339..289S}. In this model, the
-multiphase nature of the interstellar medium is modeled in a subgrid manner by
-allowing each resolution element to have a ``cold'' and ``hot'' component, with
-the equation of state of the gas suitably modified. Gas is allowed to
-interchange between the cold and hot components through processes such as
-cooling and stellar feedback. Cold gas is allowed to undergo star formation. We
-refer to this model as the smooth interstellar medium model, and it is described
-in more detail in \citet{2019MNRAS.489.4233M}.
+interstellar medium based upon \citet{2003MNRAS.339..289S}. In this approach,
+the multiphase nature of the interstellar medium is described in a subgrid
+manner by allowing each resolution element to have a ``cold'' and ``hot''
+component, with the equation of state of the gas suitably modified. Gas is
+allowed to interchange between the cold and hot components through processes
+such as cooling and stellar feedback. Cold gas is allowed to undergo star
+formation. We refer to this model as the smooth interstellar medium model, and
+it is described in more detail in \citet{2019MNRAS.489.4233M}.
 
 \subsection{Bar Analysis}
 The analysis of various bar properties is performed as follows. First, the
@@ -429,7 +431,7 @@ torques, and angle differences.
 \section{Results}
 \label{sec:results}
 
-We show the time evolution of different bar properties in Fig.~\ref{fig:prop}.
+We present the time evolution of different bar properties in Fig.~\ref{fig:prop}.
 In the upper panel, we show the pattern speed over time in the \Nbody{} (blue)
 and SMUGGLE (orange) runs. The pattern speed in the \Nbody{} case slows down
 while the pattern speed in the SMUGGLE case remains roughly constant. The
@@ -447,12 +449,12 @@ pattern speed for the \Nbody{} run over the same interval.
 
 The bottom panel of Fig.~\ref{fig:prop} shows the torque exerted on the bar by
 different components. The solid lines indicate the torque on the bar by the dark
-matter halo, whereas the dashed line indicates the torque on the bar by the gas
-phase. In the \Nbody{} case, the halo exerts a steady negative torque on the
-bar, with an average torque from $1$ to $4\,\textrm{Gyr}$ of $-58.0$ in units of
+matter halo, whereas the dashed line is the torque on the bar by the gas phase.
+In the \Nbody{} case, the halo exerts a steady negative torque on the bar, with
+an average torque from $1$ to $4\,\textrm{Gyr}$ of $-58.0$ in units of
 $10^{10}M_{\odot}\,(\textrm{km}/\textrm{s})^2$. The halo in the SMUGGLE case
 exerts a similar negative torque on the bar in the first Gyr of evolution, but
-after that the halo exerts a much smaller torque on the bar, averaging only
+after that the halo exerts a much weaker torque on the bar, averaging only
 $-7.8$ in the same units and over the same time interval. The gas in the SMUGGLE
 case exerts a steady positive torque averaging $11.7$ over $1\,\textrm{Gyr}$ in
 the same units.
@@ -538,7 +540,7 @@ pattern speed in the SMUGGLE case being roughly constant or slightly increasing.
 The lack of evolution in the pattern speed of the SMUGGLE case (seen in
 Fig.~\ref{fig:prop}) is intimately tied to the sudden decrease in torque exerted
 on the bar by the dark matter halo. We argue that this can be understood in
-terms of the halo wake mechanism. In the \Nbody{} case, halo material which is
+terms of the halo wake mechanism. In the \Nbody{} case, halo material that is
 resonant with the bar will form a wake which lags behind and exerts a negative
 torque on the bar, slowing it down \citep{1984MNRAS.209..729T,
 1985MNRAS.213..451W, 1992ApJ...400...80H}.\footnote{Since the bar is not a solid
@@ -637,10 +639,11 @@ necessary in order for the proposed stabilizing mechanism to operate.
 \subsection{Smooth Interstellar Medium}
 We also performed a simulation of the same disk but with a simpler model of the
 interstellar medium \citep{2003MNRAS.339..289S}, closer to standard methods used
-in cosmological simulations of galaxy formation. We find that the pattern speed
-evolution is nearly the same in this case, and so conclude that our result is
-not sensitive to the details of the model for the interstellar medium. Details
-on the physics of this test is given in Section.~X.
+in cosmological simulations of galaxy formation and described in more detail in
+Section~\ref{sec:methods}. The result of this test is presented in
+Fig.~\ref{fig:GFM}. We find that the pattern speed evolution is nearly the same
+in this case, and so conclude that our result is not sensitive to the details of
+the model for the interstellar medium.
 
 
 \subsection{Observations}
@@ -655,9 +658,10 @@ past. Some have argued that perhaps the central regions of dark matter haloes
 are less dense than we expected from $\Lambda\textrm{CDM}$
 \citep[e.g.][]{2000ApJ...543..704D,2021AA...650L..16F}. Some have argued that
 perhaps bars are recurrent, short-lived phenomena, and that all the bars we see
-in the local universe are very young (CITE). Some have argued that modifications
-to General Relativity ease the tension between the observed universe and
-$\Lambda\textrm{CDM}$ \citep[e.g.][]{2021MNRAS.503.2833R, 2021MNRAS.508..926R}.
+in the local universe are very young \citep{2002AA...392...83B,
+2005MNRAS.364L..18B}. Some have argued that modifications to General Relativity
+ease the tension between the observed universe and $\Lambda\textrm{CDM}$
+\citep[e.g.][]{2021MNRAS.503.2833R, 2021MNRAS.508..926R}.
 
 Because such a small gas fraction is necessary for our stabilizing mechanism to
 operate ($5\%$ in our Milky Way-like disk), we argue that most galaxies host a
@@ -755,9 +759,9 @@ bar could be both long-lived and a fast rotator, of which there is some
 observational evidence \citep{2019MNRAS.490.4740B}. And finally, we complicate
 the picture of radial mixing expected to sculpt the Milky Way's disk
 \citep{2012MNRAS.420..913B, 2015ApJ...808..132H}, a process which relies upon
-the pattern speed of the bar to change with time (though our work does not
-alter expectations for radial mixing induced by spiral
-arms \citep{2002MNRAS.336..785S}).
+the pattern speed of the bar to change with time Our work does not alter
+expectations for radial mixing induced by spiral arms
+\citep{2002MNRAS.336..785S}.
 
 We found that below a certain gas fraction, bars should still be able to slow
 down. Therefore, we expect barred spiral galaxies which have been gas-poor for
@@ -881,7 +885,7 @@ decomposition is performing adequately.
 \label{app:varyps}
 When the bar slows down, we argue that this induces a larger positive torque
 from the gas phase. Only gas within corotation will flow inwards, while gas
-outside corotation will flow outwards\cite{2011MNRAS.415.1027H}. Since the
+outside corotation will flow outwards \citep{2011MNRAS.415.1027H}. Since the
 corotation radius is larger for more slowly rotating bars, it follows that
 more slowly rotating bars should be more efficient at driving gas inflows and
 thus experience a larger positive torque from the gas phase.
@@ -947,14 +951,14 @@ bar \citep{2019MNRAS.490.4740B}. We briefly summarize some of the other ways our
 disk is comparable to the Milky Way.
 
 We computed the circular velocity curve of our model using the \texttt{AGAMA}
-package\cite{2019MNRAS.482.1525V}. We fit the baryonic component (stellar disk,
+package \citep{2019MNRAS.482.1525V}. We fit the baryonic component (stellar disk,
 bulge, gas, and newly formed stars) with an axisymmetric cylindrical spline with
 $20$ grid points in both the radial and vertical direction spanning $0.2$ to
 $50\,\textrm{kpc}$ in the radial direction and from $0.02$ to $10\,\textrm{kpc}$
 in the vertical direction. We fit the dark matter halo using a spherically
 symmetric multipole fit with a maximum angular harmonic coefficient of $l=2$. We
 plot the circular velocity curve in Fig.~\ref{fig:vcirc} compared to
-observational estimates\cite{2019ApJ...871..120E}. The SMUGGLE disk (which
+observational estimates \citep{2019ApJ...871..120E}. The SMUGGLE disk (which
 includes additional mass in the form of gas) has a slightly higher circular
 velocity than the \Nbody{} disk which, itself, is slightly higher than the
 observational estimates. Overall, though, the circular velocity curves between
@@ -963,11 +967,11 @@ our model and that observed in the Milky Way are broadly consistent.
 We also show the evolution of the surface density profile in Fig.~\ref{fig:surf}
 We find that in our simulation the atomic and molecular gas surface density and
 the SFR surface density is broadly consistent with the expected values for the
-Milky Way\cite{2008AA...487..951K,2022ApJ...929L..18E}. The discrepancy between
+Milky Way \citep{2008AA...487..951K,2022ApJ...929L..18E}. The discrepancy between
 $1$ and $4\,\textrm{kpc}$ in the molecular and SFR surface density is likely due
 to the fact that the distances to molecular clouds which underlines this work
 used a simple kinematic distance based on an axisymmetric model of the Milky
-Way\cite{2017ApJ...834...57M}, which is not accurate in the bar region where gas
+Way \citep{2017ApJ...834...57M}, which is not accurate in the bar region where gas
 has large non-circular velocities.
 
 \begin{figure}
