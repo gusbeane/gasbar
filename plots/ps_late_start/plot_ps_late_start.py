@@ -12,6 +12,9 @@ import astropy.units as u
 
 mpl.use('Agg')
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
@@ -134,7 +137,7 @@ def run():
     
     cm = 1/2.54
 
-    fig, ax = plt.subplots(1, 1, figsize=(9*cm, 6*cm))
+    fig, ax = plt.subplots(1, 1, figsize=(columnwidth*cm, (2./3.)*columnwidth*cm))
 
     # First panel, pattern speed.
     ax.plot(time_Nbody - time_Nbody[300], savgol_filter(ps_Nbody, 81, 3), c=tb_c[0], label=r'$N$-body')

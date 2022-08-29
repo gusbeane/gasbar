@@ -16,6 +16,9 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 torque_path = '/n/home01/abeane/starbar/analysis/torques/data/'
@@ -140,7 +143,7 @@ def run():
 
     cm = 1/2.54
 
-    fig, ax = plt.subplots(1, 1, figsize=(9*cm, 9*cm))
+    fig, ax = plt.subplots(1, 1, figsize=(columnwidth*cm, (3./4.)*columnwidth*cm))
 
     # First panel, pattern speed.
 
@@ -155,7 +158,7 @@ def run():
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
 
-    ax.legend(frameon=False, title=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot}/\textrm{kpc}^2\,]$')
+    ax.legend(frameon=False, ncol=2, title=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot}/\textrm{kpc}^2\,]$')
 
     fig.tight_layout()
 

@@ -14,6 +14,9 @@ rc('font', **{'family': 'serif', 'serif': ['Computer Modern'], 'size': 8})
 rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
+columnwidth = 244.0 * 0.035145980349999517 # convert to cm
+textwidth = 508.0 * 0.035145980349999517 # convert to cm
+
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
 bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
 torque_path = '/n/home01/abeane/starbar/analysis/torques-rot/data/'
@@ -66,7 +69,7 @@ def read_torque(name, lvl):
 
 def run():
     cm = 1/2.54
-    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(9*cm, 7*cm))
+    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(columnwidth*cm, (2./3.)*columnwidth*cm))
 
     # First panel, pattern speed.
     tlist_30, tz_halo_30, _, tz_gas_30 = read_torque(phS2R35, 'lvl3-rot30')
