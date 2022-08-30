@@ -22,6 +22,7 @@
 \newcommand{\Vc}{\ensuremath{V_{\textrm{c}} }}
 \newcommand{\PS}{\ensuremath{\Omega_{\textrm{p}}}}
 \newcommand{\Rb}{\ensuremath{R_{\textrm{b}}}}
+\newcommand{\kms}{\ensuremath{\textrm{km}/\textrm{s}}}
 
 \newcommand{\Nbody}{$N$-body}
 \newcommand{\AREPO}{\textsc{AREPO}}
@@ -254,7 +255,7 @@ before concluding in Section~\ref{sec:conclusions}.
     The solid lines indicate the torque exerted by the halo in both the \Nbody{}
     and SMUGGLE cases. The dashed line is the torque exerted by the gas phase in
     the SMUGGLE run (there is no gas in the \Nbody{} run). Details on how these
-    properties are calculated is given in the Methods section.}\label{fig:prop}
+    properties are calculated is given in Section~\ref{ssec:bar_analysis}.}\label{fig:prop}
 \end{figure}
 
 \begin{figure}
@@ -379,6 +380,7 @@ formation. We refer to this model as the smooth interstellar medium model, and
 it is described in more detail in \citet{2019MNRAS.489.4233M}.
 
 \subsection{Bar Analysis}
+\label{ssec:bar_analysis}
 The analysis of various bar properties is performed as follows. First, the
 pattern speed is measured from the angle of the second Fourier component. We
 measured the second Fourier component by computing,
@@ -478,7 +480,7 @@ pattern speed in the SMUGGLE case being roughly constant or slightly increasing.
 
 \begin{figure*}
     \centering
-    \includegraphics[width=18cm]{fig/halo_wake.pdf}
+    \includegraphics[width=\textwidth]{fig/halo_wake.pdf}
     \caption{The wake excited in the dark matter halo. The dark matter halo wake
     is shown in the \Nbody{} case (\textit{middle panel}) and SMUGGLE case
     (\textit{right panel}) after $2.6\,\textrm{Gyr}$ of evolution. The
@@ -645,6 +647,62 @@ Fig.~\ref{fig:GFM}. We find that the pattern speed evolution is nearly the same
 in this case, and so conclude that our result is not sensitive to the details of
 the model for the interstellar medium.
 
+\subsection{Semi-Analytic Model}
+We also developed a simple semi-analytic model of a bar-disk-halo system. This
+exercise demonstrates that our proposed mechanism follows from a few simplistic
+assumptions. Our method follows closely the one developed in
+\citet{2022MNRAS.513..768C}. We model the bar-disk-halo system with three
+components: a dark matter Hernquist halo \citep{1990ApJ...356..359H}, a
+Miyamoto-Nagai disk \citep{1975PASJ...27..533M}, and a pure quadrupole bar
+described in \citet{2022MNRAS.513..768C}. The bar and disk components are just
+described by their potential, but we integrate the trajectories of test
+particles drawn from a Hernquist halo. Note that we do not include the
+interactions between these test particles, and so this model is not
+self-consistent. We give our chosen parameter values in Appendix~\ref{app:sam}.
+
+We allow the bar in this model to rotate as a solid body. However, we crucially
+allow the pattern speed of the bar to freely change with time in accordance with
+the torque exerted on the dark matter halo by the bar. In particular, we
+subtract the $z$-component of this torque divided by the moment of inertia of
+the bar from the pattern speed. Since the radius of corotation \RCR{} is a
+parameter in the bar model from \citet{2022MNRAS.513..768C}, we allow the moment
+of inertia of the bar to vary with ${\RCR}^2$. To be more precise, we allow
+\begin{equation}
+I = \frac{I_6}{10^{10} \Msun (\kms)^2} \left( \frac{\RCR}{6\,\textrm{kpc}} \right)^2\textrm{,}
+\end{equation}
+where $I_6$ is a free parameter chosen by the user. We found that allowing $I_6=8$ is a good approximation to our bar model.
+
+In addition to $I_6$, we allowed for another free parameter - the torque from
+the gas phase on the bar, $\tau_{\textrm{gas}}$. This torque is applied to the
+bar in the same way as the torque from the halo is applied. The torque is given
+in code units ($10^{10}\Msun \left(\kms\right)^2$). We allow this torque to
+mildly vary with pattern speed according to the formula,
+\begin{equation}
+\tau = \tau_{\textrm{gas}} + (40\,\kms/\textrm{kpc} - \Omega_p)\textrm{.}
+\end{equation}
+We are motivated to do this because of our result in Appendix~\ref{app:varyps}
+which shows that more slowly rotating bars have higher gas infall rates and thus
+larger positive torques. In the $\tau_{\textrm{gas}}=0$ case, we do not allow
+the gas torque to vary with pattern speed.
+
+We show the effect of varying the gas torque $\tau_{\textrm{gas}}$ from $0$ to
+$20$ in increments of $2$ in Fig.~\ref{fig:sam}. The solid lines indicate the
+semi-analytic model, while the two dashed lines correspond to our fiducial
+simulations introduced earlier. For reference, the average torque exerted by the
+gas phase on the bar in our fiducial simulation was $11.7$ in code units. We see in Fig.~\ref{fig:sam} that we can reproduce the stability of our fiducial
+gas disk simply by including a positive torque on the order of $6$. Our
+semi-analytic model with no gas torque can reproduce the pattern speed evolution
+of the $N$-body case.
+
+We next take the $\tau_{\textrm{gas}}=0$ and $20$ cases from Fig.~\ref{fig:sam}
+and plot the torque evolution. This result, given in Fig.~\ref{fig:sam-torque},
+is comparable to the lower panel of Fig.~\ref{fig:prop}. We find that the
+$\tau_{\textrm{gas}}=0$ case compares favorably to the \Nbody{} case described
+in previous sections. The bar exerts a steady negative torque in this case (blue
+line). When a gas torque is included (orange lines), we find that the halo's
+torque becomes much weaker, similar to what we found in the SMUGGLE case. The
+gas applies a steady positive torque by construction. The exhaustion process is
+reproduced in our simple semi-analytic model.
 
 \subsection{Observations}
 Observational estimates of the pattern speeds of bars indicate that nearly all
@@ -705,6 +763,7 @@ measurement of pattern speeds is a delicate process still prone to large errors.
     \label{fig:fgas}
 \end{figure}
 
+
 Second, the work of \citet{2021MNRAS.500.4710C} and \citet{2021MNRAS.505.2412C}
 have made indirect measurements of the deceleration of the bar's pattern speed
 from kinematics and chemistry. We point out that these reported measurements are
@@ -743,6 +802,33 @@ next step in understanding the formation and evolution of galactic bars.
     stability of the pattern speed is not simply a result of our assumed model
     for the ISM.}
 \label{fig:GFM}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{fig/samGvar.pdf}
+    \caption{A comparison between the pattern speeds of our fiducial disk
+    systems and a semi-analytic model. The solid lines indicate the pattern
+    speeds assuming a constant positive torque, varying in increments of $2$
+    from $0$ to $20$. The dashed lines indicate the pattern speed evolution from
+    our fully self-consistent simulations from earlier. We find excellent
+    agreement between our fiducial simulations and our semi-analytic model of a
+    bar-disk-halo system. Torques are given in code units ($10^{10}\Msun
+    \left(\kms\right)^2$).}
+    \label{fig:sam}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{fig/sam_torque.pdf}
+    \caption{The torque exerted on the bar by various components in our
+    semi-analytic model. Solid lines indicate the torque by the halo while the
+    dashed line indicates the torque exerted by the gas phase. We chose two
+    models with $\tau_{\textrm{gas}}=0$ and $20$, which most closely resemble
+    our $N$-body and SMUGGLE disks, respectively. This figure ought to be
+    compared to the lower panel of Fig.~\ref{fig:prop}. Overall, we find good
+    qualitative agreement.}
+    \label{fig:sam-torque}
 \end{figure}
 
 \section{Conclusions}
@@ -846,7 +932,8 @@ The inclusion of a Data Availability Statement is a requirement for articles pub
     trapped in the bar while the \textit{right panel} shows the component of the
     disk identified as not being trapped in the bar. The fact that the untrapped
     stars form a roughly axisymmetric structure indicates our bar decomposition
-    is sufficiently accurate.}
+    is sufficiently accurate. We have computed that $76\%$ of the second Fourier
+    component resides in the stars classified as being trapped in the bar.}
     \label{fig:decomp}
 \end{figure*}
 
@@ -870,16 +957,25 @@ bar if it met the following criteria:
 \begin{equation}
 \frac{{\sigma_R}_0 + {\sigma_R}_1}{\left<R\right>_0 + \left<R\right>_1} < 0.22
 \end{equation}
-These criterion are slightly different and simplified from the ones used in \citet{2016MNRAS.463.1952P}, but we found them to empirically work well at
-decomposing the disk into a bar and disk component. In Fig.~\ref{fig:decomp}, we show an example of this decomposition. The
-\textit{left} panel shows a surface density projection of the stellar disk and
-bulge (including newly formed stars) from the SMUGGLE model after
-$1\,\text{Gyr}$ of evolution in a frame such that the bar is aligned with the
-$x$-axis. The \textit{middle} panel shows a projection of the subset of stars
-that are identified as being trapped in the bar and the \textit{right} panel
-shows a projection of the stars that are not identified as being trapped. The
-fact that the \textit{right} panel is roughly axisymmetric indicates the bar
-decomposition is performing adequately.
+These criterion are slightly different and simplified from the ones used in
+\citet{2016MNRAS.463.1952P}, but we found them to empirically work well at
+decomposing the disk into a bar and disk component. In Fig.~\ref{fig:decomp}, we
+show an example of this decomposition. The \textit{left} panel shows a surface
+density projection of the stellar disk and bulge (including newly formed stars)
+from the SMUGGLE model after $1\,\text{Gyr}$ of evolution in a frame such that
+the bar is aligned with the $x$-axis. The \textit{middle} panel shows a
+projection of the subset of stars that are identified as being trapped in the
+bar and the \textit{right} panel shows a projection of the stars that are not
+identified as being trapped. The fact that the \textit{right} panel is roughly
+axisymmetric indicates the bar decomposition is performing adequately.
+
+We computed the second Fourier component $A_2$ for all particles classified as
+barred and unbarred. We found that $76\%$ of the total $m=2$ Fourier component
+is in the particles classified as barred (i.e.,
+$A_{2,\textrm{bar}}/A_{2,\textrm{tot}}\sim0.76$). This indicates good but not
+perfect classification. Some of this is probably coming from the $m=4$ component
+being classified as unbarred, given that the unbarred component has a somewhat
+boxy shape.
 
 \section{Varying Pattern Speed}
 \label{app:varyps}
@@ -908,6 +1004,25 @@ slowly rotating bar experiences a larger positive torque from the gas.
     velocity.}
     \label{fig:equil}
 \end{figure}
+
+\section{Semi-Analytic Model Parameters}
+\label{app:sam}
+Our semi-analytic model consisted of a three-component bar-disk-halo system. We
+describe here the parameters we chose for these components. The parameters of
+the disk and halo were chosen to match closely what we used in our fiducial
+simulations. The system can thus be understood as being roughly similar to the
+Milky Way, though no careful analysis has been performed to ensure the closest
+match possible.
+
+For the dark matter halo, we used a Hernquist potential
+\citep{1990ApJ...356..359H} with mass $10^{12}\,\Msun$ and a scale length of
+$26.2\,\textrm{kpc}$. For the stellar disk, we used a MiyaMoto-Nagai disk
+\citep{1975PASJ...27..533M} with mass $4.8\times10^{10}\,\Msun$, radial scale
+length of $2.67\,\textrm{kpc}$, and vertical scale length of
+$0.32\,\textrm{kpc}$. For the bar, we used the quadrupole potential described in
+\citet{2022MNRAS.513..768C}. We used their fiducial parameter values --
+specifically, we set $A=0.02$, $b=0.28$, and $v_c = 235\,\kms$. Our initial
+pattern speed is always set to $40\,\kms/\textrm{kpc}$.
 
 \section{Idealized Mock Light Images}
 \label{app:hst}
