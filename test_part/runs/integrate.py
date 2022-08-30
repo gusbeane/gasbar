@@ -7,6 +7,7 @@ from force import Hernquist_force, bar_force, MiyamotoNagaiDisk
 spec = [
     ('time', types.float64[:]),
     ('total_torque', types.float64[:,:]),
+    ('torque_gas', types.float64[:]),
     ('ps', types.float64[:]),
     ('M', types.float64),
     ('a', types.float64),
@@ -48,6 +49,7 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, disk_M, disk_a, disk
     total_torque = np.zeros((Nint, 3))
     time_out = np.zeros(Nint)
     ps_out = np.zeros(Nint)
+    torque_gas_list = np.zeros(Nint)
     
     torque_gas0 = torque_gas
     ps0 = ps
@@ -60,6 +62,7 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, disk_M, disk_a, disk
         total_torque[i] = np.sum(torque, axis=0)
         ps_out[i] = ps
         time_out[i] = T
+        torque_gas_list[i] = torque_gas
 
         # Print
         if verbose:
@@ -78,8 +81,11 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, disk_M, disk_a, disk
         ps += - total_torque[i][2]/I * dt / 2.0 # constant ps
         ps += torque_gas/I * dt / 2.0
         
-        torque_gas = torque_gas0 * (ps0-ps)
-        
+        if torque_gas0 > 0:
+            torque_gas = torque_gas0 + (40-ps)
+        else:
+            torque_gas = torque_gas0
+
         # Bar drift
         ang += ps * dt
         
@@ -105,6 +111,7 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, disk_M, disk_a, disk
     out = output()
     out.time = time_out
     out.total_torque = total_torque
+    out.torque_gas = torque_gas_list
     out.ps = ps_out
 
     out.M = M
