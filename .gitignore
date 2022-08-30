@@ -14,7 +14,7 @@ paper/2104.09515
 paper/*.blg
 paper/*.synctex.gz
 
-runs
+./runs
 initial_conditions
 hose_runs
 *.hdf5

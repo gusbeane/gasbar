@@ -2,7 +2,7 @@ import numpy as np
 from numba import njit, prange
 from numba.core import types
 from numba.experimental import jitclass
-from force import Hernquist_force, bar_force
+from force import Hernquist_force, bar_force, MiyamotoNagaiDisk
 
 spec = [
     ('time', types.float64[:]),
@@ -21,14 +21,15 @@ spec = [
 @jitclass(spec)
 class output(object):
     def __init__(self):
-        key_list = []
-        for key, _ in spec:
-            key_list.append(key)
+        pass
+#         key_list = []
+#         for key, _ in spec:
+#             key_list.append(key)
 
-            self.key_list = key_list
+#             self.key_list = key_list
 
 @njit(parallel=True)
-def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, dt=0.1, Tmax=1.0,
+def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, disk_M, disk_a, disk_b, dt=0.1, Tmax=1.0,
                         torque_gas=20.0, I_at_rCR6=2.0, G=43007.1, verbose=False):
     T = 0.0
     
@@ -36,7 +37,8 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, dt=0.1, Tmax=1.0,
     
     acc_halo = Hernquist_force(pos, M, a, G)
     acc_bar = bar_force(pos, A, b, vc, ps, ang)
-    acc = acc_halo + acc_bar
+    acc_disk = MiyamotoNagaiDisk(pos, disk_M, disk_a, disk_b, G)
+    acc = acc_halo + acc_bar + acc_disk
     
     Nint = int(Tmax/dt)+1
     print('Nint=', Nint)
@@ -46,6 +48,9 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, dt=0.1, Tmax=1.0,
     total_torque = np.zeros((Nint, 3))
     time_out = np.zeros(Nint)
     ps_out = np.zeros(Nint)
+    
+    torque_gas0 = torque_gas
+    ps0 = ps
 
     N = pos.shape[0]
     
@@ -68,16 +73,21 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, dt=0.1, Tmax=1.0,
         
         rCR = vc/ps
         I = I_at_rCR6 * (rCR/6.0)**2
-        Lz_bar = I * ps
         
+        # Bar half-kick
         ps += - total_torque[i][2]/I * dt / 2.0 # constant ps
         ps += torque_gas/I * dt / 2.0
+        
+        torque_gas = torque_gas0 * (ps0-ps)
+        
+        # Bar drift
         ang += ps * dt
         
         # Force computation
         acc_halo = Hernquist_force(pos, M, a, G)
         acc_bar = bar_force(pos, A, b, vc, ps, ang)
-        acc = acc_halo + acc_bar
+        acc_disk = MiyamotoNagaiDisk(pos, disk_M, disk_a, disk_b, G)
+        acc = acc_halo + acc_bar + acc_disk
         
         # Second half-kick
         for j in prange(N):
@@ -85,10 +95,9 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, dt=0.1, Tmax=1.0,
                 vel[j][k] += acc[j][k] * dt / 2.
         
         rCR = vc/ps
-        I = 0.2 * (b*rCR)**2 * 1.25**2
-        Lz_bar = I * ps
+        I = I_at_rCR6 * (rCR/6.0)**2
         
-        ps += - Lz_bar/I* dt / 2.0 # constant ps
+        ps += - total_torque[i][2]/I * dt / 2.0 # constant ps
         ps += torque_gas/I * dt / 2.0
         
         T += dt

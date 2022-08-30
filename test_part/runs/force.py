@@ -83,3 +83,26 @@ def bar_force(pos, A, b, vc, ps, ang):
         acc[i][2] = np.cos(theta) * acc_r - np.sin(theta) * acc_theta
         
     return acc
+
+@njit
+def MiyamotoNagaiDisk(pos, M, a, b, G):
+    acc = np.zeros(pos.shape)
+    N = pos.shape[0]
+
+    for i in range(N):
+        x = pos[i,0]
+        y = pos[i,1]
+        z = pos[i,2]
+        Rsq = x**2 + y**2
+    
+        frc_x = - G * M * x / (Rsq + (a + np.sqrt(b**2 + z**2))**2)**(3./2.)
+        frc_y = - G * M * y / (Rsq + (a + np.sqrt(b**2 + z**2))**2)**(3./2.)
+    
+        frc_z = - G*M*z * (a + np.sqrt(b**2+z**2))
+        frc_z /= np.sqrt(b**2+z**2) * (Rsq + (a + np.sqrt(b**2 + z**2))**2)**(3./2.)
+    
+        acc[i,0] = frc_x
+        acc[i,1] = frc_y
+        acc[i,2] = frc_z
+    
+    return acc
