@@ -79,8 +79,10 @@ def read_bar_prop(name, lvl):
 def run():
     # print_gas_fractions()
     phS2R35 = 'phantom-vacuum-Sg20-Rc3.5'
+    Nbody = 'Nbody'
     lvl='lvl3'
-    bar_prop_Nbody = read_bar_prop(phS2R35, lvl)
+    bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
+    bar_prop_Nbody = read_bar_prop(Nbody, lvl)
     
     cm = 1/2.54
     
@@ -104,7 +106,11 @@ def run():
     
     t = bar_prop_Nbody['tlist']
     ps_N = savgol_filter(bar_prop_Nbody['pattern_speed'], 81, 3)
-    ax.plot(t - t[300], ps_N, c='k')
+    ax.plot(t - t[300], ps_N, c=tb_c[0], ls='dashed', label=r'$N$-body')
+    
+    t = bar_prop_SMUGGLE['tlist']
+    ps_S = savgol_filter(bar_prop_SMUGGLE['pattern_speed'], 81, 3)
+    ax.plot(t - t[300], ps_S, c=tb_c[1], ls='dashed', label='SMUGGLE')
     
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
@@ -112,6 +118,8 @@ def run():
     ax.text(2, 23, r'$\tau_{\textrm{gas}} = 0$', c=tb_c[0])
     ax.text(3, 45, r'$\tau_{\textrm{gas}} = 20$', c=tb_c[1])
 
+    ax.legend(frameon=False, loc='lower left')
+    
     fig.tight_layout()
 
     fig.savefig('samGvar.pdf')
