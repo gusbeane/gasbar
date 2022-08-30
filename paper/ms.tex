@@ -88,7 +88,7 @@ Milky Way-like galactic disk hosting a strong bar which includes a
 state-of-the-art model of the interstellar medium and a live dark matter halo.
 In this simulation the bar pattern does not slow down over time, and instead
 remains at a stable, constant rate of rotation. This behavior has been observed
-in previous simulations using more simplified models for the interstellar gas
+in previous simulations using more simplified models for the interstellar gas,
 but the apparent lack of secular evolution has remained unexplained. We propose
 that the gas phase of the disk and the dark matter halo act in concert to
 stabilize the bar pattern speed and prevent the bar from slowing down or
@@ -184,7 +184,7 @@ bar than its contribution to the mass of a galaxy would suggest
 \citep{2010ApJ...719.1470V, 2013MNRAS.429.1949A}.
 
 We have performed a simulation of a disk galaxy using the finite-volume,
-gravito-hydrodynamics code AREPO \citep{2010MNRAS.401..791S}. We use the galaxy
+gravito-hydrodynamics code \AREPO{} \citep{2010MNRAS.401..791S}. We use the galaxy
 formation model Stars and MUltiphase Gas in GaLaxiEs
 \citep[SMUGGLE;][]{2019MNRAS.489.4233M}. This disk galaxy exhibits almost no
 evolution in the bar pattern speed over several Gyr when the gas phase is
@@ -481,14 +481,14 @@ $-7.8$ in the same units and over the same time interval. The gas in the SMUGGLE
 case exerts a steady positive torque averaging $11.7$ over $1\,\textrm{Gyr}$ in
 the same units.
 
-As we saw qualitatively in Fig.~\ref{fig:overview}, the middle panel of
+As we saw qualitatively in Fig.~\ref{fig:overview}, the upper panel of
 Fig.~\ref{fig:strength} shows that the length of the bar in the \Nbody{} case
 grows over time while it remains roughly constant in the SMUGGLE case. This is
 also consistent with previous numerical work, which found that bars tend to grow
 as they slow down and the radius of corotation increases
 \citep{2000ApJ...543..704D, 2003MNRAS.341.1179A}. The time evolution of the bar
 strength, defined as the maximum of $\left|A_2/A_0\right|$ as a function of
-radius, is shown in the lower panel Fig.~\ref{fig:strength}. The quantity
+radius, is shown in the lower panel of Fig.~\ref{fig:strength}. The quantity
 $\left|A_2/A_0\right|$ varies from $0$ to $1$, with larger values indicating a
 stronger bar pattern. We see that in the \Nbody{} case, $\left|A_2/A_0\right|$
 increases over time as the bar pattern slows. This is consistent with previous
@@ -555,7 +555,7 @@ newly resonant with the bar to participate in forming the wake. However, the gas
 is a reliable source of positive torque on the bar, speeding the bar up. This
 stops the resonance location from changing such that the halo cannot reinforce
 the wake, arresting the process by which the halo can slow the bar down. We term
-this process ``exhaustion.''
+this process ``halo exhaustion.''
 
 We can test this interpretation by measuring the angle offset between the halo
 wake and the bar. If the wake and the bar are aligned (i.e., there is no angle
@@ -588,13 +588,13 @@ several Gyr time span.
 
 We argue that the following occurs. First, the bar is not able to slow down
 quickly enough due to the positive torque of the infalling gas. This causes
-the resonant halo phase space at a particular pattern speed, $\Omega_{p,0}$,
+the resonant halo phase space at a particular pattern speed, $\Omega_{\textrm{p},0}$,
 to become exhausted and no longer able to support a negative torque. Second,
 the gas is still exerting a positive torque on the bar, and therefore the
 pattern speed will again increase. Since at higher pattern speeds the halo has
 not yet been totally exhausted, the halo will once again be able to exert a
 negative torque on the bar. The pattern speed will then settle at a new value
-slightly higher than $\Omega_{p,0}$ where the gas and halo torques cancel.
+slightly higher than $\Omega_{\textrm{p},0}$ where the gas and halo torques cancel.
 Over time, the pattern speed should slowly increase as the halo becomes
 progressively exhausted.
 
@@ -621,7 +621,7 @@ pattern speed to quickly return to the higher value of our fiducial simulation
 
 
 \subsection{Varying Initial Gas Fractions}
-We also performed a test in which we varied the initial gas fraction of the
+We performed a test in which we varied the initial gas fraction of the
 disk. In our fiducial run, we set the surface density of the gas disk from
 $4\,\textrm{kpc}$ to $\sim9.3\,\textrm{kpc}$ to be $20\,\Msun/\textrm{pc}^2$.
 We also ran with surface densities of $15$, $10$, and
@@ -639,7 +639,7 @@ necessary in order for the proposed stabilizing mechanism to operate.
 
 
 \subsection{Smooth Interstellar Medium}
-We also performed a simulation of the same disk but with a simpler model of the
+We performed a simulation of the same disk but with a simpler model of the
 interstellar medium \citep{2003MNRAS.339..289S}, closer to standard methods used
 in cosmological simulations of galaxy formation and described in more detail in
 Section~\ref{sec:methods}. The result of this test is presented in
@@ -694,13 +694,15 @@ We allow the bar in this model to rotate as a solid body. However, we crucially
 allow the pattern speed of the bar to freely change with time in accordance with
 the torque exerted on the dark matter halo by the bar. In particular, we
 subtract the $z$-component of this torque divided by the moment of inertia of
-the bar from the pattern speed. Since the radius of corotation \RCR{} is a
-parameter in the bar model from \citet{2022MNRAS.513..768C}, we allow the moment
-of inertia of the bar to vary with ${\RCR}^2$. To be more precise, we allow
+the bar from the pattern speed at each timestep. Since the radius of corotation
+\RCR{} is a parameter in the bar model from \citet{2022MNRAS.513..768C}, we
+allow the moment of inertia of the bar to vary with ${\RCR}^2$. To be more
+precise, we allow
 \begin{equation}
 I = \frac{I_6}{10^{10} \Msun (\kms)^2} \left( \frac{\RCR}{6\,\textrm{kpc}} \right)^2\textrm{,}
 \end{equation}
-where $I_6$ is a free parameter chosen by the user. We found that allowing $I_6=8$ is a good approximation to our bar model.
+where $I_6$ is a free parameter chosen by the user. We found that allowing
+$I_6=8$ is a good approximation to our fiducial disk model.
 
 In addition to $I_6$, we allowed for another free parameter - the torque from
 the gas phase on the bar, $\tau_{\textrm{gas}}$. This torque is applied to the
@@ -708,21 +710,23 @@ bar in the same way as the torque from the halo is applied. The torque is given
 in code units ($10^{10}\Msun \left(\kms\right)^2$). We allow this torque to
 mildly vary with pattern speed according to the formula,
 \begin{equation}
-\tau = \tau_{\textrm{gas}} + (40\,\kms/\textrm{kpc} - \Omega_p)\textrm{.}
+\tau = \tau_{\textrm{gas}} + (40 - \Omega_{\textrm{p}})\textrm{,}
 \end{equation}
-We are motivated to do this because of our result in Appendix~\ref{app:varyps}
-which shows that more slowly rotating bars have higher gas infall rates and thus
-larger positive torques. In the $\tau_{\textrm{gas}}=0$ case, we do not allow
-the gas torque to vary with pattern speed.
+where $\Omega_{\textrm{p}}$ is given in $\kms/\textrm{kpc}$. We are motivated to
+do this because of our result in Appendix~\ref{app:varyps} which shows that more
+slowly rotating bars have higher gas infall rates and thus larger positive
+torques. In the $\tau_{\textrm{gas}}=0$ case, we do not allow the gas torque to
+vary with pattern speed.
 
 We show the effect of varying the gas torque $\tau_{\textrm{gas}}$ from $0$ to
 $20$ in increments of $2$ in Fig.~\ref{fig:sam}. The solid lines indicate the
 semi-analytic model, while the two dashed lines correspond to our fiducial
 simulations introduced earlier. For reference, the average torque exerted by the
-gas phase on the bar in our fiducial simulation was $11.7$ in code units. We see in Fig.~\ref{fig:sam} that we can reproduce the stability of our fiducial
-gas disk simply by including a positive torque on the order of $6$. Our
-semi-analytic model with no gas torque can reproduce the pattern speed evolution
-of the $N$-body case.
+gas phase on the bar in our fiducial simulation was $11.7$ in code units. We see
+in Fig.~\ref{fig:sam} that we can reproduce the stability of our fiducial gas
+disk (i.e., its lack of secular evolution) simply by including a positive torque
+on the order of $6$. Our semi-analytic model with no gas torque can reproduce
+the pattern speed evolution of the $N$-body case.
 
 We next take the $\tau_{\textrm{gas}}=0$ and $20$ cases from Fig.~\ref{fig:sam}
 and plot the torque evolution. This result, given in Fig.~\ref{fig:sam-torque},
@@ -731,8 +735,8 @@ $\tau_{\textrm{gas}}=0$ case compares favorably to the \Nbody{} case described
 in previous sections. The bar exerts a steady negative torque in this case (blue
 line). When a gas torque is included (orange lines), we find that the halo's
 torque becomes much weaker, similar to what we found in the SMUGGLE case. The
-gas applies a steady positive torque by construction. The exhaustion process is
-reproduced in our simple semi-analytic model.
+gas applies a steady positive torque by construction. Therefore, the exhaustion
+process is reproduced in our simple semi-analytic model.
 
 \subsection{Observations}
 Observational estimates of the pattern speeds of bars indicate that nearly all
@@ -785,7 +789,8 @@ simulation -- e.g., satellite infall \citep{2011Natur.477..301P}, non-sphericity
 \citep{2013MNRAS.434.1287S, 2014ApJ...783L..18L, 2018MNRAS.476.1331C,
 2019MNRAS.488.5788C}, or perhaps even the gaseous circumgalactic medium.
 Naturally, extending our present work to account for such effects is a crucial
-next step in understanding the formation and evolution of galactic bars.
+next step in understanding the formation and evolution of galactic bars. We are
+presently engaged in such an exploration.
 
 
 \begin{figure}
@@ -833,6 +838,12 @@ next step in understanding the formation and evolution of galactic bars.
 
 \section{Conclusions}
 \label{sec:conclusions}
+We performed a simulation of a Milky Way-like galactic disk hosting a strong bar
+with a state-of-the-art model for the interstellar medium. We found that the
+pattern speed of the bar in this simulation does not slow down but rather
+remains at a stable, constant pattern speed. We provided a simple semi-analytic
+model which reproduces many of the features from our fiducial disk model.
+
 The implications of our findings are numerous. First, we naturally explain why
 nearly all observed galaxies are fast rotators without requiring the inner
 regions of dark matter halos to be underdense \citep{1998ApJ...493L...5D,
@@ -1023,6 +1034,9 @@ $0.32\,\textrm{kpc}$. For the bar, we used the quadrupole potential described in
 \citet{2022MNRAS.513..768C}. We used their fiducial parameter values --
 specifically, we set $A=0.02$, $b=0.28$, and $v_c = 235\,\kms$. Our initial
 pattern speed is always set to $40\,\kms/\textrm{kpc}$.
+
+We integrated our model for $5\,\textrm{Gyr}$ with a timestep of
+$0.01\,\textrm{Gyr}$.
 
 \section{Idealized Mock Light Images}
 \label{app:hst}
