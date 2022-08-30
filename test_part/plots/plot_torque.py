@@ -93,45 +93,47 @@ def run():
     
     fig, ax = plt.subplots(1, 1, figsize=(columnwidth*cm, (3./4.)*columnwidth*cm))
     
-    G = 20
-    I = 8
-
     # colors = pl.cm.cool(np.linspace(0,1,n))
     
     #cmap = mpl.colors.LinearSegmentedColormap.from_list("", [tb_c[0], tb_c[1]])
     #colors = cmap(np.linspace(0, 1, N))
     
-    outN = read_Iout(I)
-    outS = read_Gout(G)
+    outN = read_Gout(0)
+    outS = read_Gout(20)
 
     timeN = outN['time']
     timeS = outS['time']
     
-    psN = outN['ps']
-    psS = outS['ps']
+    tzN = outN['total_torque'][:,2]
+    tzS = outS['total_torque'][:,2]
 
-    ax.plot(timeN, psN, c=tb_c[0], ls='dashed')
-    ax.plot(timeS, psS, c=tb_c[1], ls='dashed')
-        
-    t = bar_prop_Nbody['tlist']
-    ps_N = savgol_filter(bar_prop_Nbody['pattern_speed'], 81, 3)
-    ax.plot(t - t[300], ps_N, c=tb_c[0], label=r'$N$-body')
+    tz_gas = outS['torque_gas'][:]
+
+    tzN = savgol_filter(tzN, 81, 3)
+    tzS = savgol_filter(tzS, 81, 3)
+    tz_gas = savgol_filter(tz_gas, 81, 3)
+
+    ax.plot(timeN, -tzN, c=tb_c[0])
+    ax.plot(timeS, -tzS, c=tb_c[1])
+    ax.plot(timeS, tz_gas, c=tb_c[1], ls='dashed')
+
+    ax.axhline(0, c='k')
     
-    t = bar_prop_SMUGGLE['tlist']
-    ps_S = savgol_filter(bar_prop_SMUGGLE['pattern_speed'], 81, 3)
-    ax.plot(t - t[300], ps_S, c=tb_c[1], label='SMUGGLE')
-    
-    ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
+    ax.set(ylim=(-100, 100), ylabel=r'$\tau_{\textrm{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
     ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
     
-    ax.text(2, 23, r'$\tau_{\textrm{gas}} = 0$', c=tb_c[0])
-    ax.text(3, 45, r'$\tau_{\textrm{gas}} = 20$', c=tb_c[1])
+    custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
+                    mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
+    ax.legend(custom_lines, ['by halo', 'by gas'], frameon=False)
 
-    ax.legend(frameon=False, loc='lower left')
+    ax.text(1, -65, r'$\tau_{\textrm{gas}} = 0$', c=tb_c[0])
+    ax.text(3, -35, r'$\tau_{\textrm{gas}} = 20$', c=tb_c[1])
+
+    # ax.legend(frameon=False, loc='lower left')
 
     fig.tight_layout()
 
-    fig.savefig('sam_tot.pdf')
+    fig.savefig('sam_torque.pdf')
 
 if __name__ == '__main__':
     run()
