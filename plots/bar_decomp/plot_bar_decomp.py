@@ -19,7 +19,7 @@ columnwidth = 244.0 * 0.035145980349999517 # convert to cm
 textwidth = 508.0 * 0.035145980349999517 # convert to cm
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
+bprop_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/bar_prop/data/'
 
 # names
 Nbody = 'Nbody'
@@ -130,8 +130,8 @@ def gen_heatmap(pos, mass, nres, range):
     return heatmap
 
 def run(name, lvl, idx):
-    phase_space_path = '/n/home01/abeane/starbar/analysis/phase_space/data'
-    in_bar_path = '/n/home01/abeane/starbar/analysis/in_bar/data'
+    phase_space_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/phase_space/data'
+    in_bar_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/in_bar/data'
     
     center = get_center(name)
     mass = get_mass(lvl)
@@ -151,6 +151,11 @@ def run(name, lvl, idx):
         heatmap = np.load('heatmap.npy')
         heatmap_in_bar = np.load('heatmap_in_bar.npy')
         heatmap_not_in_bar = np.load('heatmap_not_in_bar.npy')
+        
+        A2_vals = np.load('A2_vals.npy')
+        A2 = A2_vals[0]
+        A2_in_bar = A2_vals[1]
+        A2_not_in_bar = A2_vals[2]
 
     except:
         time, pos = read_phase_space(name, lvl, idx, phase_space_path)
@@ -170,6 +175,21 @@ def run(name, lvl, idx):
         np.save('heatmap.npy', heatmap)
         np.save('heatmap_in_bar.npy', heatmap_in_bar)
         np.save('heatmap_not_in_bar.npy', heatmap_not_in_bar)
+        
+        phi = np.arctan2(pos[:,1], pos[:,0])
+        phi_in_bar = np.arctan2(pos_in_bar[:,1], pos_in_bar[:,0])
+        phi_not_in_bar = np.arctan2(pos_not_in_bar[:,1], pos_not_in_bar[:,0])
+        
+        A2 = np.nansum(np.exp(2j*phi))
+        A2_in_bar = np.nansum(np.exp(2j*phi_in_bar))
+        A2_not_in_bar = np.nansum(np.exp(2j*phi_not_in_bar))
+        
+        np.save('A2_vals.npy', np.array([A2, A2_in_bar, A2_not_in_bar]))
+        print('phi nan: ', np.where(np.isnan(phi))[0])
+
+    print(np.abs(A2), np.abs(A2_in_bar), np.abs(A2_not_in_bar))
+
+
 
     cmap = copy.copy(plt.get_cmap('binary'))
     # cmap.set_bad(cmap.colors[0])
