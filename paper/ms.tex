@@ -679,11 +679,11 @@ the model for the interstellar medium.
 
 \subsection{Semi-Analytic Model}
 We also developed a simple semi-analytic model of a bar-disk-halo system. This
-exercise demonstrates that our proposed mechanism follows from a few simplistic
+exercise demonstrates that our proposed mechanism follows from a few simple
 assumptions. Our method follows closely the one developed in
 \citet{2022MNRAS.513..768C}. We model the bar-disk-halo system with three
-components: a dark matter Hernquist halo \citep{1990ApJ...356..359H}, a
-Miyamoto-Nagai disk \citep{1975PASJ...27..533M}, and a pure quadrupole bar
+components: a dark matter \citet{1990ApJ...356..359H} halo, a
+\citet{1975PASJ...27..533M} disk, and a pure quadrupole bar
 described in \citet{2022MNRAS.513..768C}. The bar and disk components are just
 described by their potential, but we integrate the trajectories of test
 particles drawn from a Hernquist halo. Note that we do not include the
@@ -702,7 +702,11 @@ precise, we allow
 I = \frac{I_6}{10^{10} \Msun (\kms)^2} \left( \frac{\RCR}{6\,\textrm{kpc}} \right)^2\textrm{,}
 \end{equation}
 where $I_6$ is a free parameter chosen by the user. We found that allowing
-$I_6=8$ is a good approximation to our fiducial disk model.
+$I_6=8$ is a good approximation to our fiducial disk model. In code units, the
+moment of inertia of the SMUGGLE bar (i.e., the particles classified as being in
+the bar) is about $2$. This is a factor of $4$ smaller than our fiducial value
+of $I_6=8$, but this is probably due to the fact that the bar does not really
+rotate as a solid body.
 
 In addition to $I_6$, we allowed for another free parameter - the torque from
 the gas phase on the bar, $\tau_{\textrm{gas}}$. This torque is applied to the
