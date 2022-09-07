@@ -1,0 +1,29 @@
+Title:  Stellar Bars in Spiral Galaxies Do Not Slow Down 
+
+Cover Letter: 
+
+Dear Dr. Sage,
+
+We are writing with a pre-submission enquiry for a manuscript we are preparing for publication. We are considering submitting the paper to Nature, and wanted to ask if it might be of interest to you.
+
+The paper presents theoretical evidence that the bar pattern in spiral galaxies rotates at a constant rate due to the influence of the interstellar medium. A large amount of previous simulation and analytic work has provided the expectation that the dark matter halo should exert a negative torque on the bar and that the pattern speed of the bar should decrease with time. In fact, this torque is expected to be significant, such that the radius of corotation should be quite large compared to the radius of the bar after only a few Gyr of tumbling. However, nearly all galaxies with observed pattern speeds rotate quickly, with corotation radii similar to bar radii. The conclusion drawn in the past from this is that either bars are young and short-lived features, or that the inner regions of dark matter halos must be negligible compared to the disk.
+
+We have performed a high-resolution simulation of an isolated barred galaxy with a state-of-the-art model for the interstellar medium. We found the surprising result that in this simulation the pattern speed remains constant over many Gyr. This implies that some equilibrium mechanism is at play, which we describe in some detail in the attached referenced paragraph.
+
+A handful of previous simulations of barred galaxies with gas have arrived at similar results with constant pattern speeds, which should provide some confidence that our result is not a numerical artifact. However, we are the first to notice its significance and to propose a physical mechanism for the stability of the pattern speed over many Gyr. This result has implications for understanding the role of dark matter on the evolution of bars, naturally explains why most observed galaxies are fast rotators, provides a mechanism for how the Milky Way's bar could be both old and quickly rotating, and complicates the picture of radial mixing in sculpting the disks of galaxies.
+
+We look forward to hearing what you think. Please let us know if there is any more information we can provide at this time.
+
+All the best,
+
+Angus Beane
+on behalf of the authors
+
+Angus Beane, Center for Astrophysics | Harvard & Smithsonian (first author)
+Prof. Lars Hernquist, Center for Astrophysics | Harvard & Smithsonian
+Prof. Elena D'Onghia, University of Wisconsin, Madison
+Prof. Federico Marinacci, University of Bologna
+Prof. Charlie Conroy, Center for Astrophysics | Harvard & Smithsonian
+Prof. Laura V. Sales, University of California, Riverside
+Prof. Paul Torrey, University of Florida
+Prof. Mark Vogelsberger, Massachusetts Institute of Technology 

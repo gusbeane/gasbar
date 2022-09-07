@@ -1,0 +1,109 @@
+
+\documentclass[sn-mathphys]{sn-jnl}% Math and Physical Sciences Reference Style
+%%\documentclass[sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
+%%\documentclass[sn-vancouver]{sn-jnl}% Vancouver Reference Style
+%%\documentclass[sn-apa]{sn-jnl}% APA Reference Style
+%%\documentclass[sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+%%\documentclass[sn-standardnature]{sn-jnl}% Standard Nature Portfolio Reference Style
+%%\documentclass[default]{sn-jnl}% Default
+%%\documentclass[default,iicol]{sn-jnl}% Default with double column layout
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+%%%%
+
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published 
+%%%%  by Springer Nature. The guidance has been prepared in partnership with 
+%%%%  production teams to conform to Springer Nature technical requirements. 
+%%%%  Editorial and presentation requirements differ among journal portfolios and 
+%%%%  research disciplines. You may find sections in this template are irrelevant 
+%%%%  to your work and are empowered to omit any such section if allowed by the 
+%%%%  journal you intend to submit to. The submission guidelines and policies 
+%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
+
+\usepackage{aas_macros}
+
+\jyear{2021}%
+
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}% 
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+\raggedbottom
+%%\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title{Stellar Bars in Spiral Galaxies Do Not Slow Down}
+
+\maketitle
+Elongated bar-like features are ubiquitous, occurring at the centers of
+approximately two-thirds of spiral disk galaxies \cite{2000AJ....119..536E,
+2007ApJ...657..790M}. Due to gravitational interactions between the bar and
+the other components of galaxies, it is expected that angular momentum and
+matter will redistribute between galactic components over long (Gyr)
+timescales in galaxies hosting a bar \cite{1972MNRAS.157....1L,
+1984MNRAS.209..729T, 1985MNRAS.213..451W}. Previous simulation work has
+overwhelmingly provided the expectation that the bar pattern will slow its
+rotation over time due to a drag caused by material in the dark matter halo on
+orbits resonant with the tumbling bar pattern
+\cite[e.g.][]{1992ApJ...400...80H, 2000ApJ...543..704D, 2002MNRAS.330...35A,
+2002ApJ...569L..83A, 2003MNRAS.341.1179A, 2003MNRAS.346..251O,
+2005MNRAS.363..991H, 2006ApJ...637..214M, 2007MNRAS.375..460W,
+2009ApJ...697..293D}. Simulations have shown that bars should shed enough
+angular momentum to be considered ``slow rotators'' in a few Gyr, but most
+observed galaxies seem to be ``fast rotators'' \cite{2011MSAIS..18...23C,
+2015AA...576A.102A, 2019MNRAS.482.1733G}. We have performed a simulation of an
+isolated galactic disk hosting a strong bar which includes a state-of-the-art
+model of the interstellar medium. In this simulation, the bar pattern does not
+slow down over time, and instead remains at a stable, constant rate of
+rotation. Since gas is torqued by the bar to fall towards the center of the
+galaxy, it acts to increase the angular momentum of the bar. However, the
+pattern speed we measure is nearly constant over many Gyr, suggesting a novel
+equilibrium mechanism is at play - we propose such a mechanism consistent with
+our simulation. First, a region of the halo phase space is carved out such
+that no resonant drag can occur. If the pattern speed decreases, the
+corotation radius becomes larger and so more gas is available for infall since
+only gas within corotation can infall \cite[e.g.][]{2011MNRAS.415.1027H}. This
+speeds the bar up. If the pattern speed increases, new dark matter which is
+resonant with the bar becomes available, slowing the bar down. Thus, the
+pattern speed must remain constant. The implications of this are numerous.
+First, we resolve a long-standing controversy between the observed fast
+rotators and the theoretical expectation that bars should be slow. Second, we
+show that the role of gas is of paramount importance in studies which attempt
+to uncover the nature of dark matter from its effect of slowing down the bar
+\cite{2021MNRAS.500.4710C, 2021MNRAS.505.2412C}. Third, we provide an
+explanation for how the Milky Way's bar could be both long-lived and a fast
+rotator, of which there is some observational evidence
+\cite[e.g.][]{2019MNRAS.490.4740B}. And finally, we complicate the picture of
+radial mixing expected to sculpt the Milky Way's disk
+\cite[e.g.][]{2012MNRAS.420..913B, 2015ApJ...808..132H}. Our work is a
+significant advance in our understanding of the dynamics of barred galaxies.
+
+\backmatter
+
+
+
+\bibliography{sn-bibliography}% common bib file
+%% if required, the content of .bbl file can be included here once bbl is generated
+%%\input sn-article.bbl
+
+%% Default %%
+%%\input sn-sample-bib.tex%
+
+\end{document}
