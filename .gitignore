@@ -15,6 +15,13 @@ paper/*.blg
 paper/*.synctex.gz
 
 paper-ApJ/aastex631
+paper-ApJ/aastexv631.tar.gz
+paper-ApJ/*.pdf
+paper-ApJ/*.log
+paper-ApJ/*.aux
+paper-ApJ/*.bbl
+paper-ApJ/*.blg
+paper-ApJ/*.synctex.gz
 
 
 /runs
