@@ -158,7 +158,7 @@ def run():
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
 
-    ax.legend(frameon=False, ncol=2, title=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot}/\textrm{kpc}^2\,]$')
+    ax.legend(frameon=False, ncol=2, title=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot}/\textrm{pc}^2\,]$')
 
     fig.tight_layout()
 
