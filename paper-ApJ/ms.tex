@@ -283,7 +283,7 @@ own Milky Way \citep{1957AJ.....62...19J, 1991ApJ...379..631B}. The ubiquity of
 bars is not difficult to explain, since stellar disks simulated in isolation
 almost always form bar-like structures \citep{1971ApJ...168..343H}. Several
 studies have shown that a spherical potential, such as a stellar bulge or dark
-matter halo, acts to stabilize stellar disks against bar formtaion
+matter halo, acts to stabilize stellar disks against bar formation
 \citep[e.g.,][]{1973ApJ...186..467O, 1976AJ.....81...30H}.
 
 It is more difficult to reconcile numerical simulations with the observed
@@ -337,17 +337,17 @@ bar than its contribution to the mass of a galaxy would suggest
 \citep{2010ApJ...719.1470V, 2013MNRAS.429.1949A}.
 
 We have performed a simulation of a disk galaxy using the finite-volume,
-gravito-hydrodynamics code \AREPO{} \citep{2010MNRAS.401..791S}. We use the galaxy
-formation model Stars and MUltiphase Gas in GaLaxiEs
+gravito-hydrodynamics code \AREPO{} \citep{2010MNRAS.401..791S}. We use the
+galaxy formation model Stars and MUltiphase Gas in GaLaxiEs
 \citep[\SMUGGLE{};][]{2019MNRAS.489.4233M}. This disk galaxy exhibits almost no
 evolution in the bar pattern speed over several Gyr when the gas phase is
 accounted for and properly modeled. This behavior has been observed in a few
-previous works \citep{1993AA...268...65F, 2010ApJ...719.1470V,
-2014MNRAS.438L..81A}. However, we are the first to demonstrate that the behavior
-ought to be present in a large fraction of galaxies, since it occurs in our
-simulation with gas fractions as low as about $5\%$. We are also the first to
-provide a physical explanation of the behavior with clear observational
-predictions.
+previous works \citep{1993AA...268...65F, 2007ApJ...666..189B,
+2009ApJ...707..218V, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. However, we are
+the first to demonstrate that the behavior ought to be present in a large
+fraction of galaxies, since it occurs in our simulation with gas fractions as
+low as about $5\%$. We are also the first to provide a physical explanation of
+the behavior with clear observational predictions.
 
 We show synthetic \textit{Hubble Space Telescope} images of our barred galaxy in
 a case with and without gas in Fig.~\ref{fig:overview}. We see that the bar
@@ -672,6 +672,12 @@ stops the resonance location from changing such that the halo cannot reinforce
 the wake, arresting the process by which the halo can slow the bar down. We term
 this process ``halo exhaustion.''
 
+This halo exhaustion is similar to an effect called ``metastability'' discussed
+in the literature \citep{2003MNRAS.345..406V, 2006ApJ...639..868S}. We note,
+however, that metastability is a numerical effect arising from low resolution
+and a poor sampling of resonances, and is not expected to occur in the real
+universe.
+
 We can test this interpretation by measuring the angle offset between the halo
 wake and the bar. If the wake and the bar are aligned (i.e., there is no angle
 offset), then the wake cannot exert a negative torque on the bar. This angle
@@ -683,14 +689,22 @@ wake with respect to the location of the bar in the \Nbody{} (center) and \SMUGG
 
 The presence of the gas can arrest the process by which additional material in
 the dark matter halo can contribute to a wake. However, this does not explain
-why the pattern speed in the \SMUGGLE{} case is nearly constant over several Gyr.
-Naively, it would be a coincidence that the bar pattern speed remains constant
-in the \SMUGGLE{} case, resulting from a chance cancellation of the halo and gas
-torques. However, a constant pattern speed in the presence of gas has been
-observed in a few simulations of barred galaxies with
-gas \citep{1993AA...268...65F, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. Previous
-work has argued this is due to the bar torquing gas inwards, but no explanation
-has been given for why it might remain constant.
+why the pattern speed in the \SMUGGLE{} case is nearly constant over several
+Gyr. Naively, it would be a coincidence that the bar pattern speed remains
+constant in the \SMUGGLE{} case, resulting from a chance cancellation of the
+halo and gas torques. However, a constant pattern speed in the presence of gas
+has been observed in a few simulations of barred galaxies with gas
+\citep{1993AA...268...65F, 2007ApJ...666..189B, 2009ApJ...707..218V,
+2010ApJ...719.1470V, 2014MNRAS.438L..81A}.
+
+\citet{1993AA...268...65F} argue this behavior is due to the steepening of the
+circular velocity curve in the central region as the bar drives gas to the
+center. \citet{2009ApJ...707..218V} argue this behavior occurs when the
+corotation resonance is larger than the disk radius, but we observe the behavior
+when the corotation radius is well within the disk.
+
+% Previous work has argued this is due to the bar torquing
+% gas inwards, but no explanation has been given for why it might remain constant.
 
 We propose that an equilibrium mechanism is responsible for the pattern speed
 remaining approximately constant. In this scenario, residual negative torque
