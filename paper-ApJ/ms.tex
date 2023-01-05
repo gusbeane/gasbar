@@ -129,7 +129,6 @@
 \graphicspath{{./}{figures/}}
 
 \begin{document}
-
 \title{Stellar Bars in Isolated Gas-Rich Spiral Galaxies Do Not Slow Down}
 
 %% LaTeX will automatically break titles if they run longer than
@@ -215,7 +214,8 @@
 \begin{abstract}
 
   Elongated bar-like features are ubiquitous in galaxies, occurring at the
-  centers of approximately two-thirds of spiral disks.  Due to gravitational
+  centers of approximately two-thirds of spiral disks in the nearby Universe.  
+  Due to gravitational
   interactions between the bar and the other components of galaxies, it is
   expected that angular momentum and matter will redistribute over long (Gyr)
   timescales in barred galaxies. Previous work ignoring the gas phase of
@@ -304,8 +304,8 @@ the bar to slow down over time \citep{1992ApJ...400...80H, 2000ApJ...543..704D,
 interaction can be understood as an angular form of dynamical friction between
 the bar and the dark matter halo. While studied in detail for the bar
 \citep{1984MNRAS.209..729T, 1985MNRAS.213..451W}, this process is generic for
-any non-axisymmetric disturbance \citep{1972MNRAS.157....1L}. For an old but
-still useful review of bar dynamics, see \citet{1993RPPh...56..173S}
+any non-axisymmetric disturbance \citep{1972MNRAS.157....1L}. (For an old but
+still useful review of bar dynamics, see \citet{1993RPPh...56..173S}.)
 
 Bar pattern speeds are usually measured using the parameter $\Rot=\RCR/\Rb$,
 where \RCR{} is the corotation radius and \Rb{} is the bar length.\footnote{The
@@ -336,6 +336,26 @@ numerical work has shown that the gas phase can have a stronger influence on a
 bar than its contribution to the mass of a galaxy would suggest
 \citep{2010ApJ...719.1470V, 2013MNRAS.429.1949A}.
 
+
+In the last decade, stellar bars have been studied mainly in the
+context of the instability processes that lead to their formation and their
+ability to drive gas toward the galaxy center and contribute to the formation of
+supermassive black holes (SMBH). The primary interest of these studies mainly
+was in the loss of angular momentum of the gas and the associated  gaseous flow
+down to the inner disk, possibly forming a central mass concentration
+\citep{2010ApJ...719.1470V}, and fueling the central SMBH \citep[e.g.][]{1989Natur.338...45S, 1990Natur.345..679S}. A revisit of the more general problem of
+galactic bar properties and formation, including the case of disk galaxies with
+very large gas fraction is timely since it is clear now that galactic disks show
+massive bars already at redshift $z>2$ \citep{2022arXiv221008658G}. At
+that time the universe was 2.5 billion year old and galaxies might have as high
+gas fraction as 80\% \citep{2020ARAA..58..157T}. Furthermore, unlike
+nearby disk galaxies, the high-redshift disks also continuously accrete cold gas
+from the cosmic web, making the formation, stability and evolution of
+non-axisymmetric features a key question to address since they can play a
+fundamental role in the more general problem of disk galaxy evolution.
+
+
+
 We have performed a simulation of a disk galaxy using the finite-volume,
 gravito-hydrodynamics code \AREPO{} \citep{2010MNRAS.401..791S}. We use the
 galaxy formation model Stars and MUltiphase Gas in GaLaxiEs
@@ -343,11 +363,17 @@ galaxy formation model Stars and MUltiphase Gas in GaLaxiEs
 evolution in the bar pattern speed over several Gyr when the gas phase is
 accounted for and properly modeled. This behavior has been observed in a few
 previous works \citep{1993AA...268...65F, 2007ApJ...666..189B,
-2009ApJ...707..218V, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. However, we are
-the first to demonstrate that the behavior ought to be present in a large
-fraction of galaxies, since it occurs in our simulation with gas fractions as
-low as about $5\%$. We are also the first to provide a physical explanation of
-the behavior with clear observational predictions.
+2009ApJ...707..218V, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. 
+
+Here we show that this phenomenon occurs in galaxies with gas fraction
+as low as about $5\%$, making this feature a likely characteristic of  Milky
+Way-type galaxies. This behavior will be explored in more general disks with
+larger gas fractions than the Milky Way in a forthcoming paper.
+% We are also the first to provide a physical explanation of
+%the behavior with clear observational predictions.
+We also provide a physical explanation of the redistribution of the angular
+momentum among the dark halo wake, the stellar bar, and the disk gas component. 
+
 
 We show synthetic \textit{Hubble Space Telescope} images of our barred galaxy in
 a case with and without gas in Fig.~\ref{fig:overview}. We see that the bar
@@ -656,29 +682,53 @@ pattern speed in the \SMUGGLE{} case being roughly constant or slightly increasi
 \subsection{Pattern Speed Evolution}
 The lack of evolution in the pattern speed of the \SMUGGLE{} case (seen in
 Fig.~\ref{fig:prop}) is intimately tied to the sudden decrease in torque exerted
-on the bar by the dark matter halo. We argue that this can be understood in
-terms of the halo wake mechanism. In the \Nbody{} case, halo material that is
-resonant with the bar will form a wake which lags behind and exerts a negative
-torque on the bar, slowing it down \citep{1984MNRAS.209..729T,
-1985MNRAS.213..451W, 1992ApJ...400...80H}.\footnote{Since the bar is not a solid
+on the bar by the dark matter halo. 
+
+%We argue that this can be understood in terms of the halo wake mechanism. 
+We interpret this behavior in terms of the halo wake mechanism. In the
+\Nbody{} case, a well known phenomenon is that the halo material resonant with
+the bar forms a wake, and this wake lags behind \citep{1984MNRAS.209..729T,
+1985MNRAS.213..451W, 1992ApJ...400...80H} and exerts a negative torque on the
+bar, slowing it down (see Fig.~\ref{fig:wake} below).\footnote{Since the bar is not a solid
 body, it is not guaranteed that a negative torque will slow it down - e.g. a
 negative torque could shred the bar, reducing its moment of inertia without
 changing its pattern speed. However, the bar seems to empirically respond to a
 negative torque induced by a halo wake by slowing down.} As the bar slows down,
-the location of the resonances in phase space changes, allowing halo material
-newly resonant with the bar to participate in forming the wake. However, the gas
-is a reliable source of positive torque on the bar, speeding the bar up. This
-stops the resonance location from changing such that the halo cannot reinforce
-the wake, arresting the process by which the halo can slow the bar down. We term
-this process ``halo exhaustion.''
+the location of the resonances in the phase space changes (see Fig.~12 and Table
+1 in \citet{2020ApJ...890..117D}) allowing halo material newly resonant with the
+bar to participate in the formation of the wake. However, the gas is also a
+reliable source of positive torque on the bar, speeding the bar up. In turn,
+this stops the location of the resonance from changing such that the halo cannot
+reinforce the wake, therefore arresting the process by which the halo can slow
+the bar down. We term this process ``halo exhaustion.'' Note that the resonances
+can be maintained even in the presence of the dissipative gaseous component if
+the gas is continuously accreted from the external environment, as is the case
+for massive disk galaxies at high redshift.
 
-This halo exhaustion is similar to an effect called ``metastability'' discussed
-in the literature \citep{2003MNRAS.345..406V, 2006ApJ...639..868S}. We note,
-however, that metastability is a numerical effect arising from low resolution
-and a poor sampling of resonances, and is not expected to occur in the real
-universe.
+%In the \Nbody{} case, halo material that is
+%resonant with the bar will form a wake which lags behind and exerts a negative 
+%torque on the bar, slowing it down \citep{1984MNRAS.209..729T,
+%1985MNRAS.213..451W, 1992ApJ...400...80H}.\footnote{Since the bar is not a solid
+%body, it is not guaranteed that a negative torque will slow it down - e.g. a
+%negative torque could shred the bar, reducing its moment of inertia without
+%changing its pattern speed. However, the bar seems to empirically respond to a
+%negative torque induced by a halo wake by slowing down.} As the bar slows down,
+%the location of the resonances in phase space changes, allowing halo material
+%newly resonant with the bar to participate in forming the wake. However, the gas
+%is a reliable source of positive torque on the bar, speeding the bar up. This
+%stops the resonance location from changing such that the halo cannot reinforce
+%the wake, arresting the process by which the halo can slow the bar down. We term
+%this process ``halo exhaustion.''
 
-We can test this interpretation by measuring the angle offset between the halo
+This halo exhaustion process is similar to the ``metastability'' effect, which
+has been previously discussed in the literature \citep{2003MNRAS.345..406V,
+2006ApJ...639..868S}. Finally, we also note that these authors, in particular,
+observe that the effects of numerical resolution in the simulations adopted to
+explore these mechanisms have yet to be fully explored and could play a role in
+the observed phenomenology of the simulations. We plan to address these issues
+in future dedicated work.
+
+We test this interpretation by measuring the angle offset between the halo
 wake and the bar. If the wake and the bar are aligned (i.e., there is no angle
 offset), then the wake cannot exert a negative torque on the bar. This angle
 is plotted in the left panel of Fig.~\ref{fig:wake}, which shows that the
@@ -1153,7 +1203,7 @@ match possible.
 
 For the dark matter halo, we used a Hernquist potential
 \citep{1990ApJ...356..359H} with mass $10^{12}\,\Msun$ and a scale length of
-$26.2\,\textrm{kpc}$. For the stellar disk, we used a MiyaMoto-Nagai disk
+$26.2\,\textrm{kpc}$. For the stellar disk, we used a Miyamoto-Nagai disk
 \citep{1975PASJ...27..533M} with mass $4.8\times10^{10}\,\Msun$, radial scale
 length of $2.67\,\textrm{kpc}$, and vertical scale length of
 $0.32\,\textrm{kpc}$. For the bar, we used the quadrupole potential described in
@@ -1284,6 +1334,5 @@ has large non-circular velocities.
 %% commands to see a summary list of all changes at the end of the article.
 %\listofchanges
 
-\end{document}
 
-% End of file `sample631.tex'.
+\end{document}
