@@ -26,7 +26,7 @@
 %% does not need to be explicitly stated.
 %%
 %% using aastex version 6.3
-\documentclass[twocolumn,linenumbers]{aastex631}
+\documentclass[twocolumn,linenumbers,trackchanges]{aastex631}
 
 %% The default is a single spaced, 10 point font, single spaced article.
 %% There are 5 other style options available via an optional argument. They
@@ -508,9 +508,12 @@ closest to ``level 3'' in the AURIGA simulations \citep{2017MNRAS.467..179G}.
 This corresponds to approximately $6.4\times10^6$ particles in the stellar disk,
 $1.1\times10^6$ in the bulge, $1.2\times10^6$ in the gas disk, and
 $25.3\times10^6$ in the dark matter halo. We used a softening length of
-$0.02\,\textrm{kpc}$ for all components. Snapshots were saved at equal intervals
-of $0.005$ in the time units of the simulation,
-$\textrm{kpc}/(\textrm{km}/\textrm{s})$.
+$20\,\textrm{pc}$ for all components. \edit1{This softening length is smaller
+than used in the original GALAKOS model ($28\,\textrm{pc}$ in their model, but
+$43.5\,\textrm{pc}$ when scaled to our mass resolution). Our smaller softening
+length is consistent with other resolved ISM models \citep{2018MNRAS.480..800H,
+2019MNRAS.489.4233M}.} Snapshots were saved at equal intervals of $0.005$ in the
+time units of the simulation, $\textrm{kpc}/(\textrm{km}/\textrm{s})$.
 
 Our setup is initially out of equilibrium, but we found that after about
 $500\,\textrm{Myr}$, the system has settled into a roughly steady-state
