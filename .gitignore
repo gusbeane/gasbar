@@ -64,8 +64,6 @@ plots/fourier_component/ComputeFourier
 notebooks/data
 prof.dat
 
-core*
-
 *.swp
 
 local_plots
