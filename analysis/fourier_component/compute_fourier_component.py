@@ -228,22 +228,28 @@ if __name__ == '__main__':
     phgvS10Rc35 = 'phantom-vacuum-Sg10-Rc3.5'
     phgvS08Rc35 = 'phantom-vacuum-Sg08-Rc3.5'
     phgvS05Rc35 = 'phantom-vacuum-Sg05-Rc3.5'
+    phgvS2Rc35star = 'phantom-vacuum-Sg20-Rc3.5-star'
     
     
     phgvS2Rc35RF = 'phantom-vacuum-Sg20-Rc3.5-RadFeed'
     phgS1 = 'phantom-Sg10-Rc4.0'
 
     pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
-                 (Nbody, 'lvl4'), (Nbody, 'lvl3'), (Nbody, 'lvl2'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
-                 (phgvS2Rc35, 'lvl3-snap700'),
+                 (Nbody, 'lvl4'), # 0
+                 (Nbody, 'lvl3'), # 1
+                 (Nbody, 'lvl2'), # 2
+                 (phgvS2Rc35, 'lvl4'), # 3
+                 (phgvS2Rc35, 'lvl3'), # 4
+                 (phgvS2Rc35, 'lvl3-snap700'), # 5
                  #(phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-snap700'),
                  #(phgvS2Rc35, 'lvl3-GFM'), (phgvS2Rc35, 'lvl3-isotherm'),
                  #(phgvS2Rc35, 'lvl4-GFM'),
-                 (phgvS15Rc35, 'lvl3'),
-                 (phgvS10Rc35, 'lvl3'),
-                 (phgvS08Rc35, 'lvl3'),
-                 (phgvS05Rc35, 'lvl3')]
+                 (phgvS15Rc35, 'lvl3'), # 6
+                 (phgvS10Rc35, 'lvl3'), # 7
+                 (phgvS08Rc35, 'lvl3'), # 8
+                 (phgvS05Rc35, 'lvl3'), # 9
+                 (phgvS2Rc35star, 'lvl4'), # 10
+                 (phgvS2Rc35star, 'lvl3')] # 11
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
