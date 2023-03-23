@@ -151,28 +151,15 @@ def run(nproc):
     print('ave_in=', ave_in, 'ave_out=', ave_out)
         
     cm = 1/2.54
-    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(9*cm, 9*cm))
+    fig, ax = plt.subplots(1, 1, sharex=True, figsize=(9*cm, 7*cm))
 
 
-    ax.plot(time_list, savgol_filter(in_list, 81, 3), c=tb_c[1], label='inside corotation')
-    ax.plot(time_list, savgol_filter(out_list, 81, 3), c=tb_c[1], ls='dashed', label='outside corotation')
+    ax.plot(time_list, savgol_filter(-in_list, 81, 3), c=tb_c[1], label='inside corotation')
+    ax.plot(time_list, savgol_filter(-out_list, 81, 3), c=tb_c[1], ls='dashed', label='outside corotation')
 
-    # Second panel, length of bar and mass of bar.
-    # t300 = bar_prop_Nbody['tlist'][300]
+    ax.axhline(0.0, c='k')
 
-    # rot_Nbody = np.array(RCR_Nbody)/bar_prop_Nbody['Rbar']
-    # rot_SMUGGLE = np.array(RCR_SMUGGLE) / bar_prop_SMUGGLE['Rbar']
-
-    # rot_Nbody = savgol_filter(rot_Nbody, 81, 3)
-    # rot_SMUGGLE = savgol_filter(rot_SMUGGLE, 81, 3)
-
-    # ax.plot(bar_prop_Nbody['tlist'] - t300, rot_Nbody, c=tb_c[0], label='N-body')#, ls='dashed')
-    # ax.plot(bar_prop_SMUGGLE['tlist'], rot_SMUGGLE, c=tb_c[1], label='SMUGGLE')#, ls='dashed')
-
-    # ax.legend(frameon=False)
-    # ax.set(ylim=(1.2, 2), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$', xlim=(0, 5))
-
-    ax.set(ylim=(-30, 10), ylabel=r'$\tau_{\text{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
+    ax.set(ylim=(-10, 30), ylabel=r'$\tau_{\text{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
     ax.set_xlabel(r'$t\,[\,\text{Gyr}\,]$')
     ax.set(xlim=(0, 5))
     
