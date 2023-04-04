@@ -268,13 +268,15 @@
     \caption{Synthetic Hubble Space Telescope images of our simulations with and
     without the interstellar medium. The upper panels show an \Nbody{} only
     simulation while the lower panels show a simulation which includes the
-    \SMUGGLE{} model for the interstellar medium. Each panel is $20\,\textrm{kpc}$
-    to a side. Columns show different points in time, separated by
-    $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar grows in
-    length and strength. In the \SMUGGLE{} run, the bar remains at approximately
-    the same length and strength over the course of the simulation. The \Nbody{}
-    model is identical to the GALAKOS model, discussed in the text. Details on
-    the production of these synthetic images is given in Appendix~\ref{app:hst}.}\label{fig:overview}
+    \SMUGGLE{} model for the interstellar medium. Each panel is
+    $20\,\textrm{kpc}$ to a side. Columns show different points in time,
+    separated by $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar
+    grows in length and strength. In the \SMUGGLE{} run, the bar remains at
+    approximately the same length and strength over the course of the
+    simulation. The \Nbody{} model is identical to the GALAKOS model {\bf (with
+    different particle numbers and softening lengths)}, discussed in the text.
+    Details on the production of these synthetic images is given in
+    Appendix~\ref{app:hst}.}\label{fig:overview}
 \end{figure*}
 
 Approximately two-thirds of spiral disks host an elongated bar-like feature at
@@ -282,9 +284,9 @@ their centers \citep{2000AJ....119..536E, 2007ApJ...657..790M}, including our
 own Milky Way \citep{1957AJ.....62...19J, 1991ApJ...379..631B}. The ubiquity of
 bars is not difficult to explain, since stellar disks simulated in isolation
 almost always form bar-like structures \citep{1971ApJ...168..343H}. Several
-studies have shown that a spherical potential, such as a stellar bulge or dark
-matter halo, acts to stabilize stellar disks against bar formation
-\citep[e.g.,][]{1973ApJ...186..467O, 1976AJ.....81...30H}.
+studies have shown that a {\bf hot, centrally concentrated mass distribution},
+such as a stellar bulge or dark matter halo, acts to stabilize stellar disks
+against bar formation \citep[e.g.,][]{1973ApJ...186..467O, 1976AJ.....81...30H}.
 
 It is more difficult to reconcile numerical simulations with the observed
 pattern speeds of extragalactic bars. Currently, the best technique for
@@ -322,12 +324,12 @@ speeds of bars indicate that nearly all galaxies have $1 < \Rot < 1.4$
 pattern speed should be measured relative to a characteristic angular velocity
 of the outer disk.
 
-While the interaction between the bar and a dark matter halo is well-understood
-theoretically, this is not the case for the interaction between a bar and a
-gaseous disk. Some argue that the gas disk should slow down the bar more
-\citep{2003MNRAS.341.1179A}, while others argue that the tendency of the bar to
-drive gas inwards means the bar should speed up due to the effect of the gas
-disk \citep{2013MNRAS.429.1949A, 2014MNRAS.438L..81A}. Since the gas phase
+{\bf While the fact that a bar is slowed down by a dark matter halo is
+well-understood theoretically,} this is not the case for the interaction between
+a bar and a gaseous disk. Some argue that the gas disk should slow down the bar
+more \citep{2003MNRAS.341.1179A}, while others argue that the tendency of the
+bar to drive gas inwards means the bar should speed up due to the effect of the
+gas disk \citep{2013MNRAS.429.1949A, 2014MNRAS.438L..81A}. Since the gas phase
 typically contributes only about $10-20\%$ of the mass of a galaxy at the
 present day, one might naively expect it to have a subdominant effect on the
 bar. However, because gas is collisional, it can participate in non-resonant
@@ -361,8 +363,8 @@ gravito-hydrodynamics code \AREPO{} \citep{2010MNRAS.401..791S}. We use the
 galaxy formation model Stars and MUltiphase Gas in GaLaxiEs
 \citep[\SMUGGLE{};][]{2019MNRAS.489.4233M}. This disk galaxy exhibits almost no
 evolution in the bar pattern speed over several Gyr when the gas phase is
-accounted for and properly modeled. This behavior has been observed in a few
-previous works \citep{1993AA...268...65F, 2007ApJ...666..189B,
+accounted for and {\bf robustly} modeled. This behavior has been observed in a
+few previous works \citep{1993AA...268...65F, 2007ApJ...666..189B,
 2009ApJ...707..218V, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. 
 
 Here we show that this phenomenon occurs in galaxies with gas fraction
@@ -1070,7 +1072,7 @@ bar could be both long-lived and a fast rotator, of which there is some
 observational evidence \citep{2019MNRAS.490.4740B}. And finally, we complicate
 the picture of radial mixing expected to sculpt the Milky Way's disk
 \citep{2012MNRAS.420..913B, 2015ApJ...808..132H}, a process which relies upon
-the pattern speed of the bar to change with time Our work does not alter
+the pattern speed of the bar to change with time. Our work does not alter
 expectations for radial mixing induced by spiral arms
 \citep{2002MNRAS.336..785S}.
 
@@ -1194,11 +1196,14 @@ corotation radius is larger for more slowly rotating bars, it follows that
 more slowly rotating bars should be more efficient at driving gas inflows and
 thus experience a larger positive torque from the gas phase.
 
-We performed an experiment to test this hypothesis by forcing the stellar disk
-in the \SMUGGLE{} run to rotate at a constant angular rate and measuring the
-torque on the bar by the gas phase at different rotation rates. The result of
-this experiment is illustrated in Fig.~\ref{fig:equil}, which shows that a more
-slowly rotating bar experiences a larger positive torque from the gas.
+{\bf We performed an experiment to test this hypothesis by freezing the stellar
+disk in the \SMUGGLE{} run and forcing it to rotate at a constant angular rate.
+This has the effect of forcing the bar to rotate as a solid body at a constant
+angular rate which we control. The gas is evolved self-consistently with this
+rotating disk.} We measured the torque on the bar by the gas phase at different
+rotation rates. The result of this experiment is illustrated in
+Fig.~\ref{fig:equil}, which shows that a more slowly rotating bar experiences a
+larger positive torque from the gas.
 
 {\bf We also note that since \citet{2011MNRAS.415.1027H} predicts gas outside of
 corotation will flow outward, the bar should exert a positive torque on that
