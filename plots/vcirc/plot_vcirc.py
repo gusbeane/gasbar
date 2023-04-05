@@ -92,19 +92,27 @@ def run():
     
 def run_init():
     cm = 1/2.54
-    fig, ax = plt.subplots(1, 1, figsize=(columnwidth*cm, (2./3.)*columnwidth*cm))
+    fig, ax = plt.subplots(1, 1, figsize=(2*columnwidth*cm, 2*(2./3.)*columnwidth*cm))
 
+    pot = read_agama_pot(200, phS2R35, lvl)
+    R, vc = compute_vcirc(pot)
+    ax.plot(R, vc, c=tb_c[1], label=r'$\textrm{SMUGGLE}\,t=1\,\textrm{Gyr}$')
+    
+    pot = read_agama_pot(0, phS2R35, lvl)
+    R, vc = compute_vcirc(pot)
+    ax.plot(R, vc, c=tb_c[3], label=r'$\textrm{SMUGGLE}\,t=0\,\textrm{Gyr}$')
+    
     pot = read_agama_pot(300, Nbody, lvl)
     R, vc = compute_vcirc(pot)
-    ax.plot(R, vc, c=tb_c[0], label=r'$t=0\,\textrm{Gyr}$')
+    ax.plot(R, vc, c=tb_c[0], label=r'$N\textrm{-body}\,t=0\,\textrm{Gyr}$')
 
     pot = read_agama_pot(0, Nbody, lvl)
     R, vc = compute_vcirc(pot)
-    ax.plot(R, vc, c=tb_c[1], label='r$t=-1.5\,\textrm{Gyr}$')
-
-    obs_data = np.genfromtxt('eilers_data.txt')
-    ax.errorbar(obs_data[:,0], obs_data[:,1], yerr=obs_data[:,2:].T, c='k', ls = "None")
-    ax.scatter(obs_data[:,0], obs_data[:,1], s=4, c='k', label='Eilers et al. (2019)')
+    ax.plot(R, vc, c=tb_c[2], label=r'$N\textrm{-body}\,t=-1.5\,\textrm{Gyr}$')
+    
+    # obs_data = np.genfromtxt('eilers_data.txt')
+    # ax.errorbar(obs_data[:,0], obs_data[:,1], yerr=obs_data[:,2:].T, c='k', ls = "None")
+    # ax.scatter(obs_data[:,0], obs_data[:,1], s=4, c='k', label='Eilers et al. (2019)')
 
     ax.set_xlim(0, 25)
     ax.set_ylim(0, 400)
@@ -112,7 +120,7 @@ def run_init():
     ax.set_xlabel(r'$R\,[\,\text{kpc}\,]$')
     ax.set_ylabel(r'$v_{\textrm{circ}}\,[\,\text{km}/\text{s}\,]$')
     
-    ax.set_title('$N$-body')
+    # ax.set_title('$N$-body')
 
     ax.legend(frameon=False)
 
