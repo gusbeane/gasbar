@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH -p bigmem
+#SBATCH -p hernquist_ice 
 #SBATCH -J fourier 
 #SBATCH -n 48
 #SBATCH -N 1

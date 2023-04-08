@@ -103,18 +103,18 @@ def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logs
                                        nbins=nbins, logspace=logspace)
     Rlist, A4r, A4i, A4r_c, A4i_c = fourier_component(pos, mass, 4, Rmin, Rmax, 
                                        nbins=nbins, logspace=logspace)
-    # Rlist, A5r, A5i, A5r_c, A5i_c = fourier_component(pos, mass, 5, Rmin, Rmax, 
-    #                                    nbins=nbins, logspace=logspace)
-    # Rlist, A6r, A6i, A6r_c, A6i_c = fourier_component(pos, mass, 6, Rmin, Rmax, 
-    #                                    nbins=nbins, logspace=logspace)
-    # Rlist, A7r, A7i, A7r_c, A7i_c = fourier_component(pos, mass, 7, Rmin, Rmax, 
-    #                                    nbins=nbins, logspace=logspace)
-    # Rlist, A8r, A8i, A8r_c, A8i_c = fourier_component(pos, mass, 8, Rmin, Rmax, 
-    #                                    nbins=nbins, logspace=logspace)
-    # Rlist, A9r, A9i, A9r_c, A9i_c = fourier_component(pos, mass, 9, Rmin, Rmax, 
-    #                                    nbins=nbins, logspace=logspace)
-    # Rlist, A10r, A10i, A10r_c, A10i_c = fourier_component(pos, mass, 10, Rmin, Rmax, 
-    #                                    nbins=nbins, logspace=logspace)
+    Rlist, A5r, A5i, A5r_c, A5i_c = fourier_component(pos, mass, 5, Rmin, Rmax, 
+                                       nbins=nbins, logspace=logspace)
+    Rlist, A6r, A6i, A6r_c, A6i_c = fourier_component(pos, mass, 6, Rmin, Rmax, 
+                                       nbins=nbins, logspace=logspace)
+    Rlist, A7r, A7i, A7r_c, A7i_c = fourier_component(pos, mass, 7, Rmin, Rmax, 
+                                       nbins=nbins, logspace=logspace)
+    Rlist, A8r, A8i, A8r_c, A8i_c = fourier_component(pos, mass, 8, Rmin, Rmax, 
+                                       nbins=nbins, logspace=logspace)
+    Rlist, A9r, A9i, A9r_c, A9i_c = fourier_component(pos, mass, 9, Rmin, Rmax, 
+                                       nbins=nbins, logspace=logspace)
+    Rlist, A10r, A10i, A10r_c, A10i_c = fourier_component(pos, mass, 10, Rmin, Rmax, 
+                                       nbins=nbins, logspace=logspace)
     
     time = sn.Time.as_unit(arepo.u.d).value * u.d
     time = time.to_value(u.Myr)
@@ -127,24 +127,24 @@ def compute_fourier_component(path, snapnum, Rmin=0.0, Rmax=30.0, nbins=60, logs
     out['A2r'], out['A2i'] = A2r, A2i
     out['A3r'], out['A3i'] = A3r, A3i
     out['A4r'], out['A4i'] = A4r, A4i
-    # out['A5r'], out['A5i'] = A5r, A5i
-    # out['A6r'], out['A6i'] = A6r, A6i
-    # out['A7r'], out['A7i'] = A7r, A7i
-    # out['A8r'], out['A8i'] = A8r, A8i
-    # out['A9r'], out['A9i'] = A9r, A9i
-    # out['A10r'], out['A10i'] = A10r, A10i
+    out['A5r'], out['A5i'] = A5r, A5i
+    out['A6r'], out['A6i'] = A6r, A6i
+    out['A7r'], out['A7i'] = A7r, A7i
+    out['A8r'], out['A8i'] = A8r, A8i
+    out['A9r'], out['A9i'] = A9r, A9i
+    out['A10r'], out['A10i'] = A10r, A10i
 
     out['A0_c'] = A0_c
     out['A1r_c'], out['A1i_c'] = A1r_c, A1i_c
     out['A2r_c'], out['A2i_c'] = A2r_c, A2i_c
     out['A3r_c'], out['A3i_c'] = A3r_c, A3i_c
     out['A4r_c'], out['A4i_c'] = A4r_c, A4i_c
-    # out['A5r_c'], out['A5i_c'] = A5r_c, A5i_c
-    # out['A6r_c'], out['A6i_c'] = A6r_c, A6i_c
-    # out['A7r_c'], out['A7i_c'] = A7r_c, A7i_c
-    # out['A8r_c'], out['A8i_c'] = A8r_c, A8i_c
-    # out['A9r_c'], out['A9i_c'] = A9r_c, A9i_c
-    # out['A10r_c'], out['A10i_c'] = A10r_c, A10i_c
+    out['A5r_c'], out['A5i_c'] = A5r_c, A5i_c
+    out['A6r_c'], out['A6i_c'] = A6r_c, A6i_c
+    out['A7r_c'], out['A7i_c'] = A7r_c, A7i_c
+    out['A8r_c'], out['A8i_c'] = A8r_c, A8i_c
+    out['A9r_c'], out['A9i_c'] = A9r_c, A9i_c
+    out['A10r_c'], out['A10i_c'] = A10r_c, A10i_c
 
     out['time'] = time
 
@@ -157,22 +157,22 @@ def concat_files(outs, indices, fout):
     for t, idx in zip(outs, indices):
         snap = h5out.create_group('snapshot_'+"{:03d}".format(idx))
 
-        # for key in ['Rlist', 'A0', 'A1r', 'A1i',
-        #             'A2r','A2i', 'A3r','A3i',
-        #             'A4r','A4i', 'A5r','A5i',
-        #             'A6r','A6i', 'A7r','A7i',
-        #             'A8r','A8i', 'A9r','A9i', 'A10r', 'A10i',
-        #             'A0_c', 'A1r_c', 'A1i_c',
-        #             'A2r_c','A2i_c', 'A3r_c','A3i_c',
-        #             'A4r_c','A4i_c', 'A5r_c','A5i_c',
-        #             'A6r_c','A6i_c', 'A7r_c','A7i_c',
-        #             'A8r_c','A8i_c', 'A9r_c','A9i_c', 'A10r_c', 'A10i_c']:
         for key in ['Rlist', 'A0', 'A1r', 'A1i',
                     'A2r','A2i', 'A3r','A3i',
-                    'A4r','A4i',
+                    'A4r','A4i', 'A5r','A5i',
+                    'A6r','A6i', 'A7r','A7i',
+                    'A8r','A8i', 'A9r','A9i', 'A10r', 'A10i',
                     'A0_c', 'A1r_c', 'A1i_c',
                     'A2r_c','A2i_c', 'A3r_c','A3i_c',
-                    'A4r_c','A4i_c']:
+                    'A4r_c','A4i_c', 'A5r_c','A5i_c',
+                    'A6r_c','A6i_c', 'A7r_c','A7i_c',
+                    'A8r_c','A8i_c', 'A9r_c','A9i_c', 'A10r_c', 'A10i_c']:
+        #for key in ['Rlist', 'A0', 'A1r', 'A1i',
+        #            'A2r','A2i', 'A3r','A3i',
+        #            'A4r','A4i',
+        #            'A0_c', 'A1r_c', 'A1i_c',
+        #            'A2r_c','A2i_c', 'A3r_c','A3i_c',
+        #            'A4r_c','A4i_c']:
             snap.create_dataset(key, data=t[key])
         time_list.append(t['time'])
 
@@ -234,22 +234,29 @@ if __name__ == '__main__':
     phgvS2Rc35RF = 'phantom-vacuum-Sg20-Rc3.5-RadFeed'
     phgS1 = 'phantom-Sg10-Rc4.0'
 
+    NbodyBH = 'Nbody300-BH'
+    NbodyBH1E8 = 'Nbody500-BH1E8'
+
     pair_list = [#(fid_dP, 'lvl5'), (fid_dP, 'lvl4'), #(fid_dP, 'lvl3'),
                  (Nbody, 'lvl4'), # 0
                  (Nbody, 'lvl3'), # 1
                  (Nbody, 'lvl2'), # 2
                  (phgvS2Rc35, 'lvl4'), # 3
                  (phgvS2Rc35, 'lvl3'), # 4
-                 (phgvS2Rc35, 'lvl3-snap700'), # 5
+                 (phgvS2Rc35, 'lvl2'), # 5
+                 (phgvS2Rc35, 'lvl3-snap700'), # 6
+                 (phgvS2Rc35, 'lvl3-soft0.04'), # 7
                  #(phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-snap700'),
                  #(phgvS2Rc35, 'lvl3-GFM'), (phgvS2Rc35, 'lvl3-isotherm'),
                  #(phgvS2Rc35, 'lvl4-GFM'),
-                 (phgvS15Rc35, 'lvl3'), # 6
-                 (phgvS10Rc35, 'lvl3'), # 7
-                 (phgvS08Rc35, 'lvl3'), # 8
-                 (phgvS05Rc35, 'lvl3'), # 9
-                 (phgvS2Rc35star, 'lvl4'), # 10
-                 (phgvS2Rc35star, 'lvl3')] # 11
+                 (phgvS15Rc35, 'lvl3'), # 8
+                 (phgvS10Rc35, 'lvl3'), # 9
+                 (phgvS08Rc35, 'lvl3'), # 10
+                 (phgvS05Rc35, 'lvl3'), # 11
+                 (phgvS2Rc35star, 'lvl4'), # 12
+                 (phgvS2Rc35star, 'lvl3'), # 13
+                 (NbodyBH, 'lvl3'), # 14
+                 (NbodyBH1E8, 'lvl3')] # 15
                  # (fid_dP_c1_bG, 'lvl5'), (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_bG1, 'lvl5'),# (fid_dP_c1_bG, 'lvl4'),# (fid_dP_c1_bG, 'lvl3'),
                  # (fid_dP_c1_rB, 'lvl5'), (fid_dP_c1_rB, 'lvl4'), (fid_dP_c1_rB, 'lvl3'),
