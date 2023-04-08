@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 
 from joblib import Parallel, delayed
 
-def read_fourier(name, basepath='/n/home01/abeane/starbar/plots/'):
+def read_fourier(name, basepath='/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/'):
     f = h5.File(basepath+'/fourier_component/data/fourier_' + name + '.hdf5', mode='r')
     return f
 
@@ -401,49 +401,32 @@ def _run_chunk(name, chunk_idx, prefix, phase_space_path, center, bar_angle_out,
 
     tlist = np.array(h5in['Time'])
 
-    # load disk particles
-    # pos = np.array(h5in['PartType2/Coordinates']).swapaxes(0, 1)
-    pos = np.array(h5in['PartType2/Coordinates'])
-    # vel = np.array(h5in['PartType2/Velocities']).swapaxes(0, 1)
-    vel = np.array(h5in['PartType2/Velocities'])
-    ids = np.array(h5in['PartType2/ParticleIDs'])
-
-    # load bulge particles
-    # pos = np.concatenate((pos, np.array(h5in['PartType3/Coordinates']).swapaxes(0, 1) ))
-    pos = np.concatenate((pos, np.array(h5in['PartType3/Coordinates']) ))
-    # vel = np.concatenate((vel, np.array(h5in['PartType3/Velocities']).swapaxes(0, 1) ))
-    vel = np.concatenate((vel, np.array(h5in['PartType3/Velocities']) ))
-    ids = np.concatenate((ids, np.array(h5in['PartType3/ParticleIDs'])))
-
-    # load star particles (if they exist)
-    if 'PartType4' in h5in.keys():
-        # pos = np.concatenate((pos, np.array(h5in['PartType4/Coordinates']).swapaxes(0, 1) ))
-        pos = np.concatenate((pos, np.array(h5in['PartType4/Coordinates']) ))
-        # vel = np.concatenate((vel, np.array(h5in['PartType4/Velocities']).swapaxes(0, 1) ))
-        vel = np.concatenate((vel, np.array(h5in['PartType4/Velocities']) ))
-        ids = np.concatenate((ids, np.array(h5in['PartType4/ParticleIDs'])))
-    # vel = np.array(h5in['Velocities'])
-
-    pos -= center
-        
-    w = np.concatenate((pos, vel), axis=-1)
-    w = np.swapaxes(w, 0, 1)
-
-    Rwlist = rotate_wlist(w, bar_angle_out, indices)
-    ans = loop_trapping_metrics(Rwlist, tlist, indices)
-
-    for j in range(len(ans)):
-        h5out.create_dataset('bar_metrics/'+str(ids[j]), data=ans[j])
+    for pt in [1, 2, 3, 4]:
+        if 'PartType'+str(pt) in h5in.keys():
+            pos = np.array(h5in['PartType'+str(pt)+'/Coordinates'])
+            vel = np.array(h5in['PartType'+str(pt)+'/Velocities'])
+            ids = np.array(h5in['PartType'+str(pt)+'/ParticleIDs'])
     
-    h5out.create_dataset('tlist', data=tlist)
-    h5out.create_dataset('id_list', data=ids)
-    h5out.create_dataset('idx_list', data=indices)
+            pos -= center
+            w = np.concatenate((pos, vel), axis=-1)
+            w = np.swapaxes(w, 0, 1)
+
+            Rwlist = rotate_wlist(w, bar_angle_out, indices)
+            ans = loop_trapping_metrics(Rwlist, tlist, indices)
+
+            for j in range(len(ans)):
+                h5out.create_dataset('PartType'+str(pt)+'/bar_metrics/'+str(ids[j]), data=ans[j])
+
+            h5out.create_dataset('PartType'+str(pt)+'/tlist', data=tlist)
+            h5out.create_dataset('PartType'+str(pt)+'/id_list', data=ids)
+            h5out.create_dataset('PartType'+str(pt)+'/idx_list', data=indices)
 
     bar_angle = np.mod(bar_angle_out['bar_angle'][indices], 2.*np.pi)
     h5out.create_dataset('bar_angle', data=bar_angle)
+
     return None
 
-def run(path, name, nsnap, nproc, phase_space_path='/n/home01/abeane/starbar/plots/phase_space2/data/'):
+def run(path, name, nsnap, nproc, phase_space_path='/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/phase_space/data/'):
     prefix = 'data/bar_orbit_' + name +'/'
     if not os.path.isdir(prefix):
         os.mkdir(prefix)
@@ -469,9 +452,9 @@ if __name__ == '__main__':
     Nbody = 'Nbody'
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
-    pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
-                 (phgvS2Rc35, 'lvl3-rstHalo'), (phgvS2Rc35, 'lvl3-GFM')]
+    pair_list = [(Nbody, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3'),
+                 ]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
