@@ -22,6 +22,10 @@ def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocit
 def process_id(ID, bar_metr, t, tlist, nsnap):
     in_bar = np.full(nsnap, 0, dtype=np.bool_)
     Naps = t.shape[0]
+
+    if Naps < 8:
+       return in_bar 
+
     for j,idx in enumerate(range(nsnap)):
         Tanalyze = tlist[idx]
         key = np.argmin(np.abs(t - Tanalyze))
@@ -45,37 +49,44 @@ def _in_bar_one_chunk(prefix_in, prefix_out, name, chunk_idx):
     fin = prefix_in+'/bar_orbit_'+name+'.' + str(chunk_idx) + '.hdf5'
     h5in = h5.File(fin, mode='r')
 
-    idx_list = np.array(h5in['idx_list'])
-    nsnap = len(idx_list)
-    
-    id_list = np.array(h5in['id_list']).astype(np.int)
-    tlist = np.array(h5in['tlist'])
-    bar_angle = np.array(h5in['bar_angle'])
-    
-    in_bar = np.full((nsnap, len(id_list)), 0, dtype=np.bool_)
-    
-    for i,ID in enumerate(id_list):
-        bar_metr = np.array(h5in['bar_metrics'][str(ID)])
-        t = tlist[bar_metr[:,0].astype(np.int)]
-        in_bar[:,i] = process_id(ID, bar_metr, t, tlist, nsnap)
-    
     fout = prefix_out + '/in_bar_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5out = h5.File(fout, mode='w')
+    
+    bar_angle = np.array(h5in['bar_angle'])
+    
+    for pt in [1, 2, 3, 4]:
+        pt_str = 'PartType' + str(pt)
+        if pt_str in h5in.keys():        
 
-    # write to output file
-    h5out.create_dataset('tlist', data=tlist)
-    h5out.create_dataset('id_list', data=id_list)
-    h5out.create_dataset('idx_list', data=idx_list)
+            idx_list = np.array(h5in[pt_str+'/idx_list'])
+            nsnap = len(idx_list)
+    
+            id_list = np.array(h5in[pt_str+'/id_list']).astype(np.int)
+            tlist = np.array(h5in[pt_str+'/tlist'])
+    
+            in_bar = np.full((nsnap, len(id_list)), 0, dtype=np.bool_)
+    
+            for i,ID in enumerate(id_list):
+                bar_metr = np.array(h5in[pt_str+'/bar_metrics'][str(ID)])
+                t = tlist[bar_metr[:,0].astype(np.int)]
+                in_bar[:,i] = process_id(ID, bar_metr, t, tlist, nsnap)
+    
+
+            # write to output file
+            h5out.create_dataset(pt_str+'/tlist', data=tlist)
+            h5out.create_dataset(pt_str+'/id_list', data=id_list)
+            h5out.create_dataset(pt_str+'/idx_list', data=idx_list)
+
+            h5out.create_dataset(pt_str+'/in_bar', data=in_bar)
+
     h5out.create_dataset('bar_angle', data=bar_angle)
-
-    h5out.create_dataset('in_bar', data=in_bar)
-
+   
     h5in.close()
     h5out.close()
     
     return None
 
-def run(name, nproc, basepath = '/n/home01/abeane/starbar/plots/bar_orbits/data/'):
+def run(name, nproc, basepath = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/bar_orbits/data/'):
     prefix_out = 'data/in_bar_' + name + '/'
     if not os.path.isdir(prefix_out):
         os.mkdir(prefix_out)
@@ -95,9 +106,9 @@ if __name__ == '__main__':
     Nbody = 'Nbody'
     phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
 
-    pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
-                 (phgvS2Rc35, 'lvl3-rstHalo')]
+    pair_list = [(Nbody, 'lvl3'),
+                 (phgvS2Rc35, 'lvl3'),
+                 ]
 
     name_list = [           p[0] + '-' + p[1] for p in pair_list]
     path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
