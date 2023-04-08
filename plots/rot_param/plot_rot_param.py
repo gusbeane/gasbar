@@ -97,12 +97,14 @@ def run():
     bar_prop_Nbody = read_bar_prop(Nbody, lvl)
     bar_prop_SMUGGLE = read_bar_prop(phS2R35, lvl)
 
+    print(bar_prop_Nbody['pattern_speed'][0:300])
+    
     agama_pot_Nbody = read_all_agama_pot(Nbody, lvl)
     agama_pot_SMUGGLE = read_all_agama_pot(phS2R35, lvl)
 
     RCR_Nbody = []
     for i in range(len(bar_prop_Nbody['tlist'])):
-        if i < 300:
+        if bar_prop_Nbody['pattern_speed'][i] <= 0.0:
             RCR_Nbody.append(np.nan)
         else:
             RCR = compute_RCR(agama_pot_Nbody[i], bar_prop_Nbody['pattern_speed'][i])
@@ -130,8 +132,10 @@ def run():
     ax.plot(bar_prop_Nbody['tlist'] - t300, rot_Nbody, c=tb_c[0], label='N-body')#, ls='dashed')
     ax.plot(bar_prop_SMUGGLE['tlist'], rot_SMUGGLE, c=tb_c[1], label='SMUGGLE')#, ls='dashed')
 
+    print(rot_Nbody[300], RCR_Nbody[300], bar_prop_Nbody['Rbar'][300])
+
     ax.legend(frameon=False)
-    ax.set(ylim=(1.2, 2), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$', xlim=(0, 5))
+    ax.set(ylim=(1.2, 2), ylabel=r'$\mathcal{R}$', xlabel=r'$t\,[\,\textrm{Gyr}\,]$', xlim=(-1.5, 5))
 
     fig.tight_layout()
     fig.savefig('rot_param.pdf')
