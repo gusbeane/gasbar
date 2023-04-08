@@ -40,6 +40,7 @@ def _concat_h5_files(name, lvl, chunk_idx, data_dir='data/'):
 
     for i in range(nsnap):
         fname = prefix + '/tmp'+str(i)+'/tmp'+str(chunk_idx)+'.hdf5'
+        print(fname)
         h5in = h5.File(fname, mode='r')
 
         for pt in ptypes:
@@ -55,6 +56,7 @@ def _concat_h5_files(name, lvl, chunk_idx, data_dir='data/'):
             out[pt][fld] = np.concatenate(out[pt][fld], axis=1)
 
     # create output file
+    print(fout)
     h5out = h5.File(fout, mode='w')
     for pt in ptypes:
         h5out.create_dataset(pt + '/ParticleIDs', data=out[pt]['ParticleIDs'])
@@ -69,12 +71,12 @@ def run(name, lvl, nchunk, nproc=1, data_dir='data/'):
     
     print('running ', name, lvl)
 
-    _ = Parallel(n_jobs=nproc) (delayed(_concat_h5_files)(name, lvl, i) for i in tqdm(range(nchunk)))
+    #_ = Parallel(n_jobs=nproc) (delayed(_concat_h5_files)(name, lvl, i) for i in tqdm(range(nchunk)))
 
     # for i in tqdm(range(nchunk)):
         # _concat_h5_files(name, lvl, i)
 
-    # _concat_h5_files(name, lvl, 0)
+    _concat_h5_files(name, lvl, 255)
 
     return None
 

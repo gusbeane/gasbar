@@ -56,7 +56,7 @@ def sort_by_id(chunk_ids, tot_ids, pos, vel, acc):
         
     return pos_chunk, vel_chunk, acc_chunk
 
-def _run_thread(path, name_lvl, snap_idx, id_chunks_disk, id_chunks_bulge, id_chunks_star, data_dir, tmp_dir):
+def _run_thread(path, name_lvl, snap_idx, id_chunks_halo, id_chunks_disk, id_chunks_bulge, id_chunks_star, data_dir, tmp_dir):
 
     print('starting thread: ', snap_idx)
 
@@ -74,7 +74,8 @@ def _run_thread(path, name_lvl, snap_idx, id_chunks_disk, id_chunks_bulge, id_ch
         has_stars = True
 
     # Loop through each id chunk and create the file with temporary output.
-    for i,(id_chunk_disk_list, id_chunk_bulge_list, id_chunk_star_list) in enumerate(zip(id_chunks_disk, id_chunks_bulge, id_chunks_star)):
+    for i,(id_chunk_halo_list, id_chunk_disk_list, id_chunk_bulge_list, id_chunk_star_list) in enumerate(zip(id_chunks_halo, id_chunks_disk, id_chunks_bulge, id_chunks_star)):
+        Nids_halo = len(id_chunk_halo_list)
         Nids_disk = len(id_chunk_disk_list)
         Nids_bulge = len(id_chunk_bulge_list)
         if has_stars:
@@ -83,10 +84,16 @@ def _run_thread(path, name_lvl, snap_idx, id_chunks_disk, id_chunks_bulge, id_ch
         fout = prefix + '/tmp' + str(i) + '.hdf5'
         h5out = h5.File(fout, mode='w')
 
+        pos_halo = np.zeros((Nids_halo, 3))
         pos_disk = np.zeros((Nids_disk, 3))
         pos_bulge = np.zeros((Nids_bulge, 3))
         if has_stars:
             pos_star = np.zeros((Nids_star, 3))
+        
+        h5out.create_dataset("PartType1/ParticleIDs", data=id_chunk_halo_list)
+        h5out.create_dataset("PartType1/Coordinates", data=pos_halo)
+        h5out.create_dataset("PartType1/Velocities", data=pos_halo)
+        h5out.create_dataset("PartType1/Acceleration", data=pos_halo)
         
         h5out.create_dataset("PartType2/ParticleIDs", data=id_chunk_disk_list)
         h5out.create_dataset("PartType2/Coordinates", data=pos_disk)
@@ -110,8 +117,14 @@ def _run_thread(path, name_lvl, snap_idx, id_chunks_disk, id_chunks_bulge, id_ch
 
     # Now loop through each index, read the snapshot, then loop through each
     # id chunk and write to the relevant file.
-    sn = read_snap(path, snap_idx, parttype=[2, 3, 4], fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs', 'Acceleration'])
+    sn = read_snap(path, snap_idx, parttype=[1, 2, 3, 4], fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs', 'Acceleration'])
 
+    key_halo = np.argsort(sn.part1.id)
+    pos_halo = sn.part1.pos.value[key_halo]
+    vel_halo = sn.part1.vel.value[key_halo]
+    acc_halo = sn.part1.acce[key_halo]
+    halo_ids_sorted = sn.part1.id[key_halo]
+    
     key_disk = np.argsort(sn.part2.id)
     pos_disk = sn.part2.pos.value[key_disk]
     vel_disk = sn.part2.vel.value[key_disk]
@@ -132,9 +145,14 @@ def _run_thread(path, name_lvl, snap_idx, id_chunks_disk, id_chunks_bulge, id_ch
         
         star_ids_sorted = sn.part4.id[key_star]
 
-    for j,(id_chunk_disk_list, id_chunk_bulge_list, id_chunk_star_list) in enumerate(zip(id_chunks_disk, id_chunks_bulge, id_chunks_star)):
+    for j,(id_chunk_halo_list, id_chunk_disk_list, id_chunk_bulge_list, id_chunk_star_list) in enumerate(zip(id_chunks_halo, id_chunks_disk, id_chunks_bulge, id_chunks_star)):
         h5out_list[j].attrs.create('Time', sn.Time.value)
-            
+        
+        pos_chunk_halo, vel_chunk_halo, acc_chunk_halo = sort_by_id(id_chunk_halo_list, halo_ids_sorted, pos_halo, vel_halo, acc_halo)
+        h5out_list[j]['PartType1/Coordinates'][:] = pos_chunk_halo
+        h5out_list[j]['PartType1/Velocities'][:] = vel_chunk_halo
+        h5out_list[j]['PartType1/Acceleration'][:] = acc_chunk_halo
+        
         pos_chunk_disk, vel_chunk_disk, acc_chunk_disk = sort_by_id(id_chunk_disk_list, disk_ids_sorted, pos_disk, vel_disk, acc_disk)
         h5out_list[j]['PartType2/Coordinates'][:] = pos_chunk_disk
         h5out_list[j]['PartType2/Velocities'][:] = vel_chunk_disk
@@ -171,7 +189,10 @@ def get_id_indices_chunks(path, nchunk):
     nsnap = len(glob.glob(path+'/output/snapdir*/*.0.hdf5'))
     indices = np.arange(nsnap)
 
-    sn = read_snap(path, indices[-1], parttype=[2, 3, 4])
+    sn = read_snap(path, indices[-1], parttype=[1, 2, 3, 4])
+    ids_halo = sn.part1.id
+    ids_halo = np.sort(ids_halo)
+    
     ids_disk = sn.part2.id
     ids_disk = np.sort(ids_disk)
 
@@ -185,10 +206,11 @@ def get_id_indices_chunks(path, nchunk):
     else:
         id_chunks_star = None
 
+    id_chunks_halo = np.array_split(ids_halo, nchunk)
     id_chunks_disk = np.array_split(ids_disk, nchunk)
     id_chunks_bulge = np.array_split(ids_bulge, nchunk)
 
-    return id_chunks_disk, id_chunks_bulge, id_chunks_star
+    return id_chunks_halo, id_chunks_disk, id_chunks_bulge, id_chunks_star
 
 def run(name, lvl, snap_idx, nchunk, basepath='../../runs/', data_dir='data/', tmp_dir='/tmp/'):
 
@@ -203,7 +225,7 @@ def run(name, lvl, snap_idx, nchunk, basepath='../../runs/', data_dir='data/', t
         sys.exit(0)
 
     # Split up particle ids and snapshot indices into chunks to be processed individually
-    id_chunks_disk, id_chunks_bulge, id_chunks_star = get_id_indices_chunks(path, nchunk)
+    id_chunks_halo, id_chunks_disk, id_chunks_bulge, id_chunks_star = get_id_indices_chunks(path, nchunk)
 
     # If output directory does not exist, make it
     if not os.path.isdir(data_dir+name_lvl):
@@ -211,7 +233,7 @@ def run(name, lvl, snap_idx, nchunk, basepath='../../runs/', data_dir='data/', t
 
     # Runs through each chunk of indices and reads the snapshot of each index. Each chunk of ids is written to a different temporary file.
     t0 = time.time()
-    to_delete = _run_thread(path, name_lvl, snap_idx, id_chunks_disk, id_chunks_bulge, id_chunks_star, data_dir, tmp_dir)
+    to_delete = _run_thread(path, name_lvl, snap_idx, id_chunks_halo, id_chunks_disk, id_chunks_bulge, id_chunks_star, data_dir, tmp_dir)
     t1 = time.time()
     print('First loop took', t1-t0, 's')
 

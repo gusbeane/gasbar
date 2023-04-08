@@ -16,7 +16,7 @@
 ##SBATCH --mem-per-cpu=5500
 #SBATCH --mem=8G
 ##SBATCH -t 4-00:00           # Runtime in D-HH:MM
-#SBATCH -t 00:05           # Runtime in D-HH:MM
+#SBATCH -t 15:00           # Runtime in D-HH:MM
 
 source ../load-modules.sh
 

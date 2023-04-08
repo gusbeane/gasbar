@@ -8,7 +8,6 @@
 ##SBATCH --array=0-15
 #SBATCH -o logs_SMUGGLE-lvl3/OUTPUT.%A.%a.out
 #SBATCH -e logs_SMUGGLE-lvl3/ERROR.%A.%a.err
-##SBATCH --exclusive
 #SBATCH --mail-user=angus.beane@cfa.harvard.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
@@ -16,7 +15,7 @@
 ##SBATCH --mem-per-cpu=5500
 #SBATCH --mem=8G
 ##SBATCH -t 4-00:00           # Runtime in D-HH:MM
-#SBATCH -t 00:05           # Runtime in D-HH:MM
+#SBATCH -t 15:00          # Runtime in D-HH:MM
 
 source ../load-modules.sh
 
