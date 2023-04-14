@@ -6,6 +6,9 @@ import matplotlib as mpl
 from astropy.io import fits
 from scipy.interpolate import interp1d
 import re
+import pickle
+
+from photutils.isophote import EllipseGeometry, Ellipse
 
 from matplotlib import rc
 mpl.use('Agg')
@@ -31,6 +34,8 @@ lvl = 'lvl3'
 range_xy = [[-10, 10], [-10, 10]]
 nres = 256
 extent = [range_xy[0][0], range_xy[0][1], range_xy[1][0], range_xy[1][1]]
+dx = (range_xy[0][1] - range_xy[0][0])/nres
+dy = (range_xy[1][1] - range_xy[1][0])/nres
 
 vmin=1E-3
 vmax=10.**(0.5)
@@ -186,7 +191,34 @@ def get_heatmap(sn, bangle):
                                    bins=(nres, nres), range=range_xy, weights=mass/surf)
     
     return heatmap
+
+def get_bar_length(isolist):
+    k = np.argmax(isolist.eps)
+    ellip = np.max(isolist.eps)
+    Rbar_e = isolist.sma[k] * dx
     
+    kpa = k
+    for i in range(len(isolist)-k):
+        kpa += 1
+        delta_PA = np.abs(isolist[kpa].pa - isolist[k].pa) * 180/np.pi
+        # print(delta_PA)
+        if delta_PA > 5:
+            kpa -= 1
+            break
+    
+    Rbar_PA = isolist.sma[kpa] * dx
+    
+    return Rbar_e, Rbar_PA, ellip, k, kpa
+
+def fit_ellipse(heatmap):
+    # geometry = EllipseGeometry(x0=0.0, y0=0.0, sma=80, eps=0.5, pa=0.0)
+    ellipse = Ellipse(heatmap.T)
+    
+    isolist = ellipse.fit_image(step=4.0, minsma=10., maxsma=200., linear=True)
+    
+    Rbar_e, Rbar_PA, ellip, ke, kpa = get_bar_length(isolist)
+    
+    return isolist, ke, kpa
     
 def run():
     nres = 256
@@ -231,6 +263,32 @@ def run():
         
         RbS = barpropS['Rbar'][Nidx]
         ax[1][i].plot([-RbS, RbS], [0, 0], c='w')
+
+        print('Nbody', Nidx)
+        try:
+            isolist, ke, kpa = pickle.load(open('Nbody'+str(Nidx)+'.p', 'rb'))
+        except:
+            isolist, ke, kpa = fit_ellipse(heatmapN)
+            pickle.dump((isolist, ke, kpa), open('Nbody'+str(Nidx)+'.p', 'wb'))
+        sma = isolist.sma[ke]
+        iso = isolist.get_closest(sma)
+        x, y = iso.sampled_coordinates()
+        x = (x-nres/2) * dx
+        y = (y-nres/2) * dy
+        ax[0][i].plot(x, y, color='white')
+        
+        print('SMUGGLE', Sidx)
+        try:
+            isolist, ke, kpa = pickle.load(open('SMUGGLE'+str(Sidx)+'.p', 'rb'))
+        except:
+            isolist, ke, kpa = fit_ellipse(heatmapS)
+            pickle.dump((isolist, ke, kpa), open('SMUGGLE'+str(Sidx)+'.p', 'wb'))
+        sma = isolist.sma[ke]
+        iso = isolist.get_closest(sma)
+        x, y = iso.sampled_coordinates()
+        x = (x-nres/2) * dx
+        y = (y-nres/2) * dy
+        ax[1][i].plot(x, y, color='white')
         
         i += 1
     
