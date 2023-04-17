@@ -199,10 +199,10 @@ def run():
 
     fig.tight_layout()
 
-    fig.savefig('ps_Rbar_torque.pdf')
+    fig.savefig('ps_torque.pdf')
 
     fig_us.tight_layout()
-    fig_us.savefig('ps_Rbar_torque_unsmoothed.pdf')
+    fig_us.savefig('ps_torque_unsmoothed.pdf')
     
     # print average torque
     for t, tz, tzg in zip([tlist, tlist_g], [tz_halo, tz_halo_g], [None, tz_gas_g]):
