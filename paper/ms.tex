@@ -264,19 +264,19 @@
 \label{sec:intro}
 \begin{figure*}
     \centering
-    \includegraphics[width=\textwidth]{fig/mockHST.pdf}
-    \caption{Synthetic Hubble Space Telescope images of our simulations with and
-    without the interstellar medium. The upper panels show an \Nbody{} only
-    simulation while the lower panels show a simulation which includes the
-    \SMUGGLE{} model for the interstellar medium. Each panel is
-    $20\,\textrm{kpc}$ to a side. Columns show different points in time,
-    separated by $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar
-    grows in length and strength. In the \SMUGGLE{} run, the bar remains at
-    approximately the same length and strength over the course of the
-    simulation. The \Nbody{} model is identical to the GALAKOS model {\bf (with
-    different particle numbers and softening lengths)}, discussed in the text.
-    Details on the production of these synthetic images is given in
-    Appendix~\ref{app:hst}.}\label{fig:overview}
+    \includegraphics[width=\textwidth]{fig/fig1.pdf}
+    \caption{{\bf Stellar mass distribution of our simulations with and without
+    the interstellar medium.} The upper panels show an \Nbody{} only simulation
+    while the lower panels show a simulation which includes the \SMUGGLE{} model
+    for the interstellar medium. Each panel is $20\,\textrm{kpc}$ to a side.
+    {\bf The bar length is shown as a solid white bar (details on its
+    computation are given in the text). The corotation radius is shown as a
+    dashed white circle.} Columns show different points in time, separated by
+    $1\,\textrm{Gyr}$. We can see that in the \Nbody{} run, the bar grows in
+    length and strength. In the \SMUGGLE{} run, the bar remains at approximately
+    the same length and strength over the course of the simulation. The \Nbody{}
+    model is identical to the GALAKOS model {\bf (with different particle
+    numbers and softening lengths)}, discussed in the text.}\label{fig:overview}
 \end{figure*}
 
 Approximately two-thirds of spiral disks host an elongated bar-like feature at
@@ -377,11 +377,12 @@ We also provide a physical explanation of the redistribution of the angular
 momentum among the dark halo wake, the stellar bar, and the disk gas component. 
 
 
-We show synthetic \textit{Hubble Space Telescope} images of our barred galaxy in
-a case with and without gas in Fig.~\ref{fig:overview}. We see that the bar
-grows longer and stronger without gas, while it remains at approximately the
-same length and strength when gas is included. Details on the production of
-these synthetic images are given in Appendix~\ref{app:hst}.
+We show {\bf stellar mass distributions} of our barred galaxy in a case with and
+without gas in Fig.~\ref{fig:overview}. We see that the bar grows longer and
+stronger without gas ({\bf bar length shown as a white bar}), while it remains
+at approximately the same length and strength when gas is included. {\bf As the
+bar without gas slows down, the corotation radius (white dashed circle) grows
+larger with time.}
 
 % In this work, we present a simulation of an isolated, gas-rich disk galaxy. Our
 % galaxy exhibits some similarities to the Milky Way, described in more detail in
@@ -1267,38 +1268,6 @@ pattern speed is always set to $40\,\kms/\textrm{kpc}$.
 
 We integrated our model for $5\,\textrm{Gyr}$ with a timestep of
 $0.01\,\textrm{Gyr}$.
-
-\section{Idealized Mock Light Images}
-\label{app:hst}
-We created synthetic mock light images at $1024^2$ resolution in
-Fig.~\ref{fig:overview} for the \textit{Hubble Space Telescope} using a
-post-processed Monte Carlo radiation transfer simulation with the SKIRT9 code
-including secondary emission from dust \citep{2020AC....3100381C}. Emission from
-star particles was calculated assuming a Bruzual-Charlot spectral energy
-distribution \citep{2003MNRAS.344.1000B} and a Chabrier initial stellar mass
-function \citep{2003PASP..115..763C}. The luminosity from each star particle was
-smoothed using a cubic spline kernel with each star particle being assigned a
-smoothing length equal to its distance to its $32$nd closest neighbor. We
-launched $10^9$ photon packets per simulation segment. For star particles
-which were present in the initial simulation (i.e., initial disk and bulge
-particles), we assumed that they have an age of $5\,\textrm{Gyr}$ and solar
-metallicity. For star particles in the \SMUGGLE{} simulation which are newly
-formed, we used their recorded ages and metallicities.
-
-For the \SMUGGLE{} simulations, we included absorption and emission from dust. We
-assumed the THEMIS (The Heterogeneous dust Evolution Model for Interstellar
-Solids) dust model \citep{2017AA...602A..46J} to convert gas metallicity and
-mass density to dust mass density. For the \Nbody{} simulations we ran the
-SKIRT9 code in a mode without an obscuring medium, but otherwise applied the
-same procedure.
-
-We used the profiles for filters F814W, F606W, and F475W on the Advanced
-Camera for Surveys (ACS) instrument for red, green, and blue pixel values,
-respectively. Filtered fluxes were converted to RGB values using an $\arcsinh$
-scaling following \citet{2004PASP..116..133L} Scalings and cutoff values
-were adjusted manually to create visually appealing images. Filter profiles
-were provided by the Spanish Virtual Observatory Filter
-Service \citep{2012ivoa.rept.1015R, 2020sea..confE.182R}.
 
 \section{Comparison to the Milky Way}
 \label{app:milkyway}
