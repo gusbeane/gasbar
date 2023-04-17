@@ -66,10 +66,16 @@ def read_bar_prop(name, lvl):
     return out
 
 def read_torque(name, lvl):
-    base = torque_path + 'torques_' + name + '-' + lvl + '/torques_' + name + '-' + lvl + '.'
-
+    if name == Nbody:
+        base = torque_path + 'torques_' + name + '-' + lvl + '-bak' + '/torques_' + name + '-' + lvl + '.'
+    else:
+        base = torque_path + 'torques_' + name + '-' + lvl + '/torques_' + name + '-' + lvl + '.'
+        
     # nfiles = len(glob.glob(base + '*.hdf5'))
-    nfiles = 1200
+    if name == Nbody:
+        nfiles = 1500
+    else:
+        nfiles = 1200
 
     tz_halo = []
     tz_not_bar = []
@@ -113,6 +119,8 @@ def run():
 
     cm = 1/2.54
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(columnwidth*cm, columnwidth*cm))
+    
+    fig_us, ax_us = plt.subplots(2, 1, sharex=True, figsize=(columnwidth*cm, columnwidth*cm))
 
     # First panel, pattern speed.
     t300 = bar_prop_Nbody['tlist'][300]
@@ -121,11 +129,20 @@ def run():
 
     ax[0].plot(bar_prop_Nbody['tlist'] - t300, ps_N, c=tb_c[0], label=r'$N$-body')
     ax[0].plot(bar_prop_SMUGGLE['tlist'], ps_S, c=tb_c[1], label='SMUGGLE')
+    
 
     ax[0].set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax[0].set(xlim=(0, 5))
 
     ax[0].legend(frameon=False)
+    
+    ax_us[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['pattern_speed'], c=tb_c[0], label=r'$N$-body')
+    ax_us[0].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['pattern_speed'], c=tb_c[1], label='SMUGGLE')
+    
+    ax_us[0].set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
+    ax_us[0].set(xlim=(0, 5))
+
+    ax_us[0].legend(frameon=False)
 
     #print out percent increase in SMUGGLE ps
     t = bar_prop_SMUGGLE['tlist']
@@ -150,6 +167,10 @@ def run():
     tlist, tz_halo, tz_not_bar, _= read_torque(Nbody, lvl)
     tlist_g, tz_halo_g, tz_not_bar_g, tz_gas_g = read_torque(phS2R35, lvl)
 
+    ax_us[1].plot(tlist-tlist[300], -tz_halo, c=tb_c[0])
+    ax_us[1].plot(tlist_g, -tz_halo_g, c=tb_c[1])
+    ax_us[1].plot(tlist_g, -tz_gas_g, c=tb_c[1], ls='dashed')
+    
     tz_halo = savgol_filter(tz_halo, 81, 3)
     tz_halo_g = savgol_filter(tz_halo_g, 81, 3)
     tz_gas_g = savgol_filter(tz_gas_g, 81, 3)
@@ -166,12 +187,23 @@ def run():
     custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
                     mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
     ax[1].legend(custom_lines, ['by halo', 'by gas'], frameon=False)
+    
+    ax_us[1].axhline(0, c='k')
 
+    ax_us[1].set(ylim=(-100, 100), ylabel=r'$\tau_{\text{on bar}}\,[\,10^{10}\,M_{\odot}\,(\text{km}/\text{s})^2\,]$')
+    ax_us[1].set_xlabel(r'$t\,[\,\text{Gyr}\,]$')
+
+    custom_lines = [mpl.lines.Line2D([0], [0], color='k'),
+                    mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
+    ax_us[1].legend(custom_lines, ['by halo', 'by gas'], frameon=False)
 
     fig.tight_layout()
 
     fig.savefig('ps_Rbar_torque.pdf')
 
+    fig_us.tight_layout()
+    fig_us.savefig('ps_Rbar_torque_unsmoothed.pdf')
+    
     # print average torque
     for t, tz, tzg in zip([tlist, tlist_g], [tz_halo, tz_halo_g], [None, tz_gas_g]):
         key = np.logical_and(t > 1, t < 5)
