@@ -1293,18 +1293,19 @@ bar \citep{2019MNRAS.490.4740B}. We briefly summarize some of the other ways our
 disk is comparable to the Milky Way.
 
 We computed the circular velocity curve of our model using the \texttt{AGAMA}
-package \citep{2019MNRAS.482.1525V}. We fit the baryonic component (stellar disk,
-bulge, gas, and newly formed stars) with an axisymmetric cylindrical spline with
-$20$ grid points in both the radial and vertical direction spanning $0.2$ to
-$50\,\textrm{kpc}$ in the radial direction and from $0.02$ to $10\,\textrm{kpc}$
-in the vertical direction. We fit the dark matter halo using a spherically
-symmetric multipole fit with a maximum angular harmonic coefficient of $l=2$. We
-plot the circular velocity curve {\bf at $t=1\,\textrm{Gyr}$} in Fig.~\ref{fig:vcirc} compared to
-observational estimates \citep{2019ApJ...871..120E}. The \SMUGGLE{} disk (which
-includes additional mass in the form of gas) has a slightly higher circular
-velocity than the \Nbody{} disk which, itself, is slightly higher than the
-observational estimates. Overall, though, the circular velocity curves between
-our model and that observed in the Milky Way are broadly consistent.
+package \citep{2019MNRAS.482.1525V}. We fit the baryonic component (stellar
+disk, bulge, gas, and newly formed stars) with an axisymmetric cylindrical
+spline with $20$ grid points in both the radial and vertical direction spanning
+$0.2$ to $50\,\textrm{kpc}$ in the radial direction and from $0.02$ to
+$10\,\textrm{kpc}$ in the vertical direction. We fit the dark matter halo using
+{\bf an axisymmetric} multipole fit with a maximum angular harmonic coefficient
+of $l=2$, {\bf to account for the compression of the halo by the disk}. We plot
+the circular velocity curve {\bf at $t=1\,\textrm{Gyr}$} in Fig.~\ref{fig:vcirc}
+compared to observational estimates \citep{2019ApJ...871..120E}. The \SMUGGLE{}
+disk (which includes additional mass in the form of gas) has a slightly higher
+circular velocity than the \Nbody{} disk which, itself, is slightly higher than
+the observational estimates. Overall, though, the circular velocity curves
+between our model and that observed in the Milky Way are broadly consistent.
 
 We also show the evolution of the surface density profile in Fig.~\ref{fig:surf}
 We find that in our simulation the atomic and molecular gas surface density and
