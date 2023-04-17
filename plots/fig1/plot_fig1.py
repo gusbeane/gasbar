@@ -7,6 +7,12 @@ from astropy.io import fits
 from scipy.interpolate import interp1d
 import re
 import pickle
+import agama
+
+import astropy.units as u
+from scipy.optimize import minimize
+
+agama.setUnits(mass=1E10, length=1, velocity=1)
 
 from photutils.isophote import EllipseGeometry, Ellipse
 
@@ -49,6 +55,26 @@ def read_fourier(name, lvl='lvl3',
                  basepath='/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/'):
     f = h5.File(basepath+'/fourier_component/data/fourier_'+name+'-'+lvl+'.hdf5', mode='r')
     return f
+
+def read_agama_pot(idx, name, lvl):
+    base = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/agama_pot/data/'
+    fname = base + 'pot_' + name + '-' + lvl + '/pot_' + name + '-' + lvl + '.' + str(idx) + '.txt'
+    return agama.Potential(fname)
+
+def compute_vc(R, pot):
+    acc = pot.force(R, 0, 0)
+    vcsq = - R * acc[0]
+    return np.sqrt(vcsq)
+
+def _to_minimize(R, pot, omega_p):
+    vc = compute_vc(R, pot)
+    omega = vc / R
+    return np.abs(omega - omega_p)
+
+def compute_RCR(pot, omega_p, Rguess=6):
+    ans = minimize(_to_minimize, Rguess, args=(pot, omega_p))
+
+    return float(ans.x)
 
 def fix_bar_angle(bar_angle):
     out = np.zeros(len(bar_angle))
@@ -134,6 +160,8 @@ def get_A2_angle(dat, keys, Rbin, cum=False):
     R_at_Rbin = Rlist[:,Rbin]
     
     time = np.array(dat['time'])
+    time = time * u.Myr
+    time = time.to_value(u.kpc/(u.km/u.s))
 
     return time, R_at_Rbin, phi
 
@@ -249,6 +277,18 @@ def run():
         snN = read_snap(Nidx, Nbody, 'lvl3')
         snS = read_snap(Sidx, phS2R35, 'lvl3')
         
+        agama_potN = read_agama_pot(Nidx, Nbody, 'lvl3')
+        agama_potS = read_agama_pot(Sidx, phS2R35, 'lvl3')
+        
+        print('N ps=', bangleN['pattern_speed'][Nidx])
+        print('S ps=', bangleS['pattern_speed'][Nidx])
+        
+        RCR_N = compute_RCR(agama_potN, bangleN['pattern_speed'][Nidx])
+        RCR_S = compute_RCR(agama_potS, bangleS['pattern_speed'][Nidx])
+        
+        print('RCR_N=', RCR_N)
+        print('RCR_S=', RCR_S)
+        
         heatmapN = get_heatmap(snN, bangleN['bar_angle'][Nidx])
         heatmapS = get_heatmap(snS, bangleS['bar_angle'][Sidx])
         
@@ -264,31 +304,46 @@ def run():
         RbS = barpropS['Rbar'][Nidx]
         ax[1][i].plot([-RbS, RbS], [0, 0], c='w')
 
-        print('Nbody', Nidx)
-        try:
-            isolist, ke, kpa = pickle.load(open('Nbody'+str(Nidx)+'.p', 'rb'))
-        except:
-            isolist, ke, kpa = fit_ellipse(heatmapN)
-            pickle.dump((isolist, ke, kpa), open('Nbody'+str(Nidx)+'.p', 'wb'))
-        sma = isolist.sma[ke]
-        iso = isolist.get_closest(sma)
-        x, y = iso.sampled_coordinates()
-        x = (x-nres/2) * dx
-        y = (y-nres/2) * dy
-        ax[0][i].plot(x, y, color='white')
+        # print('Nbody', Nidx)
+        # try:
+        #     isolist, ke, kpa = pickle.load(open('Nbody'+str(Nidx)+'.p', 'rb'))
+        # except:
+        #     isolist, ke, kpa = fit_ellipse(heatmapN)
+        #     pickle.dump((isolist, ke, kpa), open('Nbody'+str(Nidx)+'.p', 'wb'))
+        # sma = isolist.sma[kpa]
+        # iso = isolist.get_closest(sma)
+        # x, y = iso.sampled_coordinates()
+        # x = (x-nres/2) * dx
+        # y = (y-nres/2) * dy
+        # ax[0][i].plot(x, y, color='white')
         
-        print('SMUGGLE', Sidx)
-        try:
-            isolist, ke, kpa = pickle.load(open('SMUGGLE'+str(Sidx)+'.p', 'rb'))
-        except:
-            isolist, ke, kpa = fit_ellipse(heatmapS)
-            pickle.dump((isolist, ke, kpa), open('SMUGGLE'+str(Sidx)+'.p', 'wb'))
-        sma = isolist.sma[ke]
-        iso = isolist.get_closest(sma)
-        x, y = iso.sampled_coordinates()
-        x = (x-nres/2) * dx
-        y = (y-nres/2) * dy
-        ax[1][i].plot(x, y, color='white')
+        # print('Rot param N', Nidx, RCR_N/sma/dx)
+        
+        # print('SMUGGLE', Sidx)
+        # try:
+        #     isolist, ke, kpa = pickle.load(open('SMUGGLE'+str(Sidx)+'.p', 'rb'))
+        # except:
+        #     isolist, ke, kpa = fit_ellipse(heatmapS)
+        #     pickle.dump((isolist, ke, kpa), open('SMUGGLE'+str(Sidx)+'.p', 'wb'))
+        # sma = isolist.sma[kpa]
+        # iso = isolist.get_closest(sma)
+        # x, y = iso.sampled_coordinates()
+        # x = (x-nres/2) * dx
+        # y = (y-nres/2) * dy
+        # ax[1][i].plot(x, y, color='white')
+        
+        # print('Rot param S', Sidx, RCR_S/sma/dx)
+        
+        # plot CR as a circle
+        xlist = np.linspace(-RCR_N, RCR_N, 1000)
+        ylist = np.sqrt(RCR_N**2-xlist**2)
+        ax[0][i].plot(xlist, ylist, c='w', ls='dashed')
+        ax[0][i].plot(xlist, -ylist, c='w', ls='dashed')
+        
+        xlist = np.linspace(-RCR_S, RCR_S, 1000)
+        ylist = np.sqrt(RCR_S**2-xlist**2)
+        ax[1][i].plot(xlist, ylist, c='w', ls='dashed')
+        ax[1][i].plot(xlist, -ylist, c='w', ls='dashed')
         
         i += 1
     
