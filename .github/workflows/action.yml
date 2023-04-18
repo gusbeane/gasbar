@@ -11,6 +11,9 @@ jobs:
       BIBTEX: bibtex
     steps: 
     - uses: actions/checkout@v1
+    - name: apt-get update
+      run: |
+        sudo apt-get update
     - name: Install texlive
       run: |
         sudo apt-get install texlive-publishers \
