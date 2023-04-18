@@ -159,7 +159,8 @@ def run():
 
     cm = 1/2.54
     fig, ax = plt.subplots(1, 4, figsize=(textwidth*cm, textwidth*(6/18)*cm), gridspec_kw={"width_ratios":[1, 1, 1, 0.05]})
-
+    fig_us, ax_us = plt.subplots(1, 4, figsize=(textwidth*cm, textwidth*(6/18)*cm), gridspec_kw={"width_ratios":[1, 1, 1, 0.05]})
+    
     # First panel, wake of Nbody.
     sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
     heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_Nbody['A2_angle'][Nbody_idx]/2.0)
@@ -169,14 +170,22 @@ def run():
 
     ax[1].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
     ax[1].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
+    
+    ax_us[1].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
+    ax_us[1].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
+    
     dphi = fourier_Nbody['A2_h_angle'][Nbody_idx] - fourier_Nbody['A2_angle'][Nbody_idx]
     dphi /= 2.0
     ax[1].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
+    ax_us[1].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
 
     ax[1].axes.xaxis.set_visible(False)
     ax[1].axes.yaxis.set_visible(False)
-
     ax[1].set_aspect('equal')
+    
+    ax_us[1].axes.xaxis.set_visible(False)
+    ax_us[1].axes.yaxis.set_visible(False)
+    ax_us[1].set_aspect('equal')
 
     # Second panel, diff in angle.
     dphiN = compute_dphi(fourier_Nbody['A2_angle'], fourier_Nbody['A2_h_angle'])
@@ -184,6 +193,10 @@ def run():
 
     tN = fourier_Nbody['time']
     tS = fourier_SMUGGLE['time']
+    
+    ax_us[0].plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label=r'$N$-body')
+    ax_us[0].plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
+    ax_us[0].axhline(0.0, c='k')
 
     dphiN = savgol_filter(dphiN, 81, 3)
     dphiS = savgol_filter(dphiS, 81, 3)
@@ -201,6 +214,14 @@ def run():
     ax[0].set_xticks([0, 1, 2, 3, 4, 5])
 
     ax[0].set_aspect(1.0/ax[0].get_data_ratio(), adjustable='box')
+    
+    ax_us[0].set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+
+    ax_us[0].legend(frameon=False)
+    # ax[0].set_aspect('auto')
+    ax_us[0].set_xticks([0, 1, 2, 3, 4, 5])
+
+    ax_us[0].set_aspect(1.0/ax[0].get_data_ratio(), adjustable='box')
 
     # Third panel, wake of SMUGGLE.
     sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1], fields=None)
@@ -211,19 +232,31 @@ def run():
 
     im = ax[2].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
     ax[2].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
+    im_us = ax_us[2].imshow((1E10/1E6)*heatmap.T, origin='lower', vmin=vmin, vmax=vmax, extent=extent, cmap='bwr')
+    ax_us[2].plot((-Rbar, Rbar), (0.0, 0.0), c='k')
+    
     dphi = fourier_SMUGGLE['A2_h_angle'][SMUGGLE_idx] - fourier_SMUGGLE['A2_angle'][SMUGGLE_idx]
     dphi /= 2.0
     ax[2].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
+    ax_us[2].plot((-Rbar*np.cos(dphi), Rbar*np.cos(dphi)), (-Rbar*np.sin(dphi), Rbar*np.sin(dphi)), c='k', ls='dashed')
 
     ax[2].set_aspect('equal')
+    ax_us[2].set_aspect('equal')
 
     fig.colorbar(im, cax=ax[3], pad=0.02, label=r'$\Delta \Sigma\,[\,M_{\odot}/\textrm{pc}^2\,]$')
+    fig_us.colorbar(im_us, cax=ax_us[3], pad=0.02, label=r'$\Delta \Sigma\,[\,M_{\odot}/\textrm{pc}^2\,]$')
 
     ax[2].axes.xaxis.set_visible(False)
     ax[2].axes.yaxis.set_visible(False)
+    
+    ax_us[2].axes.xaxis.set_visible(False)
+    ax_us[2].axes.yaxis.set_visible(False)
 
     ax[1].set_title(r'$N$-body')
     ax[2].set_title(r'SMUGGLE')
+    
+    ax_us[1].set_title(r'$N$-body')
+    ax_us[2].set_title(r'SMUGGLE')
 
     fig.subplots_adjust(wspace=0, hspace=0)
 
@@ -233,10 +266,15 @@ def run():
 
     ax[1].plot([4.5, 6.5], [-6, -6], c='k', lw=2)
     ax[1].text(5.5, -5.5, r'$2\,\textrm{kpc}$', c='k', ha='center')
+    
+    ax_us[1].plot([4.5, 6.5], [-6, -6], c='k', lw=2)
+    ax_us[1].text(5.5, -5.5, r'$2\,\textrm{kpc}$', c='k', ha='center')
 
     fig.tight_layout()
-
     fig.savefig('halo_wake.pdf')
+    
+    fig_us.tight_layout()
+    fig_us.savefig('halo_wake_unsmoothed.pdf')
 
     # talk plots
 
