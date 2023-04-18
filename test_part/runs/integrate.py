@@ -81,10 +81,10 @@ def integrate_particles(pos, vel, mres, M, a, A, b, vc, ps, disk_M, disk_a, disk
         ps += - total_torque[i][2]/I * dt / 2.0 # constant ps
         ps += torque_gas/I * dt / 2.0
         
-        if torque_gas0 > 0:
-            torque_gas = torque_gas0 + (40-ps)
-        else:
-            torque_gas = torque_gas0
+        #if torque_gas0 > 0:
+        #    torque_gas = torque_gas0 + (40-ps)
+        #else:
+        #    torque_gas = torque_gas0
 
         # Bar drift
         ang += ps * dt
