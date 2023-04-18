@@ -611,11 +611,9 @@ equal to $1\,\textrm{Gyr}$ (it is $\sim0.977\,\textrm{Gyr}$). Therefore,
 throughout this work we referred to the native code time unit as
 $\textrm{Gyr}$. None of our results are sensitive to this choice.
 
-In order to remove numerical noise in several quantities we computed, we
-applied a Savitzky-Golay filter \citep{1964AnaCh..36.1627S} as implemented in
-\texttt{scipy} using a window length of $81$ and polynomial order of $3$. This
-filter was applied to plots of pattern speeds, bar lengths and strengths,
-torques, and angle differences.
+We applied a Savitzky-Golay filter \citep{1964AnaCh..36.1627S} as implemented in
+\texttt{scipy} using a window length of $21$ and polynomial order of $3$ to the
+plot of torques in order to remove some numerical noise.
 
 \begin{figure*}
     \centering
