@@ -96,48 +96,31 @@ def run():
 
     cm = 1/2.54
     fig, ax = plt.subplots(2, 1, figsize=(columnwidth*cm, columnwidth*cm), sharex=True)
-    fig_us, ax_us = plt.subplots(2, 1, figsize=(columnwidth*cm, columnwidth*cm), sharex=True)
     
     # First panel, length of bar and mass of bar.
-    #ax[0].plot(bar_prop_Nbody['tlist'] - t300, savgol_filter(bar_prop_Nbody['Rbar'], 81, 3), c=tb_c[0],
-    #            label=r'$N$-body')
-    #ax[0].plot(bar_prop_SMUGGLE['tlist'], savgol_filter(bar_prop_SMUGGLE['Rbar'], 81, 3), c=tb_c[1],
-    #            label='SMUGGLE')
-    
-    ax_us[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0],
+    ax[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0],
                 label=r'$N$-body')
-    ax_us[0].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['Rbar'], c=tb_c[1],
+    ax[0].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['Rbar'], c=tb_c[1],
                 label='SMUGGLE')
 
     ax[0].set(ylim=(0, 7), ylabel=r'$R_{\text{bar}}\,[\,\text{kpc}\,]$')
     ax[0].legend(frameon=False)
     
-    ax_us[0].set(ylim=(0, 7), ylabel=r'$R_{\text{bar}}\,[\,\text{kpc}\,]$')
-    ax_us[0].legend(frameon=False)
-
     fourier = read_fourier(Nbody, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax[1].plot(t-t[300], savgol_filter(A2A0, 81, 3), c=tb_c[0], label=r'$N$-body')
-    ax_us[1].plot(t-t[300], A2A0, c=tb_c[0], label=r'$N$-body')
+    ax[1].plot(t-t[300], A2A0, c=tb_c[0], label=r'$N$-body')
 
     fourier = read_fourier(phS2R35, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax[1].plot(t, savgol_filter(A2A0, 81, 3), c=tb_c[1], label='SMUGGLE')
-    ax_us[1].plot(t, A2A0, c=tb_c[1], label='SMUGGLE')
+    ax[1].plot(t, A2A0, c=tb_c[1], label='SMUGGLE')
 
     
     ax[1].set(xlim=(0, 5), ylim=(0, 0.7))
     ax[1].set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')
     
-    ax_us[1].set(xlim=(0, 5), ylim=(0, 0.7))
-    ax_us[1].set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')
-
     fig.tight_layout()
     fig.savefig('Rb_A2.pdf')
     
-    fig_us.tight_layout()
-    fig_us.savefig('Rb_A2_unsmoothed.pdf')
-
 
 if __name__ == '__main__':
     run()
