@@ -443,18 +443,20 @@ before concluding in Section~\ref{sec:conclusions}.
 \begin{figure}
     \centering
     \includegraphics[width=9cm]{fig/Rb_A2.pdf}
-    \caption{The evolution in bar length and strength. The \textit{upper panel}
+    \caption{The evolution in bar length, mass and strength. The \textit{upper panel}
     shows the evolution of the bar length. In the \Nbody{} case, the bar
     lengthens. This occurs because as the pattern speed drops, bar-like orbits
     at larger radii are possible. Stars are captured on these orbits,
-    lengthening the bar. This process does not occur in the \SMUGGLE{} cases since
-    the bar pattern speed is not decreasing, and therefore the bar length
-    remains constant. The bar strength, shown in the \textit{lower panel} is
-    measured as the maximum of the second Fourier component divided by the
-    zeroth Fourier component. We see that in the \Nbody{} case (blue) the bar
-    strength increases with time, consistent with previous results showing that
-    the bar strength increases as bars slow down. In the \SMUGGLE{} case (orange),
-    we see that the bar strength remains roughly constant, possibly slightly
+    lengthening the bar. This process does not occur in the \SMUGGLE{} cases
+    since the bar pattern speed is not decreasing, and therefore the bar length
+    remains constant. {\bf The bar mass, shown in the \textit{middle panel}, is
+    increasing in the \Nbody{} case as the bar grows. It is decreasing in the
+    \SMUGGLE{} case, indicating a shredding process.} The bar strength, shown in
+    the \textit{lower panel} is measured as the maximum of the second Fourier
+    component divided by the zeroth Fourier component. We see that in the
+    \Nbody{} case (blue) the bar strength increases with time, consistent with
+    previous results showing that the bar strength increases as bars slow down.
+    In the \SMUGGLE{} case (orange), we see that the bar strength slightly
     decreasing with time. This is also consistent with the expected relation
     between pattern speed and strength since the bar in this case is not slowing
     down.}
@@ -668,20 +670,27 @@ the same units.
 
 As we saw qualitatively in Fig.~\ref{fig:overview}, the upper panel of
 Fig.~\ref{fig:strength} shows that the length of the bar in the \Nbody{} case
-grows over time while it remains roughly constant in the \SMUGGLE{} case. This is
-also consistent with previous numerical work, which found that bars tend to grow
-as they slow down and the radius of corotation increases
-\citep{2000ApJ...543..704D, 2003MNRAS.341.1179A}. The time evolution of the bar
-strength, defined as the maximum of $\left|A_2/A_0\right|$ as a function of
-radius, is shown in the lower panel of Fig.~\ref{fig:strength}. The quantity
-$\left|A_2/A_0\right|$ varies from $0$ to $1$, with larger values indicating a
-stronger bar pattern. We see that in the \Nbody{} case, $\left|A_2/A_0\right|$
-increases over time as the bar pattern slows. This is consistent with previous
-\Nbody{} simulations which showed a clear correlation between the bar pattern
-speed and the bar strength \citep[e.g.,][]{2003MNRAS.341.1179A}. In the \SMUGGLE{}
-case, we see that the bar strength has an initial drop but then remains at a
-roughly constant, but slightly decreasing, strength. This is consistent with the
-pattern speed in the \SMUGGLE{} case being roughly constant or slightly increasing.
+grows over time while it remains roughly constant in the \SMUGGLE{} case. This
+is also consistent with previous numerical work, which found that bars tend to
+grow as they slow down and the radius of corotation increases
+\citep{2000ApJ...543..704D, 2003MNRAS.341.1179A}. {\bf The middle panel of
+Fig.~\ref{fig:strength} shows the mass of the bar. As the \Nbody{} bar slows
+down and lengthens, it also grows in mass. The \SMUGGLE{} bar, however, loses
+mass over time. This indicates an ongoing shredding process, and highlights the
+fact that bars are not solid bodies and can respond to external torques through
+mass redistribution.}
+
+The time evolution of the bar strength, defined as the maximum of
+$\left|A_2/A_0\right|$ as a function of radius, is shown in the lower panel of
+Fig.~\ref{fig:strength}. The quantity $\left|A_2/A_0\right|$ varies from $0$ to
+$1$, with larger values indicating a stronger bar pattern. We see that in the
+\Nbody{} case, $\left|A_2/A_0\right|$ increases over time as the bar pattern
+slows. This is consistent with previous \Nbody{} simulations which showed a
+clear correlation between the bar pattern speed and the bar strength
+\citep[e.g.,][]{2003MNRAS.341.1179A}. In the \SMUGGLE{} case, we see that the
+bar strength has an initial drop but then remains at a roughly constant, but
+slightly decreasing, strength. This is consistent with the pattern speed in the
+\SMUGGLE{} case being roughly constant or slightly increasing.
 
 \section{Discussion}
 \label{sec:discussion}
