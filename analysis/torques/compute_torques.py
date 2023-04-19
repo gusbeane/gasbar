@@ -9,6 +9,7 @@ import os
 from numba import njit
 import re
 from sklearn.cluster import KMeans
+import shutil
 
 from pyMND.forcetree import construct_tree, force_treeevaluate_loop
 
@@ -48,53 +49,79 @@ def get_mass_and_center_from_name(name):
 
 def _torque_one_snap(path, prefix_in_bar, prefix_phase_space, name, nchunk, snap_idx, 
                      path_out, theta=0.35, maxnode_fac=5., num_threads=1, G=43018.7):
-    
+   
+    print('starting snap_idx', snap_idx)
+
     # read in the relevant files
     pos_bar = np.array([]).reshape((0, 3))
     pos_notbar = np.array([]).reshape((0, 3))
     mass_disk, center = get_mass_and_center_from_name(name)
 
-    for i in range(nchunk):
+    in_bar_pt2 = []
+    in_bar_pt3 = []
+    in_bar_pt4 = []
+
+    # load snapshot
+    sn = read_snap(path, snap_idx, parttype=None, 
+                   fields=['Coordinates', 'Masses', 'Softenings', 'ParticleIDs'])
+   
+    pos_pt4 = []
+    for i in tqdm(range(nchunk)):
         fname_in_bar = prefix_in_bar + 'in_bar_' + name + '.' + str(i) + '.hdf5'
         h5_in_bar = h5.File(fname_in_bar, mode='r')
 
-        fname_phase_space = prefix_phase_space + 'phase_space_' + name + '.' + str(i) + '.hdf5'
-        h5_phase_space = h5.File(fname_phase_space, mode='r')
+        in_bar_pt2.append(h5_in_bar['PartType2/in_bar'][snap_idx])
+        in_bar_pt3.append(h5_in_bar['PartType3/in_bar'][snap_idx])
+        if 'PartType4' in h5_in_bar.keys():
+            in_bar_pt4.append(h5_in_bar['PartType4/in_bar'][snap_idx])
 
-        # pull out in_bar from file
-        in_bar = np.array(h5_in_bar['in_bar'])
-        # idx_list = np.array(h5_in_bar['idx_list'])
-    
-        # get mass and center from name
+        fname_phase_space = prefix_phase_space + '/phase_space_' + name + '.' + str(i) + '.hdf5'
+        h5_ps = h5.File(fname_phase_space, mode='r')
 
-        # load phase space properties
-        pos_tot = np.array(h5_phase_space['PartType2/Coordinates'][snap_idx])
-        pos_tot = np.concatenate((pos_tot, np.array(h5_phase_space['PartType3/Coordinates'][snap_idx])))
-        if 'PartType4' in h5_phase_space.keys():
-            pos_tot = np.concatenate((pos_tot, np.array(h5_phase_space['PartType4/Coordinates'][snap_idx])))
-
-        pos_tot -= center
-
-        
-        # vel_tot = np.array(h5_phase_space['Velocities'])
-        # tlist = np.array(h5_phase_space['Time'])
-
-        in_bar_idx = in_bar[snap_idx]
-        out_bar_idx = np.logical_not(in_bar_idx)
-
-        pos_bar = np.concatenate((pos_bar, pos_tot[in_bar_idx]))
-        pos_notbar = np.concatenate((pos_notbar, pos_tot[out_bar_idx]))
+        pos_pt4.append( h5_ps['PartType4/Coordinates'][:,snap_idx,:] )
 
         h5_in_bar.close()
-        h5_phase_space.close()
-    
-    bar_mass = np.full(len(pos_bar), mass_disk)
-    
-    # load snapshot
-    sn = read_snap(path, snap_idx, parttype=None, fields=['Coordinates', 'Masses', 'Softenings'])
 
-    # bar_soft = np.full(len(pos_bar), sn.part2.soft[0]) # all disk particles have same softening
+    pos_pt4 = np.concatenate(pos_pt4)
+
+    in_bar_pt2 = np.concatenate(in_bar_pt2)
+    in_bar_pt3 = np.concatenate(in_bar_pt3)
+    if len(in_bar_pt4) > 0:
+        in_bar_pt4 = np.concatenate(in_bar_pt4)
+
+    pos_pt2 = sn.part2.pos.value[ np.argsort(sn.part2.id) ] - center
+    pos_pt3 = sn.part3.pos.value[ np.argsort(sn.part3.id) ] - center
+    #if sn.NumPart_Total[4] > 0:
+    #    pos_pt4 = sn.part4.pos.value[ np.argsort(sn.part4.id) ] - center
+
+    pos_bar = []
+    pos_bar.append(pos_pt2[in_bar_pt2])
+    pos_bar.append(pos_pt3[in_bar_pt3])
+    if sn.NumPart_Total[4]>0:
+        pos_bar.append(pos_pt4[in_bar_pt4])
+    pos_bar = np.concatenate(pos_bar)
+
+    out_bar_pt2 = np.logical_not(in_bar_pt2)
+    out_bar_pt3 = np.logical_not(in_bar_pt3)
+    out_bar_pt4 = np.logical_not(in_bar_pt4)
+
+    pos_notbar = []
+    pos_notbar.append(pos_pt2[out_bar_pt2])
+    pos_notbar.append(pos_pt3[out_bar_pt3])
+    if sn.NumPart_Total[4] > 0:
+        pos_notbar.append(pos_pt4[out_bar_pt4])
+    pos_notbar = np.concatenate(pos_notbar)
+
+    bar_mass = []
+    bar_mass.append(np.full(sn.NumPart_Total[2], sn.MassTable[2].value))
+    bar_mass.append(np.full(sn.NumPart_Total[3], sn.MassTable[3].value))
+    if sn.NumPart_Total[4] > 0.0:
+        bar_mass.append(sn.part4.mass.value)
+    bar_mass = np.concatenate(bar_mass)
+
     bar_soft = sn.part2.soft[0]
+
+    print('a', snap_idx)
 
     tree_bar = construct_tree(pos_bar, bar_mass, theta, bar_soft, maxnode_fac=maxnode_fac)
     acc_bar = G * np.array(force_treeevaluate_loop(pos_bar, tree_bar, num_threads=num_threads))
@@ -111,9 +138,13 @@ def _torque_one_snap(path, prefix_in_bar, prefix_phase_space, name, nchunk, snap
     pos_halo = sn.part1.pos.value - center
     acc_halo = G * np.array(force_treeevaluate_loop(pos_halo, tree_bar, num_threads=num_threads))
 
+    print('b', snap_idx)
     
-    fout = path_out + 'torques_' + name + '.' + str(snap_idx) + '.hdf5'
-    h5out = h5.File(fout, mode='w')
+    #fout = path_out + 'torques_' + name + '.' + str(snap_idx) + '.hdf5'
+    fout_tmp = '/tmp/torques_' + name + '.' + str(snap_idx) + '.hdf5'
+    h5out = h5.File(fout_tmp, mode='w')
+
+    print('c', snap_idx)
 
     h5out.create_dataset("acc_bar", data=acc_bar)
     h5out.create_dataset("pos_bar", data=pos_bar)
@@ -141,6 +172,7 @@ def _torque_one_snap(path, prefix_in_bar, prefix_phase_space, name, nchunk, snap
     g.attrs.create("Time", sn.Time.value)
     g.attrs.create("MassTable", sn.MassTable)
 
+    print('d', snap_idx)
 
     # h5out.create_dataset("acc_bulge", data=acc_out[3])
     # h5out.create_dataset("pos_bulge", data=pos_out[3])
@@ -151,124 +183,44 @@ def _torque_one_snap(path, prefix_in_bar, prefix_phase_space, name, nchunk, snap
     
     h5out.close()
 
+    shutil.copy(fout_tmp, path_out)
+    os.remove(fout_tmp)
+
+    print('e', snap_idx)
+
     return None
 
-
-def process_bar_prop_out(bar_prop_out):
-    # get total number of snapshots
-    nsnap = len(bar_prop_out[0][0])
-    nchunk = len(bar_prop_out)
-    
-    bar_prop = np.zeros((nsnap, 5))
-    N_inbar = np.zeros(nsnap)
-    N_disk = np.zeros(nsnap)
-
-    # setup Rlist
-    Rlist = {}
-    for j in range(nsnap):
-        Rlist[j] = np.array([])
-
-    for i in range(nchunk):
-        bar_prop_i = bar_prop_out[i][0]
-        
-        # add the Mbar and Lzbar
-        bar_prop[:,3] += bar_prop_i[:,3]
-        bar_prop[:,4] += bar_prop_i[:,4]
-
-        # concat the Rlist
-        for j in range(nsnap):
-            Rlist_j = bar_prop_out[i][1][j]
-            if len(Rlist_j) > 0:
-                Rlist[j] = np.concatenate((Rlist[j], Rlist_j))
-        
-        # add the number in bar and number in disk
-        N_inbar += bar_prop_out[i][2][0]
-        N_disk += bar_prop_out[i][2][1]
-    
-    # get Rbar for each snap
-    Rbar = []
-    for j in range(nsnap):
-        if len(Rlist[j] > 100):
-            Rbar_j = np.percentile(Rlist[j], 99)
-        else:
-            Rbar_j = 0.0
-        
-        Rbar.append(Rbar_j)
-    
-    bar_prop[:,2] = np.array(Rbar)
-
-    # compute disk fraction
-    bar_prop[:,1] = N_inbar / N_disk
-    bar_prop[:,0] = bar_prop_out[0][0][:,0] # tlist
-
-    return bar_prop
-
-def get_other_output(prefix_in_bar, name):
-    fin = prefix_in_bar + 'in_bar_' + name + '.0.hdf5'
-    h5in = h5.File(fin, mode='r')
-
-    tlist = np.array(h5in['tlist'])
-    idx_list = np.array(h5in['idx_list'])
-    bar_angle = np.array(h5in['bar_angle'])
-
-    return tlist, idx_list, bar_angle
-
-def run(path, name, nproc, nsnap, basepath = '/n/home01/abeane/starbar/plots/bar_orbits/data/'):
+def run(path, name, snap_idx, basepath = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/bar_orbits/data/'):
     prefix_in_bar = '../in_bar/data/in_bar_' + name + '/'
-    prefix_phase_space = '/n/home01/abeane/starbar/plots/phase_space/data/' + name + '/'
+    prefix_phase_space = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/phase_space/data/' + name + '/'
 
     path_out = 'data/' + 'torques_' + name + '/'
-    if not os.path.isdir(path_out):
+    try:
         os.mkdir(path_out)
+    except:
+        pass
 
     nchunk = len(glob.glob(prefix_in_bar+'/in_bar_'+name+'.*.hdf5'))
 
     # compute bar properties for each chunk
-    _ = Parallel(n_jobs=nproc)(delayed(_torque_one_snap)(path, prefix_in_bar, prefix_phase_space, name, nchunk, i, path_out) for i in tqdm(range(nsnap)))
+    # _ = Parallel(n_jobs=nproc)(delayed(_torque_one_snap)(path, prefix_in_bar, prefix_phase_space, name, nchunk, i, path_out) for i in tqdm(range(nsnap)))
     
-    # process the bar output from each chunk
-    # bar_prop = process_bar_prop_out(bar_prop_out)
+    #for i in tqdm(range(nsnap)):
+    #    _torque_one_snap(path, prefix_in_bar, prefix_phase_space, name, nchunk, i, path_out)
 
-    # get other output from in bar
-    # tlist, idx_list, bar_angle = get_other_output(prefix_in_bar, name)
-
-    # output
-    # prefix_out = 'data/'
-    # fout = prefix_out + 'bar_prop_' + name + '.hdf5'
-    # h5out = h5.File(fout, mode='w')
-
-    # h5out.create_dataset('bar_prop', data=bar_prop)
-    # h5out.create_dataset('tlist', data=tlist)
-    # h5out.create_dataset('idx_list/', data=idx_list)
-    # h5out.create_dataset('bar_angle', data=bar_angle)
-    # h5out.close()
+    _torque_one_snap(path, prefix_in_bar, prefix_phase_space, name, nchunk, snap_idx, path_out)
 
     return None        
 
 if __name__ == '__main__':
-    nproc = int(sys.argv[1])
-
     basepath = '../../runs/'
+    
+    name_prefix = sys.argv[1]
+    lvl = sys.argv[2]
+    snap_idx = int(sys.argv[3])
 
-    Nbody = 'Nbody'
-    phgvS2Rc35 = 'phantom-vacuum-Sg20-Rc3.5'
+    path = basepath + name_prefix + '/' + lvl
+    name = name_prefix + '-' + lvl
 
-    pair_list = [(Nbody, 'lvl4'), (Nbody, 'lvl3'),
-                 (phgvS2Rc35, 'lvl4'), (phgvS2Rc35, 'lvl3'),
-                 (phgvS2Rc35, 'lvl3-rstHalo')]
+    out = run(path, name, snap_idx)
 
-    name_list = [           p[0] + '-' + p[1] for p in pair_list]
-    path_list = [basepath + p[0] + '/' + p[1] for p in pair_list]
-
-    nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
-
-    if len(sys.argv) == 3:
-        i = int(sys.argv[2])
-        path = path_list[i]
-        name = name_list[i]
-        nsnap = nsnap_list[i]
-
-        out = run(path, name, nproc, nsnap)
-    else:
-        for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
-            out = run(path, name, nproc, nsnap)

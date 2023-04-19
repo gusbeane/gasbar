@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH -p bigmem 
+#SBATCH -p hernquist_ice,bigmem 
 ##SBATCH --constraint=intel
 #SBATCH -J torque 
 #SBATCH -n 32
