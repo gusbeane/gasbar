@@ -615,7 +615,21 @@ $\textrm{Gyr}$. None of our results are sensitive to this choice.
 
 We applied a Savitzky-Golay filter \citep{1964AnaCh..36.1627S} as implemented in
 \texttt{scipy} using a window length of $21$ and polynomial order of $3$ to the
-plot of torques in order to remove some numerical noise.
+plot of torques (Fig.~\ref{fig:prop}) and angle differences
+(Fig.~\ref{fig:wake}) in order to remove some numerical noise.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{fig/halo_trapped.pdf}
+    \caption{The trapped fraction of the dark matter halo within two disk scale
+    lengths ($\sim5.3\,\textrm{kpc}$) for the \Nbody{} and \SMUGGLE{} runs. As
+    the dark matter halo torques the bar, material from the halo is trapped on
+    bar-like orbits. In the \Nbody{} case, the trapped fraction increases with
+    time, indicating the torquing process is active. In the \SMUGGLE{} case, the
+    trapped fraction is nearly constant with time, indicating the torquing
+    process is inactive.}
+    \label{fig:htrap}
+\end{figure}
 
 \begin{figure*}
     \centering
@@ -743,14 +757,25 @@ explore these mechanisms have yet to be fully explored and could play a role in
 the observed phenomenology of the simulations. We plan to address these issues
 in future dedicated work.
 
-We test this interpretation by measuring the angle offset between the halo
-wake and the bar. If the wake and the bar are aligned (i.e., there is no angle
-offset), then the wake cannot exert a negative torque on the bar. This angle
-is plotted in the left panel of Fig.~\ref{fig:wake}, which shows that the
-angle offset is larger in the \Nbody{} case than in the \SMUGGLE{} case by about a
-factor of two. The center and right panels of Fig.~\ref{fig:wake} show the halo
-wake with respect to the location of the bar in the \Nbody{} (center) and \SMUGGLE{}
-(right) cases at one point in time.
+{\bf We test this interpretation in two ways. First, we measure the trapped
+fraction of the halo. As material in the halo wake torques the bar, that
+material becomes trapped on bar-like orbits \citep[the ``shadow
+bar'';][]{2016MNRAS.463.1952P}. In Fig.~\ref{fig:htrap} we show the halo trapped
+fraction for particles with radii less than two disk scale lengths
+($\sim5.3\,\textrm{kpc}$). In the \Nbody{} case, the trapped fraction increases
+with time, as expected since the halo is actively torquing the bar. In the
+\SMUGGLE{} case, the trapped fraction is constant (or perhaps slightly
+decreasing) with time. This supports our interpertation that the halo wake
+process has shut down in the presence of the gas phase.}
+
+Second, we measure the angle offset between the halo wake and the bar. If the
+wake and the bar are aligned (i.e., there is no angle offset), then the wake
+cannot exert a negative torque on the bar. This angle is plotted in the left
+panel of Fig.~\ref{fig:wake}, which shows that the angle offset is larger in the
+\Nbody{} case than in the \SMUGGLE{} case by about a factor of two. The center
+and right panels of Fig.~\ref{fig:wake} show the halo wake with respect to the
+location of the bar in the \Nbody{} (center) and \SMUGGLE{} (right) cases at one
+point in time.
 
 The presence of the gas can arrest the process by which additional material in
 the dark matter halo can contribute to a wake. However, this does not explain
