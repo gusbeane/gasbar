@@ -219,7 +219,7 @@ def run():
 
     # ax[1].axvline(tS[520])
 
-    ax[0].set(xlim=(0, 5), ylim=(-10, 30), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+    ax[0].set(xlim=(0, 5), ylim=(-10, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
 
     ax[0].legend(frameon=False)
     # ax[0].set_aspect('auto')
