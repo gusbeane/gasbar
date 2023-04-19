@@ -95,7 +95,7 @@ def run():
     t300 = bar_prop_Nbody['tlist'][300]
 
     cm = 1/2.54
-    fig, ax = plt.subplots(2, 1, figsize=(columnwidth*cm, columnwidth*cm), sharex=True)
+    fig, ax = plt.subplots(3, 1, figsize=(columnwidth*cm, 1.5*columnwidth*cm), sharex=True)
     
     # First panel, length of bar and mass of bar.
     ax[0].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Rbar'], c=tb_c[0],
@@ -106,17 +106,23 @@ def run():
     ax[0].set(ylim=(0, 7), ylabel=r'$R_{\text{bar}}\,[\,\text{kpc}\,]$')
     ax[0].legend(frameon=False)
     
+    # Second panel, mass of bar
+    ax[1].plot(bar_prop_Nbody['tlist'] - t300, bar_prop_Nbody['Mbar'], c=tb_c[0])
+    ax[1].plot(bar_prop_SMUGGLE['tlist'], bar_prop_SMUGGLE['Mbar'], c=tb_c[1])
+    ax[1].set(ylim=(0, 1.2), ylabel=r'$M_{\text{bar}}\,[\,10^{10}M_{\odot}\,]$')
+    
+    #Third panel, max(A2/A0)
     fourier = read_fourier(Nbody, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax[1].plot(t-t[300], A2A0, c=tb_c[0], label=r'$N$-body')
+    ax[2].plot(t-t[300], A2A0, c=tb_c[0], label=r'$N$-body')
 
     fourier = read_fourier(phS2R35, lvl)
     t, A2A0 = extract_t_max_A2A0(fourier)
-    ax[1].plot(t, A2A0, c=tb_c[1], label='SMUGGLE')
+    ax[2].plot(t, A2A0, c=tb_c[1], label='SMUGGLE')
 
     
-    ax[1].set(xlim=(0, 5), ylim=(0, 0.7))
-    ax[1].set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')
+    ax[2].set(xlim=(0, 5), ylim=(0, 0.7))
+    ax[2].set(xlabel=r'$t\,[\,\textrm{Gyr}\,]$', ylabel=r'$\textrm{max}\left(\left|A_2/A_0\right|\right)$')
     
     fig.tight_layout()
     fig.savefig('Rb_A2.pdf')
