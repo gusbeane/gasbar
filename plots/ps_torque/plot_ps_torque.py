@@ -66,16 +66,17 @@ def read_bar_prop(name, lvl):
     return out
 
 def read_torque(name, lvl):
-    if name == phS2R35:
+    #if name == phS2R35:
+    if False:
         base = torque_path + 'torques_' + name + '-' + lvl + '-bak' + '/torques_' + name + '-' + lvl + '.'
     else:
         base = torque_path + 'torques_' + name + '-' + lvl + '/torques_' + name + '-' + lvl + '.'
         
-    # nfiles = len(glob.glob(base + '*.hdf5'))
-    if name == Nbody:
-        nfiles = 1500
-    else:
-        nfiles = 1200
+    nfiles = len(glob.glob(base + '*.hdf5'))
+    #if name == Nbody:
+    #    nfiles = 1500
+    #else:
+    #    nfiles = 1200
 
     tz_halo = []
     tz_not_bar = []
