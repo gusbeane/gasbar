@@ -22,8 +22,9 @@ rc('text', usetex=True)
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}']
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-fourier_path = '/n/home01/abeane/starbar/analysis/fourier_sphere/data/'
-bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
+fourier_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/fourier_sphere/data/'
+bprop_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/bar_prop/data/'
+in_bar_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/in_bar/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -38,6 +39,22 @@ def read_snap(idx, name, lvl, parttype=[2, 3, 4], fields=['Coordinates', 'Masses
     sn = arepo.Snapshot(snap_path+name+'/'+lvl+'/output', idx, combineFiles=True, parttype=parttype,
                         fields=fields)
     return sn
+
+def read_in_bar(name, lvl, idx, nchunk=256):
+    fname_base = in_bar_path+'in_bar_'+name+'-'+lvl+'/in_bar_'+name+'-'+lvl+'.'
+    
+    in_bar = []
+    
+    for i in tqdm(range(nchunk)):
+        fname = fname_base + str(i) + '.hdf5'
+        
+        t = h5.File(fname, mode='r')
+        in_bar.append(t['PartType1']['in_bar'][idx])
+        t.close()
+    
+    in_bar = np.concatenate(in_bar)
+    
+    return in_bar
 
 @njit
 def compute_surface_density(R, mass, Rbins):
@@ -77,13 +94,17 @@ def rotate_pos(pos, ang):
     
     return pos
 
-def compute_heatmap(sn, center, nres, rng, angle=0.0):
+def compute_heatmap(sn, center, nres, rng, angle=0.0, in_bar=None):
     center = sn.part1.pos.value[np.argmin(sn.part1.pot)]
 
     pos = sn.part1.pos.value - center
     mass = sn.MassTable[1]
 
     pos = rotate_pos(pos, angle)
+    
+    if in_bar is not None:
+        pos = pos[np.argsort(sn.part1.id)]
+        pos = pos[np.logical_not(in_bar)]
 
     Rbins = np.logspace(-3, 2, 80)
     R = np.linalg.norm(pos[:,:2], axis=1)
@@ -111,6 +132,7 @@ def compute_heatmap(sn, center, nres, rng, angle=0.0):
     return heatmap
 
 def read_fourier(name, lvl):
+    print(fourier_path + 'fourier_' + name + '-' + lvl + '.hdf5')
     t = h5.File(fourier_path + 'fourier_' + name + '-' + lvl + '.hdf5', mode='r')
     out = {}
     for key in t.keys():
@@ -148,20 +170,23 @@ def run():
 
     Nbody_idx = 820
     SMUGGLE_idx = 520
+    
+    in_bar_N = read_in_bar(Nbody, lvl, Nbody_idx)
+    in_bar_S = read_in_bar(phS2R35, lvl, SMUGGLE_idx)
 
     nres = 256
     rng = [[-7.5, 7.5], [-7.5, 7.5]]
     extent = [rng[0][0], rng[0][1], rng[1][0], rng[1][1]]
     
-    vmin = -0.002 * (1E10/1E6)
-    vmax = 0.002 * (1E10/1E6)
+    vmin = -0.0015 * (1E10/1E6)
+    vmax = 0.0015 * (1E10/1E6)
 
     cm = 1/2.54
     fig, ax = plt.subplots(1, 4, figsize=(textwidth*cm, textwidth*(6/18)*cm), gridspec_kw={"width_ratios":[1, 1, 1, 0.05]})
     
     # First panel, wake of Nbody.
     sn = read_snap(Nbody_idx, Nbody, lvl, parttype=[1], fields=None)
-    heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_Nbody['A2_angle'][Nbody_idx]/2.0)
+    heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_Nbody['A2_angle'][Nbody_idx]/2.0, in_bar=in_bar_N)
     # heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_Nbody['A2_angle'][Nbody_idx])
     Rbar = bar_prop_Nbody['Rbar'][Nbody_idx]
     print(fourier_Nbody['A2_angle'][Nbody_idx], bar_prop_Nbody['bar_angle'][Nbody_idx], fourier_Nbody['A2_h_angle'][Nbody_idx])
@@ -188,13 +213,13 @@ def run():
     tN = fourier_Nbody['time']
     tS = fourier_SMUGGLE['time']
     
-    ax[0].plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label=r'$N$-body')
-    ax[0].plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
+    ax[0].plot(tN - tN[300], 180.*dphiN/np.pi, c=tb_c[0], label=r'$N$-body')
+    ax[0].plot(tS, 180.*dphiS/np.pi, c=tb_c[1], label='SMUGGLE')
     ax[0].axhline(0.0, c='k')
 
     # ax[1].axvline(tS[520])
 
-    ax[0].set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+    ax[0].set(xlim=(0, 5), ylim=(-10, 30), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
 
     ax[0].legend(frameon=False)
     # ax[0].set_aspect('auto')
@@ -204,7 +229,7 @@ def run():
     
     # Third panel, wake of SMUGGLE.
     sn = read_snap(SMUGGLE_idx, phS2R35, lvl, parttype=[1], fields=None)
-    heatmap = compute_heatmap(sn, np.array([200., 200., 200.]), nres, rng, angle=-fourier_SMUGGLE['A2_angle'][SMUGGLE_idx]/2.0)
+    heatmap = compute_heatmap(sn, np.array([200., 200., 200.]), nres, rng, angle=-fourier_SMUGGLE['A2_angle'][SMUGGLE_idx]/2.0, in_bar=in_bar_S)
     # heatmap = compute_heatmap(sn, np.array([0., 0., 0.]), nres, rng, angle=-fourier_SMUGGLE['A2_angle'][SMUGGLE_idx])
     Rbar = bar_prop_SMUGGLE['Rbar'][SMUGGLE_idx]
     print(fourier_SMUGGLE['A2_angle'][SMUGGLE_idx], bar_prop_SMUGGLE['bar_angle'][SMUGGLE_idx], fourier_SMUGGLE['A2_h_angle'][SMUGGLE_idx])
