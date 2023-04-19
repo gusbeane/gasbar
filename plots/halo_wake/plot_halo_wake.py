@@ -136,7 +136,6 @@ def compute_dphi(phi_disk, phi_halo):
     dphi = phi_disk - phi_halo
     dphi = np.mod(dphi + np.pi, 2.*np.pi) - np.pi 
     dphi /= 2.0
-    dphi = savgol_filter(dphi, 81, 3)
 
     return dphi
 
@@ -182,6 +181,9 @@ def run():
     # Second panel, diff in angle.
     dphiN = compute_dphi(fourier_Nbody['A2_angle'], fourier_Nbody['A2_h_angle'])
     dphiS = compute_dphi(fourier_SMUGGLE['A2_angle'], fourier_SMUGGLE['A2_h_angle'])
+
+    dphiN = savgol_filter(dphiN, 21, 3)
+    dphiS = savgol_filter(dphiS, 21, 3)
 
     tN = fourier_Nbody['time']
     tS = fourier_SMUGGLE['time']
