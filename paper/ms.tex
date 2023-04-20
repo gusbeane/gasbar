@@ -870,17 +870,6 @@ Fig.~\ref{fig:GFM}. We find that the pattern speed evolution is nearly the same
 in this case, and so conclude that our result is not sensitive to the details of
 the model for the interstellar medium.
 
-{\bf \subsection{Stars Instead of Gas}
-In the SMUGGLE model considered in this work, we instantaneously added gas to
-the $N$-body system after $1.5\,\textrm{Gyr}$ of evolution. One might wonder if
-this sudden change to the potential is responsible for the stable pattern speed
-evolution. To test whether this is the case, we added mass to the system in the
-same way we did for the SMUGGLE model, but using collisionless particles instead
-of gas. The result of this experiment is shown in Fig.~\ref{fig:ps-star}. While
-there is an offset compared to the pure $N$-body case, we see that the pattern
-speed evolution is broadly consistent with a declining pattern speed. This
-indicates that the gas phase is responsible for the stable pattern speed.}
-
 \begin{figure}
     \centering
     \includegraphics[width=9cm]{fig/ps_late_start.pdf}
@@ -1089,13 +1078,6 @@ are too short rather than too slow.
     stability of the pattern speed is not simply a result of our assumed model
     for the ISM.}
 \label{fig:GFM}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=9cm]{fig/ps_star.pdf}
-    \caption{{\bf Pattern speed evolution of a model in which we instaneously add stars instead of gas to the simulation, with the same density profile as the gas phase. The pattern speed evolution in this case is qualitatively similar to that of the $N$-body case, with a slight offset in the pattern speed. This test demonstrates that the stable pattern speed evolution in the SMUGGLE case is not simply a consequence of the change in potential imposed in our initial conditions.}}
-\label{fig:ps-star}
 \end{figure}
 
 \begin{figure}
@@ -1310,6 +1292,29 @@ total torque on the gas phase is still negative.}
     \label{fig:equil}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{fig/ps_star.pdf}
+    \caption{{\bf Pattern speed evolution of a model in which we instaneously
+    add stars instead of gas to the simulation, with the same density profile as
+    the gas phase. The pattern speed evolution in this case is qualitatively
+    similar to that of the $N$-body case, with a slight offset in the pattern
+    speed. This test demonstrates that the stable pattern speed evolution in the
+    SMUGGLE case is not simply a consequence of the change in potential imposed
+    in our initial conditions.}}
+\label{fig:ps-star}
+\end{figure}
+
+{\bf \section{Stars Instead of Gas}
+In the SMUGGLE model considered in this work, we instantaneously added gas to
+the $N$-body system after $1.5\,\textrm{Gyr}$ of evolution. One might wonder if
+this sudden change to the potential is responsible for the stable pattern speed
+evolution. To test whether this is the case, we added mass to the system in the
+same way we did for the SMUGGLE model, but using collisionless particles instead
+of gas. The result of this experiment is shown in Fig.~\ref{fig:ps-star}. While
+there is an offset compared to the pure $N$-body case, we see that the pattern
+speed evolution is broadly consistent with a declining pattern speed. This
+indicates that the gas phase is responsible for the stable pattern speed.}
 \section{Semi-Analytic Model Parameters}
 \label{app:sam}
 Our semi-analytic model consisted of a three-component bar-disk-halo system. We
