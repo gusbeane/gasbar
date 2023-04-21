@@ -105,11 +105,12 @@ def run():
         ax.plot(time, ps, c=c)
     
     t = bar_prop_Nbody['tlist']
-    ps_N = savgol_filter(bar_prop_Nbody['pattern_speed'], 81, 3)
+    ps_N = savgol_filter(bar_prop_Nbody['pattern_speed'], 21, 3)
     ax.plot(t - t[300], ps_N, c=tb_c[0], ls='dashed', label=r'$N$-body')
     
     t = bar_prop_SMUGGLE['tlist']
-    ps_S = savgol_filter(bar_prop_SMUGGLE['pattern_speed'], 81, 3)
+    ps_S = savgol_filter(bar_prop_SMUGGLE['pattern_speed'], 21, 3)
+    #ps_S = bar_prop_SMUGGLE['pattern_speed']
     ax.plot(t, ps_S, c=tb_c[1], ls='dashed', label='SMUGGLE')
     
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
