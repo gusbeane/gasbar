@@ -13,7 +13,7 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 ##SBATCH --mem-per-cpu=3900
-#SBATCH --mem=240G
+#SBATCH --mem=180G
 ##SBATCH -t 4-00:00           # Runtime in D-HH:MM
 #SBATCH -t 7-00:00           # Runtime in D-HH:MM
 

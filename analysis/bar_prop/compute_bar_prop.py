@@ -156,6 +156,10 @@ def process_bar_prop_out(bar_prop_out):
             Rbar_j = np.percentile(Rlist[j], 99)
         else:
             Rbar_j = 0.0
+            
+        keynan = np.where(np.isnan(Rlist[j]))[0]
+        if len(keynan) > 0:
+            print('nans detected in snap', j)
         
         Rbar.append(Rbar_j)
     
@@ -185,6 +189,9 @@ def run(name, nproc, basepath = '/n/holylfs05/abeane/gasbar/analysis/bar_orbits/
 
     # compute bar properties for each chunk
     bar_prop_out = Parallel(n_jobs=nproc)(delayed(_bar_prop_one_chunk)(prefix_in_bar, prefix_phase_space, name, i) for i in tqdm(range(nchunk)))
+    
+    # _bar_prop_one_chunk(prefix_in_bar, prefix_phase_space, name, 0)
+    # sys.exit(1)
     
     # process the bar output from each chunk
     bar_prop = process_bar_prop_out(bar_prop_out)
