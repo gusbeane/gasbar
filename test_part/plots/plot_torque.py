@@ -109,9 +109,9 @@ def run():
 
     tz_gas = outS['torque_gas'][:]
 
-    tzN = savgol_filter(tzN, 81, 3)
-    tzS = savgol_filter(tzS, 81, 3)
-    tz_gas = savgol_filter(tz_gas, 81, 3)
+    tzN = savgol_filter(tzN, 21, 3)
+    tzS = savgol_filter(tzS, 21, 3)
+    tz_gas = savgol_filter(tz_gas, 21, 3)
 
     ax.plot(timeN, -tzN, c=tb_c[0])
     ax.plot(timeS, -tzS, c=tb_c[1])
@@ -126,8 +126,8 @@ def run():
                     mpl.lines.Line2D([0], [0], color='k', ls='dashed')]
     ax.legend(custom_lines, ['by halo', 'by gas'], frameon=False)
 
-    ax.text(1, -65, r'$\tau_{\textrm{gas}} = 0$', c=tb_c[0])
-    ax.text(3, -35, r'$\tau_{\textrm{gas}} = 20$', c=tb_c[1])
+    ax.text(1, -75, r'$\tau_{\textrm{gas}} = 0$', c=tb_c[0])
+    ax.text(3, -40, r'$\tau_{\textrm{gas}} = 20$', c=tb_c[1])
 
     # ax.legend(frameon=False, loc='lower left')
 
