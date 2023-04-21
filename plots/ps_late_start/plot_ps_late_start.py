@@ -140,9 +140,9 @@ def run():
     fig, ax = plt.subplots(1, 1, figsize=(columnwidth*cm, (2./3.)*columnwidth*cm))
 
     # First panel, pattern speed.
-    ax.plot(time_Nbody - time_Nbody[300], savgol_filter(ps_Nbody, 81, 3), c=tb_c[0], label=r'$N$-body')
-    ax.plot(time_SMUGGLE, savgol_filter(ps_SMUGGLE, 81, 3), c=tb_c[1], label=r'SMUGGLE')
-    ax.plot(time_SMUGGLE700 + (time_Nbody[700] - time_Nbody[300]), savgol_filter(ps_SMUGGLE700, 81, 3), c=tb_c[2], label=r'SMUGGLE (later start time)')
+    ax.plot(time_Nbody - time_Nbody[300], ps_Nbody, c=tb_c[0], label=r'$N$-body')
+    ax.plot(time_SMUGGLE, ps_SMUGGLE, c=tb_c[1], label=r'SMUGGLE')
+    ax.plot(time_SMUGGLE700 + (time_Nbody[700] - time_Nbody[300]), ps_SMUGGLE700, c=tb_c[2], label=r'SMUGGLE (later start time)')
 
 
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
