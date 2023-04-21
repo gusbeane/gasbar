@@ -71,12 +71,12 @@ def run(name, lvl, nchunk, nproc=1, data_dir='data/'):
     
     print('running ', name, lvl)
 
-    #_ = Parallel(n_jobs=nproc) (delayed(_concat_h5_files)(name, lvl, i) for i in tqdm(range(nchunk)))
+    _ = Parallel(n_jobs=nproc) (delayed(_concat_h5_files)(name, lvl, i) for i in tqdm(range(nchunk)))
 
     # for i in tqdm(range(nchunk)):
         # _concat_h5_files(name, lvl, i)
 
-    _concat_h5_files(name, lvl, 255)
+    #_concat_h5_files(name, lvl, 255)
 
     return None
 
