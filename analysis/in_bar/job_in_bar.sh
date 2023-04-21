@@ -1,6 +1,6 @@
 #!/bin/sh
-##SBATCH -p hernquist,conroy,shared,itc_cluster
-#SBATCH -p hernquist_ice
+#SBATCH -p hernquist,conroy,shared,itc_cluster
+##SBATCH -p hernquist_ice
 ##SBATCH --constraint=intel
 #SBATCH -J in_bar 
 #SBATCH -n 24
@@ -13,7 +13,8 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 ##SBATCH --mem-per-cpu=3900
-#SBATCH --mem=480G
+##SBATCH --mem=480G
+#SBATCH --mem=180G
 ##SBATCH -t 4-00:00           # Runtime in D-HH:MM
 #SBATCH -t 7-00:00           # Runtime in D-HH:MM
 

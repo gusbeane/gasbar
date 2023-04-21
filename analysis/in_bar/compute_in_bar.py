@@ -12,6 +12,8 @@ from sklearn.cluster import KMeans
 
 from joblib import Parallel, delayed
 
+prefix_phase_space = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/phase_space/data/'
+
 def read_snap(path, idx, parttype=[0], fields=['Coordinates', 'Masses', 'Velocities', 'ParticleIDs']):
     
     fname = path + '/output'
@@ -23,15 +25,15 @@ def process_id(ID, bar_metr, t, tlist, nsnap):
     in_bar = np.full(nsnap, 0, dtype=np.bool_)
     Naps = t.shape[0]
 
-    if Naps < 8:
-       return in_bar 
+    if Naps < 20:
+        return in_bar
 
     for j,idx in enumerate(range(nsnap)):
         Tanalyze = tlist[idx]
         key = np.argmin(np.abs(t - Tanalyze))
 
-        if key==0 or key==Naps-1:
-            continue
+        # if key==0 or key==Naps-1:
+        #     continue
         
         metr = bar_metr[key]
         
@@ -51,7 +53,10 @@ def _in_bar_one_chunk(prefix_in, prefix_out, name, chunk_idx):
 
     fout = prefix_out + '/in_bar_' + name + '.' + str(chunk_idx) + '.hdf5'
     h5out = h5.File(fout, mode='w')
-    
+
+    fps = prefix_phase_space + '/' + name + '/phase_space_' + name + '.' + str(chunk_idx) + '.hdf5'
+    h5ps = h5.File(fps, mode='r')
+
     bar_angle = np.array(h5in['bar_angle'])
     
     for pt in [1, 2, 3, 4]:
@@ -70,7 +75,12 @@ def _in_bar_one_chunk(prefix_in, prefix_out, name, chunk_idx):
                 bar_metr = np.array(h5in[pt_str+'/bar_metrics'][str(ID)])
                 t = tlist[bar_metr[:,0].astype(np.int)]
                 in_bar[:,i] = process_id(ID, bar_metr, t, tlist, nsnap)
-    
+
+            if pt == 4:
+                for j in range(nsnap):
+                    isnan = np.isnan(h5ps['PartType4/Coordinates'][:,j,0])
+                    in_bar[j][isnan] = False
+
 
             # write to output file
             h5out.create_dataset(pt_str+'/tlist', data=tlist)
@@ -83,6 +93,7 @@ def _in_bar_one_chunk(prefix_in, prefix_out, name, chunk_idx):
    
     h5in.close()
     h5out.close()
+    h5ps.close()
     
     return None
 
@@ -93,7 +104,7 @@ def run(name, nproc, basepath = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/ga
 
     prefix_in = basepath + 'bar_orbit_' + name
     nchunk = len(glob.glob(prefix_in+'/bar_orbit_'+name+'.*.hdf5'))
-    
+
     _ = Parallel(n_jobs=nproc)(delayed(_in_bar_one_chunk)(prefix_in, prefix_out, name, i) for i in tqdm(range(nchunk)))
     
     return None        
