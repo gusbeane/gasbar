@@ -353,6 +353,13 @@ def run():
 
     ax[0][0].set_ylabel(r'without interstellar medium')
     ax[1][0].set_ylabel(r'with interstellar medium')
+    
+    for x in ax.ravel():
+        x.axes.xaxis.set_ticks([])
+        x.axes.yaxis.set_ticks([])
+        
+    ax[1][2].plot([6.5, 8.5], [-8, -8], c='w', lw=2)
+    ax[1][2].text(7.5, -7.5, r'$2\,\textrm{kpc}$', c='w', ha='center')
 
     fig.tight_layout()
 
