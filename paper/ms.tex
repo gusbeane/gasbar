@@ -610,15 +610,14 @@ the bar by the other components is simply the negative of the torque on the
 other components by the bar.
 
 \subsection{Plotting Details}
-We saved snapshots in intervals of $0.005$ in the time units of the
-simulation, $\textrm{kpc}/(\textrm{km}/\textrm{s})$, which is very nearly
-equal to $1\,\textrm{Gyr}$ (it is $\sim0.977\,\textrm{Gyr}$). Therefore,
-throughout this work we referred to the native code time unit as
-$\textrm{Gyr}$. None of our results are sensitive to this choice.
-
-We applied a Savitzky-Golay filter \citep{1964AnaCh..36.1627S} as implemented in
-\texttt{scipy} using a window length of $21$ and polynomial order of $3$ to the
-plot of torques (Fig.~\ref{fig:prop}) and angle differences
+We saved snapshots in intervals of $0.005$ in the time units of the simulation,
+$\textrm{kpc}/(\textrm{km}/\textrm{s})$, which is very nearly equal to
+$1\,\textrm{Gyr}$ (it is $\sim0.977\,\textrm{Gyr}$). Therefore, throughout this
+work we referred to the native code time unit as $\textrm{Gyr}$. None of our
+results are sensitive to this choice. We applied a Savitzky-Golay filter
+\citep{1964AnaCh..36.1627S} as implemented in \texttt{scipy} using a window
+length of $21$ and polynomial order of $3$ to the plot of torques
+(Fig.~\ref{fig:prop} and Fig.~\ref{fig:sam-torque}) and angle differences
 (Fig.~\ref{fig:wake}) in order to remove some numerical noise.
 
 \begin{figure}
@@ -1358,7 +1357,7 @@ torque inside corotation is $-10.8$ over the same time period and in the same
 units. So, while gas outside corotation does experience a positive torque, the
 total torque on the gas phase is still negative.}
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=9cm]{fig/torque_ps.pdf}
     \caption{Average torque exerted by gas on a bar which rotates at a fixed
@@ -1369,9 +1368,9 @@ total torque on the gas phase is still negative.}
     is rotated as a solid body with a constant angular
     velocity.}
     \label{fig:equil}
-\end{figure}
+\end{figure*}
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=9cm]{fig/ps_star.pdf}
     \caption{{\bf Pattern speed evolution of a model in which we instaneously
@@ -1382,7 +1381,7 @@ total torque on the gas phase is still negative.}
     SMUGGLE case is not simply a consequence of the change in potential imposed
     in our initial conditions.}}
 \label{fig:ps-star}
-\end{figure}
+\end{figure*}
 
 {\bf \section{Stars Instead of Gas}
 In the SMUGGLE model considered in this work, we instantaneously added gas to
@@ -1460,7 +1459,7 @@ disk of $\sim200\,\textrm{kpc}$ \citep{1995ApJ...448..138M}. This may be caused
 by the model in our simulations not driving enough turbulent pressure, and is an
 interesting avenue of further investigation.}
 
-\begin{figure}
+\begin{figure*}
     \centering
     \includegraphics[width=9cm]{fig/surf_dens.pdf}
     \caption{The time evolution of the atomic gas surface density
@@ -1478,7 +1477,7 @@ interesting avenue of further investigation.}
     extent of the bar from $\sim1$ to $\sim4\,\textrm{kpc}$, related to the gas
     inflow in this region.}
     \label{fig:surf}
-\end{figure}
+\end{figure*}
 
 \begin{figure}
     \centering
