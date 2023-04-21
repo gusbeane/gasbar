@@ -147,13 +147,13 @@ def run():
 
     # First panel, pattern speed.
 
-    ax.plot(time_SMUGGLE20, savgol_filter(ps_SMUGGLE20, 81, 3), c=tb_c[1], label=r'$20$ (fiducial)')
-    ax.plot(time_SMUGGLE15, savgol_filter(ps_SMUGGLE15, 81, 3), c=tb_c[2], label=r'$15$')
-    ax.plot(time_SMUGGLE10, savgol_filter(ps_SMUGGLE10, 81, 3), c=tb_c[3], label=r'$10$')
-    # ax.plot(time_SMUGGLE08, savgol_filter(ps_SMUGGLE08, 81, 3), c=tb_c[4], label=r'$8$')
-    ax.plot(time_SMUGGLE05, savgol_filter(ps_SMUGGLE05, 81, 3), c=tb_c[5], label=r'$5$')
+    ax.plot(time_SMUGGLE20, ps_SMUGGLE20, c=tb_c[1], label=r'$20$ (fiducial)')
+    ax.plot(time_SMUGGLE15, ps_SMUGGLE15, c=tb_c[2], label=r'$15$')
+    ax.plot(time_SMUGGLE10, ps_SMUGGLE10, c=tb_c[3], label=r'$10$')
+    # ax.plot(time_SMUGGLE08, ps_SMUGGLE08, c=tb_c[4], label=r'$8$')
+    ax.plot(time_SMUGGLE05, ps_SMUGGLE05, c=tb_c[5], label=r'$5$')
 
-    ax.plot(time_Nbody - time_Nbody[300], savgol_filter(ps_Nbody, 81, 3), c=tb_c[0], label=r'0 ($N$-body)')
+    ax.plot(time_Nbody - time_Nbody[300], ps_Nbody, 81, 3, c=tb_c[0], label=r'0 ($N$-body)')
 
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
