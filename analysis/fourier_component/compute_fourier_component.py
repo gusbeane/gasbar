@@ -184,10 +184,6 @@ def concat_files(outs, indices, fout):
 def run(path, name, nsnap):
     fout = 'data/fourier_' + name + '.hdf5'
 
-    # dont remake something already made
-    if os.path.exists(fout):
-        return None
-
     if 'Nbody' in name:
         center = None
     else:
@@ -268,13 +264,9 @@ if __name__ == '__main__':
                                             
     nsnap_list = [len(glob.glob(path+'/output/snapdir*/*.0.hdf5')) for path in path_list]
 
-    if len(sys.argv) == 3:
-        i = int(sys.argv[2])
-        path = path_list[i]
-        name = name_list[i]
-        nsnap = nsnap_list[i]
+    i = int(sys.argv[2])
+    path = path_list[i]
+    name = name_list[i]
+    nsnap = nsnap_list[i]
 
-        run(path, name, nsnap)
-    else:
-        for path, name, nsnap in zip(tqdm(path_list), name_list, nsnap_list):
-            run(path, name, nsnap)
+    run(path, name, nsnap)
