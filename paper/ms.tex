@@ -316,11 +316,11 @@ where \RCR{} is the corotation radius and \Rb{} is the bar length.\footnote{The
 radius of corotation \RCR{} is defined for circular orbits as the radius at
 which the orbital frequency is equal to the pattern speed, \PS{}, of a given
 non-axisymmetric feature. In a galaxy with a constant circular velocity \Vc{},
-it is given by $\RCR = \Vc / \PS$.} Galaxies with $\Rot < 1.4$ are considered
-``fast rotators'' while galaxies with $\Rot > 1.4$ are considered ``slow
-rotators'' \citep{2000ApJ...543..704D}. Galaxies with $\Rot < 1$ are not thought
-to be stable \citep{1980AA....81..198C}. Observational estimates of the pattern
-speeds of bars indicate that nearly all galaxies have $1 < \Rot < 1.4$
+it is given by $\RCR = \Vc / \PS$.} {\bf Bars} with $\Rot < 1.4$ are considered
+``fast rotators'' while {\bf bars} with $\Rot > 1.4$ are considered ``slow
+rotators'' \citep{2000ApJ...543..704D}. {\bf Bars} with $\Rot < 1$ are not
+thought to be stable \citep{1980AA....81..198C}. Observational estimates of the
+pattern speeds of bars indicate that nearly all galaxies have $1 < \Rot < 1.4$
 \citep{2011MSAIS..18...23C, 2015AA...576A.102A, 2019MNRAS.482.1733G,
 2020MNRAS.491.3655G}. We note that \citet{2017ApJ...835..279F} argue that the
 pattern speed should be measured relative to a characteristic angular velocity
@@ -338,7 +338,7 @@ bar. However, because gas is collisional, it can participate in non-resonant
 angular momentum exchange with the bar \citep{2011MNRAS.415.1027H}. Thus,
 numerical work has shown that the gas phase can have a stronger influence on a
 bar than its contribution to the mass of a galaxy would suggest
-\citep{2010ApJ...719.1470V, 2013MNRAS.429.1949A}.
+\citep[e.g.,][]{2010ApJ...719.1470V, 2013MNRAS.429.1949A}.
 
 
 In the last decade, stellar bars have been studied mainly in the context of the
@@ -367,19 +367,18 @@ gravito-hydrodynamics code \AREPO{} \citep{2010MNRAS.401..791S}. We use the
 galaxy formation model Stars and MUltiphase Gas in GaLaxiEs
 \citep[\SMUGGLE{};][]{2019MNRAS.489.4233M}. This disk galaxy exhibits almost no
 evolution in the bar pattern speed over several Gyr when the gas phase is
-accounted for and {\bf robustly} modeled. This behavior has been observed in a
-few previous works \citep{1993AA...268...65F, 2007ApJ...666..189B,
-2009ApJ...707..218V, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. 
+accounted for and {\bf robustly} modeled. This behavior has been observed in
+previous works \citep{1993AA...268...65F, 2007ApJ...666..189B,
+2009ApJ...707..218V, 2010ApJ...719.1470V, 2014MNRAS.438L..81A}. {\bf We propose a new
+physical explanation for this stable behavior.}
 
-Here we show that this phenomenon occurs in galaxies with gas fraction
-as low as about $5\%$, making this feature a likely characteristic of  Milky
-Way-type galaxies. This behavior will be explored in more general disks with
-larger gas fractions than the Milky Way in a forthcoming paper.
-% We are also the first to provide a physical explanation of
-%the behavior with clear observational predictions.
-We also provide a physical explanation of the redistribution of the angular
-momentum among the dark halo wake, the stellar bar, and the disk gas component. 
-
+{\bf In particular, we find that the presence of a significant gas phase in a
+barred galaxy can arrest the process by which the dark matter halo brakes the
+bar. The constant positive torque on the bar by the gas causes the bar's
+resonance to reside in regions which have become depopulated. In the halo wake
+picture, this is equivalent to no new material being available to reinforce the
+wake. We show that this occurs in Milky Way-like galaxies with gas fractions as
+low as about $5\%$.}
 
 We show {\bf stellar mass distributions} of our barred galaxy in a case with and
 without gas in Fig.~\ref{fig:overview}. We see that the bar grows longer and
@@ -439,9 +438,12 @@ before concluding in Section~\ref{sec:conclusions}.
     run does not slow down and instead remains at a constant pattern speed. The
     \textit{lower panel} shows the torque on the bar by different components.
     The solid lines indicate the torque exerted by the halo in both the \Nbody{}
-    and \SMUGGLE{} cases. The dashed line is the torque exerted by the gas phase in
-    the \SMUGGLE{} run (there is no gas in the \Nbody{} run). Details on how these
-    properties are calculated is given in Section~\ref{ssec:bar_analysis}.}\label{fig:prop}
+    and \SMUGGLE{} cases. The dashed line is the torque exerted by the gas phase
+    in the \SMUGGLE{} run (there is no gas in the \Nbody{} run). {\bf After
+    $\sim1\,\textrm{Gyr}$ of evolution, the torque by the halo in the \SMUGGLE{}
+    case is severely reduced. We call this halo exhaustion, and discuss its
+    proposed origin in the text.} Details on how these properties are calculated
+    is given in Section~\ref{ssec:bar_analysis}.}\label{fig:prop}
 \end{figure}
 
 \begin{figure}
@@ -586,19 +588,18 @@ A_0 &= \sum_i m_i \textrm{,}
 where $m_i$ and $\phi_i$ are the mass and azimuthal angle of each particle,
 respectively. We computed $A_2$ and $A_0$ in cylindrical bins of width
 $0.5\,\textrm{kpc}$ from radii of $0$ to $30\,\textrm{kpc}$. We defined the
-angle of the bar $\phi_b$ to be twice the angle of the complex number $A_2$ as
-measured in the bin extending from a radius of $2.5$ to $3\,\textrm{kpc}$.
-After correcting for the periodicity of $\phi_b$, we measured the pattern
-speed as one-half the two-sided finite gradient of $\phi_b$ as a function of
-time.
+angle of the bar $\phi_b$ to be {\bf half} the angle of the complex number $A_2$
+as measured in the bin extending from a radius of $2.5$ to $3\,\textrm{kpc}$.
+After correcting for the periodicity of $\phi_b$, we measured the pattern speed
+as one-half the two-sided finite gradient of $\phi_b$ as a function of time.
 
 In order to compute other properties of the bar, it is necessary to decompose
 the disk into a barred and unbarred component. We achieved this by following
-closely the methods described in \citet{2016MNRAS.463.1952P}. Our implementation
-is described in more detail in Appendix~\ref{app:bardecomp}. After the disk has
-been decomposed into a trapped and untrapped component, we measured the bar
-length as being the radius $R_b$ which encapsulates $99\%$ of the stars
-identified as being trapped in the bar.
+closely the methods described in \citet{2016MNRAS.463.1952P,
+2021MNRAS.500..838P}. Our implementation is described in more detail in
+Appendix~\ref{app:bardecomp}. After the disk has been decomposed into a trapped
+and untrapped component, we measured the bar length as being the radius $R_b$
+which encapsulates $99\%$ of the stars identified as being trapped in the bar.
 
 To compute torques we used the tree algorithm in \texttt{MakeNewDisk}
 \citep{2005MNRAS.361..776S} customized to be accessible from \texttt{Python}
@@ -608,29 +609,30 @@ $0.35$ using only the star particles identified as being trapped in the bar. We
 then queried the tree at the locations of all resolution elements in the other
 components and computed the torque of the bar on such components. The torque on
 the bar by the other components is simply the negative of the torque on the
-other components by the bar.
+other components by the bar. A similar analysis using basis function expansions
+was performed in \citet{2019MNRAS.490.3616P}.
 
 \subsection{Plotting Details}
 We saved snapshots in intervals of $0.005$ in the time units of the simulation,
 $\textrm{kpc}/(\textrm{km}/\textrm{s})$, which is very nearly equal to
 $1\,\textrm{Gyr}$ (it is $\sim0.977\,\textrm{Gyr}$). Therefore, throughout this
 work we referred to the native code time unit as $\textrm{Gyr}$. None of our
-results are sensitive to this choice. We applied a Savitzky-Golay filter
+results are sensitive to this choice. {\bf We applied a Savitzky-Golay filter
 \citep{1964AnaCh..36.1627S} as implemented in \texttt{scipy} using a window
 length of $21$ and polynomial order of $3$ to the plot of torques
 (Fig.~\ref{fig:prop} and Fig.~\ref{fig:sam-torque}) and angle differences
-(Fig.~\ref{fig:wake}) in order to remove some numerical noise.
+(Fig.~\ref{fig:wake}) in order to remove some numerical noise.}
 
 \begin{figure}
     \centering
     \includegraphics[width=\columnwidth]{fig/halo_trapped.pdf}
-    \caption{The trapped fraction of the dark matter halo within two disk scale
+    \caption{{\bf The trapped fraction of the dark matter halo within two disk scale
     lengths ($\sim5.3\,\textrm{kpc}$) for the \Nbody{} and \SMUGGLE{} runs. As
     the dark matter halo torques the bar, material from the halo is trapped on
     bar-like orbits. In the \Nbody{} case, the trapped fraction increases with
     time, indicating the torquing process is active. In the \SMUGGLE{} case, the
     trapped fraction is nearly constant with time, indicating the torquing
-    process is inactive.}
+    process is inactive.}}
     \label{fig:htrap}
 \end{figure}
 
@@ -732,10 +734,7 @@ bar to participate in the formation of the wake. However, the gas is also a
 reliable source of positive torque on the bar, speeding the bar up. In turn,
 this stops the location of the resonance from changing such that the halo cannot
 reinforce the wake, therefore arresting the process by which the halo can slow
-the bar down. We term this process ``halo exhaustion.'' Note that the resonances
-can be maintained even in the presence of the dissipative gaseous component if
-the gas is continuously accreted from the external environment, as is the case
-for massive disk galaxies at high redshift.
+the bar down. We term this process ``halo exhaustion.''
 
 %In the \Nbody{} case, halo material that is
 %resonant with the bar will form a wake which lags behind and exerts a negative 
@@ -775,10 +774,10 @@ Second, we measure the angle offset between the halo wake and the bar. If the
 wake and the bar are aligned (i.e., there is no angle offset), then the wake
 cannot exert a negative torque on the bar. This angle is plotted in the left
 panel of Fig.~\ref{fig:wake}, which shows that the angle offset is larger in the
-\Nbody{} case than in the \SMUGGLE{} case by about a factor of two. The center
-and right panels of Fig.~\ref{fig:wake} show the halo wake with respect to the
-location of the bar in the \Nbody{} (center) and \SMUGGLE{} (right) cases at one
-point in time.
+\Nbody{} case than in the \SMUGGLE{} case by about a factor of {\bf three}. The
+center and right panels of Fig.~\ref{fig:wake} show the halo wake with respect
+to the location of the bar in the \Nbody{} (center) and \SMUGGLE{} (right) cases
+at one point in time.
 
 The presence of the gas can arrest the process by which additional material in
 the dark matter halo can contribute to a wake. However, this does not explain
@@ -920,8 +919,9 @@ the torque exerted on the dark matter halo by the bar. In particular, we
 subtract the $z$-component of this torque divided by the moment of inertia of
 the bar from the pattern speed at each timestep. Since the radius of corotation
 \RCR{} is a parameter in the bar model from \citet{2022MNRAS.513..768C}, we
-allow the moment of inertia of the bar to vary with ${\RCR}^2$. To be more
-precise, we allow
+allow the moment of inertia of the bar to vary with ${\RCR}^2$. {\bf This is
+inspired by the fact that the moment of inertia of an ellipsoid scales with the
+sum of the square of its axes.} To be more precise, we allow
 \begin{equation}
 I = \frac{I_6}{10^{10} \Msun (\kms)^2} \left( \frac{\RCR}{6\,\textrm{kpc}} \right)^2\textrm{,}
 \end{equation}
@@ -949,14 +949,17 @@ on the order of $6$. Our semi-analytic model with no gas torque can reproduce
 the pattern speed evolution of the $N$-body case.
 
 We next take the $\tau_{\textrm{gas}}=0$ and $20$ cases from Fig.~\ref{fig:sam}
-and plot the halo torque evolution. This result, given in Fig.~\ref{fig:sam-torque},
-is comparable to the lower panel of Fig.~\ref{fig:prop}. We find that the
-$\tau_{\textrm{gas}}=0$ case compares favorably to the \Nbody{} case described
-in previous sections. The bar exerts a steady negative torque in this case (blue
-line). When a gas torque is included (orange lines), we find that the halo's
-torque becomes much weaker, similar to what we found in the \SMUGGLE{} case. The
-gas applies a steady positive torque by construction. Therefore, the exhaustion
-process is reproduced in our simple semi-analytic model.
+and plot the halo torque evolution. This result, given in
+Fig.~\ref{fig:sam-torque}, is comparable to the lower panel of
+Fig.~\ref{fig:prop}. We find that the $\tau_{\textrm{gas}}=0$ case compares
+favorably to the \Nbody{} case described in previous sections. The bar exerts a
+steady negative torque in this case (blue line). When a gas torque is included
+(orange lines), we find that the halo's torque becomes much weaker, similar to
+what we found in the \SMUGGLE{} case. The gas applies a steady positive torque
+by construction. Therefore, the exhaustion process is reproduced in our simple
+semi-analytic model. {\bf Curiously, we do not see the bimodal behavior in
+Fig.~\ref{fig:fgas} and described in \citet{2010ApJ...719.1470V}. It is not
+presently clear why this is the case.}
 
 \subsection{Observations}
 Observational estimates of the pattern speeds of bars indicate that nearly all
@@ -991,12 +994,15 @@ measurement of pattern speeds is a delicate process still prone to large errors.
 Second, the work of \citet{2021MNRAS.500.4710C} and \citet{2021MNRAS.505.2412C}
 have made indirect measurements of the deceleration of the bar's pattern speed
 from kinematics and chemistry. We point out that these reported measurements are
-not direct measurements of the Milky Way bar's deceleration. Much like the
-simulations in the present work, the simulations of these two works do not
-properly account for the complicated formation process of the Galactic bar,
-which may leave imprints on the present day distribution of stars in spatial,
-kinematic, and chemical space. More investigation is necessary to reconcile the
-present work with these two well-executed manuscripts.
+not direct measurements of the Milky Way bar's deceleration. {\bf For instance,
+\citet{2021MNRAS.500.4710C} measures the pattern speed based on the asymmetry of
+the Hercules stream, but this can also be produced by spiral arms
+\citep{2018MNRAS.481.3794H}.} Much like the simulations in the present work, the
+simulations of these two works do not properly account for the complicated
+formation process of the Galactic bar, which may leave imprints on the present
+day distribution of stars in spatial, kinematic, and chemical space. More
+investigation is necessary to reconcile the present work with these two
+well-executed manuscripts.
 
 {\bf Lenticular galaxies which lack a signficant gas phase offer an opportunity
 to find slowly rotating bars. It would still take several Gyr for a galaxy
@@ -1014,7 +1020,7 @@ example, UGC~628 \citep[$\Rot\sim2$;][]{2009AA...499L..25C} and NGC~2915
 \citep[$\Rot>1.7$;][]{1999AJ....118.2158B}. UGC~628
 has been studied in detail by \citet{2016MNRAS.463.1751C}, who note that it
 indeed has a low gas fraction for galaxies of its type. NGC~2915 has a gas
-fraction of $0.7$ \citep{2010ApJ...715..656W}, which would seem to be in
+fraction of $70\%$ \citep{2010ApJ...715..656W}, which would seem to be in
 conflict with our prediction that only a $5\%$ gas fraction is necessary to
 arrest the halo slowdown process. However, NGC~2915 has significantly different
 structural properties than the Milky Way-like model we considered in this work.
@@ -1042,10 +1048,10 @@ observationally possible bar length estimators, such as ellipse fitting
 \citep{1990MNRAS.245..130A, 1999AAS..140....1M, 2002MNRAS.330...35A,
 2006AA...452...97M, 2009AA...495..491A, 2015AA...576A.102A}. This is beyond the
 scope of our current work. Nonetheless, our prediction that \Rot{} is stable in
-the presence of gas is robust. Assuming bars form with $\Rot\sim1$, we predict
-this should remain the case with further evolution. Why the $N$-body simulation
-forms a bar with $\Rot\sim1.6$ is a separate question deserving further
-attention.}
+the presence of sufficient gas is robust. Assuming bars form with $\Rot\sim1$,
+we predict this should remain the case with further evolution. Why the $N$-body
+simulation forms a bar with $\Rot\sim1.6$ is a separate question deserving
+further attention.}
 
 \subsection{Previous Idealized Simulation Work}
 {\bf Substantial work has been devoted to the role of gas in bar dynamics. We
@@ -1062,7 +1068,7 @@ stable pattern speed over several Gyr.}
 Their disk is similar to ours (though their dark matter halo is a factor of $10$
 less massive). They find slowdown behavior up to a gas fraction of $8\%$, with
 the finding that higher gas fractions lead to a reduced slowdown. However, for
-the models which they show pattern speeds they do not include star formation or
+the models which they show pattern speeds, they do not include star formation or
 the removal of gas from the center of their disk. In preliminary work, we found
 slowdown behavior in an adiabatic model with similar gas fractions but lacking
 any method for removing gas from the central region (in our fiducial SMUGGLE
@@ -1084,15 +1090,11 @@ fractions of $100\%$ ($7\%$), $75\%$ ($6\%$), and $50\%$ ($5\%$). For a model
 with $20\%$ ($3\%$) gas fraction they find an increasing \Rot{}. In their model
 with a spherical halo they always find increasing \Rot{}, contrary to the
 present work. We note there is a structural difference in their dark matter
-halo. They use a cored isothermal sphere as opposed to our Hernquist halo It is
+halo. They use a cored isothermal sphere as opposed to our Hernquist halo. It is
 not clear to us the impact this would have on the expected torque from the halo
 (i.e., the velocity structure of their halo may allow for more efficient capture
 and thus stronger torquing). These authors make no mention of the process by
-which the halo braking process is arrested, as we propose in the present paper.
-\textcolor{red}{Lars, Elena - I'm most worried about this paragraph. Is the
-argument about cored isothermal sphere reasonable? I'm unsure if the velocity
-structure between a cored isothermal sphere and a Hernquist profile is really
-different enough to matter.} }
+which the halo braking process is arrested, as we propose in the present paper.}
 
 {\bf There may also be issues related to structural differences between their
 bars and the bar considered in this work. In our case, we allowed the bar to
@@ -1129,7 +1131,7 @@ be in the stable regime.}
 {\bf \citet{2021AA...650L..16F} explored the evolution of bars in the Auriga
 cosmological zoom simulations \citep{2017MNRAS.467..179G}. They find \Rot{}
 values consistent with observations. Furthermore, their pattern speed evolution
-shows some apparent periods of stability (see their Fig.~B1). One galaxy, Au27,
+shows some apparent periods of stability (see their Fig.~B1). One galaxy, Au26,
 appears to even transition from the stable pattern speed regime to the slowing
 down regime at a lookback time of $\sim1.8\,\textrm{Gyr}$.}
 
@@ -1380,7 +1382,8 @@ total torque on the gas phase is still negative.}
     similar to that of the $N$-body case, with a slight offset in the pattern
     speed. This test demonstrates that the stable pattern speed evolution in the
     SMUGGLE case is not simply a consequence of the change in potential imposed
-    in our initial conditions.}}
+    in our initial conditions.} \textcolor{red}{This will be updated with a
+    higher resolution run.}}
 \label{fig:ps-star}
 \end{figure*}
 
