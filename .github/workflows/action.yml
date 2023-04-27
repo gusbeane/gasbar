@@ -24,7 +24,7 @@ jobs:
                              texlive-xetex
     - name: Build paper
       run: |
-        #cd ${MANUSCRIPT_PATH%/*}
+        cd ${MANUSCRIPT_PATH%/*}
         ${LATEX} ${MANUSCRIPT_PATH##*/}.tex
         ${BIBTEX} ${MANUSCRIPT_PATH##*/}.aux
         ${LATEX} ${MANUSCRIPT_PATH##*/}.tex
