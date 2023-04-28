@@ -153,12 +153,12 @@ def run():
     # ax.plot(time_SMUGGLE08, ps_SMUGGLE08, c=tb_c[4], label=r'$8$')
     ax.plot(time_SMUGGLE05, ps_SMUGGLE05, c=tb_c[5], label=r'$5$')
 
-    ax.plot(time_Nbody - time_Nbody[300], ps_Nbody, 81, 3, c=tb_c[0], label=r'0 ($N$-body)')
+    ax.plot(time_Nbody - time_Nbody[300], ps_Nbody, c=tb_c[0], label=r'0 ($N$-body)')
 
     ax.set(ylim=(0, 60), ylabel=r'$\Omega_p\,[\,\text{km}/\text{s}/\text{kpc}\,]$')
     ax.set(xlim=(0, 5), xlabel=r'$t\,[\,\textrm{Gyr}\,]$')
 
-    ax.legend(frameon=False, ncol=2, title=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot}/\textrm{pc}^2\,]$')
+    ax.legend(frameon=False, ncol=2, numpoints=1, title=r'$\Sigma_{\textrm{gas}}\,[\,M_{\odot}/\textrm{pc}^2\,]$')
 
     fig.tight_layout()
 
