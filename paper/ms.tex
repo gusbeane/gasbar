@@ -742,25 +742,10 @@ bar to participate in the formation of the wake. However, the gas is also a
 reliable source of positive torque on the bar, speeding the bar up. In turn,
 this stops the location of the resonance from changing such that the halo cannot
 reinforce the wake, therefore arresting the process by which the halo can slow
-the bar down. We term this process ``halo exhaustion.''
+the bar down. We term this process ``bar locking.''
 
-%In the \Nbody{} case, halo material that is
-%resonant with the bar will form a wake which lags behind and exerts a negative 
-%torque on the bar, slowing it down \citep{1984MNRAS.209..729T,
-%1985MNRAS.213..451W, 1992ApJ...400...80H}.\footnote{Since the bar is not a solid
-%body, it is not guaranteed that a negative torque will slow it down - e.g. a
-%negative torque could shred the bar, reducing its moment of inertia without
-%changing its pattern speed. However, the bar seems to empirically respond to a
-%negative torque induced by a halo wake by slowing down.} As the bar slows down,
-%the location of the resonances in phase space changes, allowing halo material
-%newly resonant with the bar to participate in forming the wake. However, the gas
-%is a reliable source of positive torque on the bar, speeding the bar up. This
-%stops the resonance location from changing such that the halo cannot reinforce
-%the wake, arresting the process by which the halo can slow the bar down. We term
-%this process ``halo exhaustion.''
-
-This halo exhaustion process is similar to the ``metastability'' effect, which
-has been previously discussed in the literature \citep{2003MNRAS.345..406V,
+This bar locking process is similar to the ``metastability'' effect, which has
+been previously discussed in the literature \citep{2003MNRAS.345..406V,
 2006ApJ...639..868S}. Finally, we also note that these authors, in particular,
 observe that the effects of numerical resolution in the simulations adopted to
 explore these mechanisms have yet to be fully explored and could play a role in
@@ -818,16 +803,17 @@ halo in our simulation is still able to support some negative torque over a
 several Gyr time span.
 
 We argue that the following occurs. First, the bar is not able to slow down
-quickly enough due to the positive torque of the infalling gas. This causes
-the resonant halo phase space at a particular pattern speed, $\Omega_{\textrm{p},0}$,
-to become exhausted and no longer able to support a negative torque. Second,
-the gas is still exerting a positive torque on the bar, and therefore the
-pattern speed will again increase. Since at higher pattern speeds the halo has
-not yet been totally exhausted, the halo will once again be able to exert a
-negative torque on the bar. The pattern speed will then settle at a new value
-slightly higher than $\Omega_{\textrm{p},0}$ where the gas and halo torques cancel.
-Over time, the pattern speed should slowly increase as the halo becomes
-progressively exhausted.
+quickly enough due to the positive torque of the infalling gas. This causes the
+resonant halo phase space at a particular pattern speed,
+$\Omega_{\textrm{p},0}$, to become {\bf mixed} and no longer able to support a
+negative torque.\footnote{In the halo wake picture, this corresponds to the wake
+becoming fully aligned with the bar.} Second, the gas is still exerting a
+positive torque on the bar, and therefore the pattern speed will again increase.
+Since at higher pattern speeds the halo has not yet been totally {\bf mixed},
+the halo will once again be able to exert a negative torque on the bar. The
+pattern speed will then settle at a new value slightly higher than
+$\Omega_{\textrm{p},0}$ where the gas and halo torques cancel. Over time, the
+pattern speed should slowly increase.
 
 \subsection{Delayed Gas Injection}
 A clear prediction of our proposed mechanism is that the constant pattern speed
@@ -966,7 +952,7 @@ favorably to the \Nbody{} case described in previous sections. The bar exerts a
 steady negative torque in this case (blue line). When a gas torque is included
 (orange lines), we find that the halo's torque becomes much weaker, similar to
 what we found in the \SMUGGLE{} case. The gas applies a steady positive torque
-by construction. Therefore, the exhaustion process is reproduced in our simple
+by construction. Therefore, the locking process is reproduced in our simple
 semi-analytic model. {\bf Curiously, we do not see the bimodal behavior in
 Fig.~\ref{fig:fgas} and described in \citet{2010ApJ...719.1470V}. It is not
 presently clear why this is the case.}
