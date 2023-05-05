@@ -20,8 +20,8 @@ columnwidth = 244.0 * 0.035145980349999517 # convert to cm
 textwidth = 508.0 * 0.035145980349999517 # convert to cm
 
 snap_path = '/n/holystore01/LABS/hernquist_lab/Users/abeane/starbar_runs/runs/'
-bprop_path = '/n/home01/abeane/starbar/analysis/bar_prop/data/'
-torque_path = '/n/home01/abeane/starbar/analysis/torques/data/'
+bprop_path = '/n/holylf05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/bar_prop/data/'
+torque_path = '/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/torques/data/'
 
 tb_c = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
         '#edc948', '#b07aa1', '#ff9da7', '#9c755f', '#bab0ac']
@@ -36,7 +36,7 @@ phS05R35 = 'phantom-vacuum-Sg05-Rc3.5'
 
 lvl = 'lvl3'
 
-def read_fourier(name, lvl, basepath='/n/home01/abeane/starbar/analysis/'):
+def read_fourier(name, lvl, basepath='/n/holylfs05/LABS/hernquist_lab/Users/abeane/gasbar/analysis/'):
     f = h5.File(basepath+'/fourier_component/data/fourier_'+name+'-'+lvl+'.hdf5', mode='r')
     return f
 
@@ -138,6 +138,8 @@ def run():
     time_SMUGGLE08, ps_SMUGGLE08 = get_pattern_speed(phS08R35, lvl)
     time_SMUGGLE05, ps_SMUGGLE05 = get_pattern_speed(phS05R35, lvl)
 
+    print(time_SMUGGLE05[-1])
+
     # for ps in [ps_Nbody, ps_SMUGGLE20, ps_SMUGGLE15, ps_SMUGGLE10, ps_SMUGGLE05]:
         # ps = savgol_filter(ps, 81, 3)
 
@@ -151,7 +153,7 @@ def run():
     ax.plot(time_SMUGGLE15, ps_SMUGGLE15, c=tb_c[2], label=r'$15$')
     ax.plot(time_SMUGGLE10, ps_SMUGGLE10, c=tb_c[3], label=r'$10$')
     # ax.plot(time_SMUGGLE08, ps_SMUGGLE08, c=tb_c[4], label=r'$8$')
-    ax.plot(time_SMUGGLE05, ps_SMUGGLE05, c=tb_c[5], label=r'$5$')
+    ax.plot(time_SMUGGLE05, ps_SMUGGLE05, c=tb_c[4], label=r'$5$')
 
     ax.plot(time_Nbody - time_Nbody[300], ps_Nbody, c=tb_c[0], label=r'0 ($N$-body)')
 
