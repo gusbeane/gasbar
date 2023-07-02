@@ -266,17 +266,17 @@ def run():
     # talk plots
 
     fig, ax = plt.subplots(1, 1, figsize=(3.5, 3.5))
-    ax.plot(tN - tN[300], 180.*dphiN, c=tb_c[0], label='N-body')
+    ax.plot(tN - tN[300], 180.*dphiN/np.pi, c=tb_c[0], label='N-body')
 
     ax.legend(frameon=False)
 
-    ax.set(xlim=(0, 5), ylim=(-35, 70), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
+    ax.set(xlim=(0, 5), ylim=(-20, 40), xlabel=r'$t\,[\,\text{Gyr}\,]$', ylabel=r'$\text{angle difference}\,[\,\text{deg}\,]$')
     ax.axhline(0, c='k')
 
     fig.tight_layout()
     fig.savefig('talk_fig3a.pdf')
 
-    ax.plot(tS, 180.*dphiS, c=tb_c[1], label='SMUGGLE')
+    ax.plot(tS, 180.*dphiS/np.pi, c=tb_c[1], label='SMUGGLE')
 
     ax.legend(frameon=False)
 
